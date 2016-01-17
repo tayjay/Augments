@@ -1,0 +1,16 @@
+[
+{
+  "modid": "Augments",
+  "name": "Augments",
+  "description": "Improve Yourself and Everything Around You.",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["tayjay"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
