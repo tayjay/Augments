@@ -1,0 +1,11 @@
+#en_US Localization File
+
+#Keys Localization
+key.categories.augments=Augments
+key.augments.augmentInventory=Augment Inventory
+
+#Creative Tabs Localizations
+itemGroup.augments=Augments
+
+#Item Localization
+item.augments:testScanner.name=Test Scanner

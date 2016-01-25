@@ -2,6 +2,7 @@ package com.tayjay.augments.creativetab;
 
 import com.tayjay.augments.lib.Reference;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 
 /**
@@ -14,7 +15,16 @@ public class CreativeTabA
         @Override
         public Item getTabIconItem()
         {
-            return null;
+            return Items.apple;
+        }
+    };
+
+    public static final CreativeTabs AUGMENT_TAB = new CreativeTabs(Reference.MOD_ID.toLowerCase())
+    {
+        @Override
+        public Item getTabIconItem()
+        {
+            return Items.diamond;
         }
     };
 }

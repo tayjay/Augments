@@ -1,6 +1,8 @@
 package com.tayjay.augments.item;
 
 import com.tayjay.augments.creativetab.CreativeTabA;
+import com.tayjay.augments.init.ModItems;
+import com.tayjay.augments.lib.Names;
 import com.tayjay.augments.lib.Reference;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -9,16 +11,16 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 /**
- * Created by tayjm_000 on 2016-01-16.
+ * Created by tayjm_000 on 2016-01-24.
  */
-public class ItemA extends Item
+public class ItemAugment extends Item
 {
-    public ItemA()
+    public ItemAugment()
     {
         super();
-        this.setCreativeTab(CreativeTabA.A_TAB);
+        setCreativeTab(CreativeTabA.AUGMENT_TAB);
+        this.maxStackSize = 1;
     }
-
 
     @Override
     public String getUnlocalizedName()

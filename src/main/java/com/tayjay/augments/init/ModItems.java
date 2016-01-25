@@ -1,6 +1,9 @@
 package com.tayjay.augments.init;
 
+import com.tayjay.augments.augment.AugmentPotionEffect;
 import com.tayjay.augments.item.ItemA;
+import com.tayjay.augments.item.ItemAugment;
+import com.tayjay.augments.item.ItemTestScanner;
 import com.tayjay.augments.lib.Reference;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.item.Item;
@@ -14,14 +17,16 @@ public class ModItems
     /**
      * Declairing Items
      */
-
+    public static ItemA testScanner;
+    public static ItemAugment potionEffect;
 
     /**
      * Initiate the item objects
      */
     public static void init()
     {
-
+        testScanner = new ItemTestScanner();
+        potionEffect = new AugmentPotionEffect();
     }
 
     /**
@@ -30,6 +35,12 @@ public class ModItems
      * @param item  Item to register.
      */
     public static void register(final ItemA item)
+    {
+        String name = item.getUnwrappedUnlocalizedName(item.getUnlocalizedName());
+        if(isEnabled(item)) GameRegistry.registerItem(item, name.substring(name.indexOf(":") + 1));
+    }
+
+    public static void register(final ItemAugment item)
     {
         String name = item.getUnwrappedUnlocalizedName(item.getUnlocalizedName());
         if(isEnabled(item)) GameRegistry.registerItem(item, name.substring(name.indexOf(":") + 1));

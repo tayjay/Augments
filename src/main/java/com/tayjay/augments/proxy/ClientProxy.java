@@ -1,7 +1,14 @@
 package com.tayjay.augments.proxy;
 
+import com.tayjay.augments.augment.handlers.ClientAugmentHandler;
+import com.tayjay.augments.augment.handlers.ServerAugmentHandler;
+import com.tayjay.augments.client.KeyInputHandler;
+import com.tayjay.augments.client.Keybindings;
+import cpw.mods.fml.client.registry.ClientRegistry;
+import cpw.mods.fml.common.FMLCommonHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.common.MinecraftForge;
 
 /**
  * Created by tayjm_000 on 2016-01-16.
@@ -11,7 +18,20 @@ public class ClientProxy extends CommonProxy
     @Override
     public void preInit()
     {
-        super.preInit();
+        registerKeybinds();
+
+    }
+
+    private void registerKeybinds()
+    {
+        for(Keybindings key : Keybindings.values())
+        {
+            FMLCommonHandler.instance().bus().register(new KeyInputHandler());
+            if(key!=null&& key.getKeybind()!=null)
+            {
+                ClientRegistry.registerKeyBinding(key.getKeybind());
+            }
+        }
     }
 
     @Override
