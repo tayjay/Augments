@@ -13,7 +13,6 @@ public class MessageOpenAugmentInventory extends MessageBase<MessageOpenAugmentI
     @Override
     public void handleServerSide(MessageOpenAugmentInventory message, EntityPlayer player)
     {
-        //todo:Change ID parameter to a value from a constructor
         player.openGui(AugmentsCore.instance, GuiHandler.GuiIDs.INVENTORY_AUGMENT_PLAYER.ordinal(), player.worldObj, (int) player.posX, (int) player.posY, (int) player.posZ);
     }
 

@@ -5,27 +5,23 @@ import com.tayjay.augments.augment.interfaces.IAugmentPlayerTick;
 import com.tayjay.augments.augment.interfaces.IPlayerAugment;
 import com.tayjay.augments.init.ModItems;
 import com.tayjay.augments.item.ItemAugment;
-import com.tayjay.augments.lib.Names;
-import com.tayjay.augments.util.ChatHelper;
+import com.tayjay.augments.util.DummyPlayer;
 import com.tayjay.augments.util.LogHelper;
 import cpw.mods.fml.common.gameevent.TickEvent;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.world.World;
 
 /**
  * Created by tayjm_000 on 2016-01-24.
  */
 public class AugmentPotionEffect extends ItemAugment implements IAugment,IAugmentPlayerTick,IPlayerAugment
 {
+    private final double attackIncrease = 10;
     public AugmentPotionEffect()
     {
         super();
@@ -60,7 +56,11 @@ public class AugmentPotionEffect extends ItemAugment implements IAugment,IAugmen
             EntityPlayer player = (EntityPlayer) entity;
             if (player != null)
             {
+
+                double defaultAttack = DummyPlayer.PLAYER.getEntityAttribute(SharedMonsterAttributes.attackDamage).getBaseValue();
                 player.addPotionEffect(new PotionEffect(Potion.invisibility.getId(), 40));
+                player.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(defaultAttack + attackIncrease + 100);
+                LogHelper.info("Adding potion effect to " + player.getCommandSenderName());
             } else
                 LogHelper.error("Player is null in AugmentPotionEffect");
         }
@@ -74,7 +74,10 @@ public class AugmentPotionEffect extends ItemAugment implements IAugment,IAugmen
             EntityPlayer player = (EntityPlayer) entity;
             if (player != null)
             {
+                double defaultAttack = DummyPlayer.PLAYER.getEntityAttribute(SharedMonsterAttributes.attackDamage).getBaseValue();
                 player.removePotionEffect(Potion.invisibility.getId());
+                player.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(1.0);
+                LogHelper.info("Removing potion effect from "+player.getCommandSenderName());
             } else
                 LogHelper.error("Player is null in AugmentPotionEffect");
         }
@@ -103,10 +106,12 @@ public class AugmentPotionEffect extends ItemAugment implements IAugment,IAugmen
 
 
     @Override
-    public void onTick(ItemStack stack, EntityPlayer player)
+    public void onTick(ItemStack augment, EntityPlayer player)
     {
-        if (stack.getItemDamage()==0) {
+        if (augment.getItemDamage()==0) {
             player.addPotionEffect(new PotionEffect(Potion.invisibility.id,40,0));
+            player.addPotionEffect(new PotionEffect(Potion.resistance.id,40,2));
         }
     }
+
 }

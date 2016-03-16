@@ -1,7 +1,9 @@
 package com.tayjay.augments.client;
 
 
+import com.tayjay.augments.handler.GuiHandler;
 import com.tayjay.augments.network.MessageOpenAugmentInventory;
+import com.tayjay.augments.network.MessageOpenGuiServer;
 import com.tayjay.augments.network.NetworkHandler;
 import com.tayjay.augments.proxy.ClientProxy;
 import com.tayjay.augments.util.LogHelper;
@@ -31,8 +33,8 @@ public class KeyInputHandler
             switch (key)
             {
                 case AUGMENT_INVENTORY:
-                    LogHelper.info("Opening Inventory.");
-                    NetworkHandler.INSTANCE.sendToServer(new MessageOpenAugmentInventory());
+                    LogHelper.info("Opening Inventory."+GuiHandler.GuiIDs.INVENTORY_AUGMENT_PLAYER.ordinal());
+                    NetworkHandler.INSTANCE.sendToServer(new MessageOpenGuiServer(GuiHandler.GuiIDs.INVENTORY_AUGMENT_PLAYER.ordinal()));
                     break;
             }
         }

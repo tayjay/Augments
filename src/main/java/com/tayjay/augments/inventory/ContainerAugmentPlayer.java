@@ -74,7 +74,7 @@ public class ContainerAugmentPlayer extends Container
             if (par2 < INV_START)
             {
                 // try to place in player inventory / action bar
-                if (!this.mergeItemStack(itemstack1, INV_START, HOTBAR_END + 1, true))
+                if (!this.mergeItemStack(itemstack1, INV_START, HOTBAR_END +1 - InventoryAugmentPlayer.INV_SIZE, true))
                 {
                     return null;
                 }

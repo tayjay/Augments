@@ -1,12 +1,23 @@
 package com.tayjay.augments.inventory;
 
+import com.tayjay.augments.AugmentsCore;
 import com.tayjay.augments.augment.interfaces.IAugment;
+import com.tayjay.augments.network.MessageSyncPlayerAugments;
+import com.tayjay.augments.network.NetworkHandler;
+import com.tayjay.augments.network.PacketSyncPlayerAugments;
+import com.tayjay.augments.util.LogHelper;
+import cpw.mods.fml.client.FMLClientHandler;
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.relauncher.Side;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+
+import java.lang.ref.WeakReference;
 
 /**
  * Created by tayjm_000 on 2016-01-24.
@@ -25,17 +36,36 @@ public class InventoryAugmentPlayer implements IInventory
     public static final int INV_SIZE = 4;
 
     /** Inventory's size must be same as number of slots you add to the Container class */
-    private ItemStack[] inventory = new ItemStack[INV_SIZE];
+    public ItemStack[] inventory = new ItemStack[INV_SIZE];
+
+    private Container eventHandler;
+
+    public WeakReference<EntityPlayer> player;
 
     public InventoryAugmentPlayer()
     {
         // don't need anything here!
     }
 
+    public InventoryAugmentPlayer(EntityPlayer player)
+    {
+        this.player = new WeakReference<EntityPlayer>(player);
+    }
+
     @Override
     public int getSizeInventory()
     {
         return inventory.length;
+    }
+
+    public Container getEventHandler()
+    {
+        return eventHandler;
+    }
+
+    public void setEventHandler(Container eventHandler)
+    {
+        this.eventHandler = eventHandler;
     }
 
     @Override
@@ -47,6 +77,44 @@ public class InventoryAugmentPlayer implements IInventory
     @Override
     public ItemStack decrStackSize(int slot, int amount)
     {
+        if (this.inventory[slot] != null) {
+            ItemStack itemstack;
+
+            if (this.inventory[slot].stackSize <= amount) {
+                itemstack = this.inventory[slot];
+
+                if (itemstack != null && itemstack.getItem() instanceof IAugment) {
+                    ((IAugment) itemstack.getItem()).onAdd(itemstack,
+                            player.get());
+                }
+
+                this.inventory[slot] = null;
+
+                if (eventHandler != null)
+                    this.eventHandler.onCraftMatrixChanged(this);
+                syncSlotToClients(slot);
+                return itemstack;
+            } else {
+                itemstack = this.inventory[slot].splitStack(amount);
+
+                if (itemstack != null && itemstack.getItem() instanceof IAugment) {
+                    ((IAugment) itemstack.getItem()).onRemove(itemstack,
+                            player.get());
+                }
+
+                if (this.inventory[slot].stackSize == 0) {
+                    this.inventory[slot] = null;
+                }
+
+                if (eventHandler != null)
+                    this.eventHandler.onCraftMatrixChanged(this);
+                syncSlotToClients(slot);
+                return itemstack;
+            }
+        } else {
+            return null;
+        }
+        /*
         ItemStack stack = getStackInSlot(slot);
         if (stack != null)
         {
@@ -60,7 +128,9 @@ public class InventoryAugmentPlayer implements IInventory
                 setInventorySlotContents(slot, null);
             }
         }
+        syncSlotToClients(slot);
         return stack;
+        */
     }
 
     @Override
@@ -80,7 +150,7 @@ public class InventoryAugmentPlayer implements IInventory
         {
             itemstack.stackSize = this.getInventoryStackLimit();
         }
-
+        syncSlotToClients(slot);
         this.onInventoryChanged();
     }
 
@@ -189,6 +259,21 @@ public class InventoryAugmentPlayer implements IInventory
             if (slot >= 0 && slot < getSizeInventory()) {
                 inventory[slot] = ItemStack.loadItemStackFromNBT(item);
             }
+        }
+    }
+
+    public void syncSlotToClients(int slot)
+    {
+        try
+        {
+            if(FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
+            {
+                //LogHelper.info("Sending Augments from"+player.get()+" to all.");
+                NetworkHandler.INSTANCE.sendToAll(new PacketSyncPlayerAugments(player.get(),slot));
+            }
+        } catch (Exception e)
+        {
+            e.printStackTrace();
         }
     }
 }

@@ -4,10 +4,13 @@ import com.tayjay.augments.AugmentsCore;
 import com.tayjay.augments.handler.GuiHandler;
 import com.tayjay.augments.init.ModItems;
 import com.tayjay.augments.lib.Names;
+import com.tayjay.augments.network.MessageOpenGuiServer;
+import com.tayjay.augments.network.NetworkHandler;
 import com.tayjay.augments.properties.PlayerAugmentProperties;
 import com.tayjay.augments.util.ChatHelper;
 import com.tayjay.augments.util.ClientUtil;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.passive.EntityWolf;
@@ -34,17 +37,25 @@ public class ItemTestScanner extends ItemA
         if(world.isRemote)
         {
             Entity e = ClientUtil.getEntityLookingAt(world,player);
-            if(e!=null && e instanceof EntityLivingBase)
+            if(e!=null)
             {
-                EntityLivingBase target = (EntityLivingBase) e;
-                player.openGui(AugmentsCore.instance, GuiHandler.GuiIDs.ENTITY_INFO.ordinal(),world,(int)player.posX,(int)player.posY,(int)player.posZ);
+                if(e instanceof EntityLiving)
+                {
+                    EntityLivingBase target = (EntityLivingBase) e;
+                    player.openGui(AugmentsCore.instance, GuiHandler.GuiIDs.ENTITY_INFO.ordinal(), world, (int) player.posX, (int) player.posY, (int) player.posZ);
+                }
+                else if(e instanceof EntityPlayer)
+                {
+                    EntityPlayer target = (EntityPlayer) e;
+                    target.openGui(AugmentsCore.instance,GuiHandler.GuiIDs.INVENTORY_AUGMENT_PLAYER.ordinal(),world, (int) player.posX, (int) player.posY, (int) player.posZ);
+                }
             }
             else if(e==null)
             {
                 if(PlayerAugmentProperties.get(player)!=null)
                 {
                     ChatHelper.sendTo(player,"Opening your Extended Properties");
-                    player.openGui(AugmentsCore.instance, GuiHandler.GuiIDs.INVENTORY_AUGMENT_PLAYER.ordinal(), world, (int) player.posX, (int) player.posY, (int) player.posZ);
+                    NetworkHandler.INSTANCE.sendToServer(new MessageOpenGuiServer(GuiHandler.GuiIDs.INVENTORY_AUGMENT_PLAYER.ordinal()));
                 }
                 else
                 {

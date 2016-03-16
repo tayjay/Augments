@@ -15,28 +15,28 @@ public class MessageSyncPlayerAugments extends MessageBase<MessageSyncPlayerAugm
 
     public MessageSyncPlayerAugments(){}
 
-    public MessageSyncPlayerAugments(EntityPlayer player)
+    public MessageSyncPlayerAugments(PlayerAugmentProperties playerProps)
     {
         data = new NBTTagCompound();
-        PlayerAugmentProperties.get(player).saveNBTData(data);
+        playerProps.saveNBTData(data);
     }
 
     @Override
     public void handleServerSide(MessageSyncPlayerAugments message, EntityPlayer player)
     {
-        //NOOP
+        PlayerAugmentProperties.get(player).syncAll();
     }
 
     @Override
     public void handleClientSide(MessageSyncPlayerAugments message, EntityPlayer player)
     {
-        PlayerAugmentProperties.get(player).loadNBTData(data);
+        PlayerAugmentProperties.get(player).loadNBTData(message.data);
     }
 
     @Override
     public void fromBytes(ByteBuf buf)
     {
-        data = ByteBufUtils.readTag(buf);
+        this.data = ByteBufUtils.readTag(buf);
     }
 
     @Override

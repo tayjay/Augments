@@ -4,6 +4,9 @@ import com.tayjay.augments.augment.handlers.ClientAugmentHandler;
 import com.tayjay.augments.augment.handlers.ServerAugmentHandler;
 import com.tayjay.augments.client.KeyInputHandler;
 import com.tayjay.augments.client.Keybindings;
+import com.tayjay.augments.command.CommandSync;
+import com.tayjay.augments.handler.EventHandlerEntity;
+import com.tayjay.augments.handler.EventHandlerNetwork;
 import com.tayjay.augments.handler.GuiHandler;
 import com.tayjay.augments.init.ModBlocks;
 import com.tayjay.augments.init.ModItems;
@@ -18,6 +21,8 @@ import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.event.FMLServerStartingEvent;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import net.minecraftforge.common.MinecraftForge;
 import scala.collection.parallel.ParIterableLike;
@@ -38,11 +43,20 @@ public class AugmentsCore
     @Mod.Instance
     public static AugmentsCore instance;
 
+    public EventHandlerEntity entityEventHandler;
+    public EventHandlerNetwork entityEventNetwork;
+
     /**
      * Create Sided proxy.
      */
     @SidedProxy(clientSide = Reference.CLIENT_PROXY_CLASS,serverSide = Reference.SERVER_PROXY_CLASS)
     public static CommonProxy proxy;
+
+    @Mod.EventHandler
+    public void onServerStarting(FMLServerStartingEvent event)
+    {
+        event.registerServerCommand(new CommandSync());
+    }
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event)
@@ -57,10 +71,13 @@ public class AugmentsCore
 
         MinecraftForge.EVENT_BUS.register(new PropertyHandler());
         FMLCommonHandler.instance().bus().register(new PropertyHandler());
-        MinecraftForge.EVENT_BUS.register(new ClientAugmentHandler());
-        FMLCommonHandler.instance().bus().register(new ClientAugmentHandler());
-        MinecraftForge.EVENT_BUS.register(new ServerAugmentHandler());
-        FMLCommonHandler.instance().bus().register(new ServerAugmentHandler());
+
+        entityEventHandler = new EventHandlerEntity();
+        entityEventNetwork = new EventHandlerNetwork();
+
+        MinecraftForge.EVENT_BUS.register(entityEventHandler);
+        MinecraftForge.EVENT_BUS.register(entityEventNetwork);
+
 
         NetworkHandler.init();
 

@@ -28,7 +28,8 @@ public class GuiHandler implements IGuiHandler
             case ENTITY_INFO:
                 return new ContainerEmpty();
             case INVENTORY_AUGMENT_PLAYER:
-                return new ContainerAugmentPlayer(player,player.inventory, PlayerAugmentProperties.get(player).inventory);
+                PlayerHandler.setPlayerAugments(player,PlayerAugmentProperties.get(player).inventory);
+                return new ContainerAugmentPlayer(player,player.inventory, PlayerHandler.getPlayerAugments(player));
         }
         throw new IllegalArgumentException("No Container with id "+ID);
     }
@@ -43,7 +44,8 @@ public class GuiHandler implements IGuiHandler
             case INVENTORY_AUGMENT_PLAYER:
                 try
                 {
-                    return new GuiInventoryAugmentPlayer(player, player.inventory, PlayerAugmentProperties.get(player).inventory);
+                    PlayerHandler.setPlayerAugments(player,PlayerAugmentProperties.get(player).inventory);
+                    return new GuiInventoryAugmentPlayer(player, player.inventory, PlayerHandler.getPlayerAugments(player));
                 }catch(NullPointerException e)
                 {
                     LogHelper.error(PlayerAugmentProperties.get(player).toString());

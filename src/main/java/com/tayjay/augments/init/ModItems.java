@@ -1,5 +1,6 @@
 package com.tayjay.augments.init;
 
+import com.tayjay.augments.augment.AugmentCyborgArmLeft;
 import com.tayjay.augments.augment.AugmentPotionEffect;
 import com.tayjay.augments.item.ItemA;
 import com.tayjay.augments.item.ItemAugment;
@@ -19,6 +20,7 @@ public class ModItems
      */
     public static ItemA testScanner;
     public static ItemAugment potionEffect;
+    public static ItemAugment cyborgArmLeft;
 
     /**
      * Initiate the item objects
@@ -27,6 +29,7 @@ public class ModItems
     {
         testScanner = new ItemTestScanner();
         potionEffect = new AugmentPotionEffect();
+        cyborgArmLeft = new AugmentCyborgArmLeft();
     }
 
     /**

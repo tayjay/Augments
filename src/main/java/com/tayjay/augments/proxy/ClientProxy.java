@@ -4,10 +4,12 @@ import com.tayjay.augments.augment.handlers.ClientAugmentHandler;
 import com.tayjay.augments.augment.handlers.ServerAugmentHandler;
 import com.tayjay.augments.client.KeyInputHandler;
 import com.tayjay.augments.client.Keybindings;
+import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 
 /**
@@ -38,6 +40,9 @@ public class ClientProxy extends CommonProxy
     public void init()
     {
         super.init();
+
+        MinecraftForge.EVENT_BUS.register(new ClientAugmentHandler());
+        FMLCommonHandler.instance().bus().register(new ClientAugmentHandler());
     }
 
     @Override
@@ -50,5 +55,10 @@ public class ClientProxy extends CommonProxy
     public EntityPlayer getClientPlayer()
     {
         return Minecraft.getMinecraft().thePlayer;
+    }
+
+    @Override
+    public World getClientWorld() {
+        return FMLClientHandler.instance().getClient().theWorld;
     }
 }

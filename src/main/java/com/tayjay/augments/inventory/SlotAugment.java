@@ -4,6 +4,7 @@ import com.tayjay.augments.augment.AugmentPotionEffect;
 import com.tayjay.augments.augment.event.AugmentChangeEvent;
 import com.tayjay.augments.augment.interfaces.IAugment;
 import com.tayjay.augments.augment.interfaces.IPlayerAugment;
+import com.tayjay.augments.handler.PlayerHandler;
 import com.tayjay.augments.properties.PlayerAugmentProperties;
 import com.tayjay.augments.util.ChatHelper;
 import com.tayjay.augments.util.LogHelper;
@@ -21,12 +22,14 @@ public class SlotAugment extends Slot
 {
     EntityPlayer player;
     ItemStack stackOld = null;
+    InventoryAugmentPlayer inv;
     public SlotAugment(IInventory inventory,EntityPlayer p, int slotIndex, int x, int y)
     {
         super(inventory, slotIndex, x, y);
         this.player = p;
-        if(PlayerAugmentProperties.get(p).inventory.getStackInSlot(slotIndex)!=null)
-            stackOld = PlayerAugmentProperties.get(p).inventory.getStackInSlot(slotIndex).copy();
+        if(PlayerHandler.getPlayerAugments(p).getStackInSlot(slotIndex)!=null)
+            stackOld = PlayerHandler.getPlayerAugments(p).getStackInSlot(slotIndex).copy();
+        inv = (InventoryAugmentPlayer) inventory;
     }
 
     /**
@@ -43,21 +46,25 @@ public class SlotAugment extends Slot
     public void onSlotChanged()
     {
         super.onSlotChanged();
-        MinecraftForge.EVENT_BUS.post(new SlotChangeEvent(this));
+        /*
+        //MinecraftForge.EVENT_BUS.post(new SlotChangeEvent(this));
         if(getStack()!=null)
         {
             stackOld = getStack();
 
-            AugmentPotionEffect augment = (AugmentPotionEffect) getStack().getItem();
+            IAugment augment = (IAugment) getStack().getItem();
             MinecraftForge.EVENT_BUS.post(new AugmentChangeEvent.Add(player, augment));
-            augment.onAdd(getStack(),player);
+            //augment.onAdd(getStack(), player);
+            //inv.syncSlotToClients(getSlotIndex());
         }
         else if(stackOld!=null)
         {
-            AugmentPotionEffect augment = (AugmentPotionEffect) stackOld.getItem();
+            IAugment augment = (IAugment) stackOld.getItem();
             MinecraftForge.EVENT_BUS.post(new AugmentChangeEvent.Add(player,augment));
             augment.onRemove(stackOld,player);
             stackOld=null;
+            //inv.syncSlotToClients(getSlotIndex());
         }
+        */
     }
 }

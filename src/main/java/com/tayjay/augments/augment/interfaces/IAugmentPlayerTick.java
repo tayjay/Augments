@@ -12,8 +12,8 @@ public interface IAugmentPlayerTick
 {
     /**
      * Holds actions to be executed on player tick
-     * @param stack ItemStack this augment is in
+     * @param augment ItemStack this augment is in
      * @param player Player augment is in
      */
-    void onTick(ItemStack stack, EntityPlayer player);
+    void onTick(ItemStack augment, EntityPlayer player);
 }

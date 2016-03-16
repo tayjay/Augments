@@ -13,7 +13,6 @@ import net.minecraft.entity.player.EntityPlayer;
  */
 public abstract class MessageBase<REQ extends IMessage> implements IMessage, IMessageHandler<REQ,REQ>
 {
-
     /**
      * Seperate the sides to handle the Message Packet
      * @param message

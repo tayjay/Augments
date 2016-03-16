@@ -2,17 +2,23 @@ package com.tayjay.augments.client.gui;
 
 import com.tayjay.augments.inventory.ContainerAugmentPlayer;
 import com.tayjay.augments.inventory.InventoryAugmentPlayer;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.item.ItemSword;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
+
+import java.util.Collection;
 
 /**
  * Created by tayjm_000 on 2016-01-24.
@@ -30,11 +36,13 @@ public class GuiInventoryAugmentPlayer extends GuiContainer
 
     /** Could use IInventory type to be more generic, but this way will save an import... */
     private final InventoryAugmentPlayer inventory;
+    private final EntityPlayer player;
 
     public GuiInventoryAugmentPlayer(EntityPlayer player, InventoryPlayer inventoryPlayer, InventoryAugmentPlayer inventoryCustom)
     {
         super(new ContainerAugmentPlayer(player, inventoryPlayer, inventoryCustom));
         this.inventory = inventoryCustom;
+        this.player = player;
         // if you need the player for something later on, store it in a local variable here as well
     }
 
@@ -53,7 +61,14 @@ public class GuiInventoryAugmentPlayer extends GuiContainer
      */
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
     {
-
+        fontRendererObj.drawString(player.getCommandSenderName(),85,5,4210752);
+        fontRendererObj.drawString("Health: "+player.getHealth()+"/"+player.getMaxHealth(),85,20,4210752);
+        fontRendererObj.drawString(player.getEntityAttribute(SharedMonsterAttributes.attackDamage).getBaseValue() + " Base attack", 85, 35, 4210752);
+        Collection<AttributeModifier> itemModifiers = null;
+        if(player.getCurrentEquippedItem()!=null)
+            itemModifiers = Minecraft.getMinecraft().thePlayer.getCurrentEquippedItem().getItem().getAttributeModifiers(player.getCurrentEquippedItem()).get(SharedMonsterAttributes.attackDamage.getAttributeUnlocalizedName());
+        if(itemModifiers!=null&&itemModifiers.iterator().hasNext())
+            fontRendererObj.drawString(itemModifiers.iterator().next().getAmount()+" Weapon Damage",85,50,4210752);
     }
 
     /**
@@ -65,6 +80,7 @@ public class GuiInventoryAugmentPlayer extends GuiContainer
         mc.getTextureManager().bindTexture(iconLocation);
         drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
         drawPlayerModel(guiLeft + 51, guiTop + 75, 30, guiLeft + 51 - xSize_lo, guiTop + 25 - ySize_lo, mc.thePlayer);
+
     }
 
     /**

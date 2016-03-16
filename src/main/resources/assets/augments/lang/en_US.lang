@@ -9,3 +9,5 @@ itemGroup.augments=Augments
 
 #Item Localization
 item.augments:testScanner.name=Test Scanner
+item.augments:potionEffect.name=Potion Augment
+item.augments:cyborgArmLeft.name=Cyborg Arm Left
