@@ -11,3 +11,4 @@ itemGroup.augments=Augments
 item.augments:testScanner.name=Test Scanner
 item.augments:potionEffect.name=Potion Augment
 item.augments:cyborgArmLeft.name=Cyborg Arm Left
+item.augments:cyborgEyes.name=Cyborg Eyes

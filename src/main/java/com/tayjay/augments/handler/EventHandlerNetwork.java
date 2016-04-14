@@ -1,11 +1,7 @@
 package com.tayjay.augments.handler;
 
-import com.tayjay.augments.inventory.InventoryAugmentPlayer;
-import com.tayjay.augments.network.NetworkHandler;
-import com.tayjay.augments.network.PacketSyncPlayerAugments;
 import com.tayjay.augments.properties.PlayerAugmentProperties;
 import com.tayjay.augments.util.ChatHelper;
-import com.tayjay.augments.util.LogHelper;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent;

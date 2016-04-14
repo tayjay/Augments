@@ -1,9 +1,7 @@
 package com.tayjay.augments.item;
 
-import com.tayjay.augments.augment.interfaces.IAugment;
+import com.tayjay.augments.augment.interfaces.IAddon;
 import com.tayjay.augments.creativetab.CreativeTabA;
-import com.tayjay.augments.init.ModItems;
-import com.tayjay.augments.lib.Names;
 import com.tayjay.augments.lib.Reference;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -12,11 +10,11 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 /**
- * Created by tayjm_000 on 2016-01-24.
+ * Created by tayjm_000 on 2016-04-04.
  */
-public abstract class ItemAugment extends Item implements IAugment
+public abstract class ItemAddon extends Item implements IAddon
 {
-    public ItemAugment()
+    public ItemAddon()
     {
         super();
         setCreativeTab(CreativeTabA.AUGMENT_TAB);
@@ -46,6 +44,4 @@ public abstract class ItemAugment extends Item implements IAugment
     {
         return unlocalizedName.substring(unlocalizedName.indexOf(".") + 1);
     }
-
-
 }

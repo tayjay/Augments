@@ -1,9 +1,11 @@
 package com.tayjay.augments.init;
 
 import com.tayjay.augments.augment.AugmentCyborgArmLeft;
+import com.tayjay.augments.augment.AugmentCyborgEyes;
 import com.tayjay.augments.augment.AugmentPotionEffect;
 import com.tayjay.augments.item.ItemA;
 import com.tayjay.augments.item.ItemAugment;
+import com.tayjay.augments.item.ItemCreativeHacker;
 import com.tayjay.augments.item.ItemTestScanner;
 import com.tayjay.augments.lib.Reference;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -19,8 +21,10 @@ public class ModItems
      * Declairing Items
      */
     public static ItemA testScanner;
+    public static ItemA creativeHacker;
     public static ItemAugment potionEffect;
     public static ItemAugment cyborgArmLeft;
+    public static ItemAugment cyborgEyes;
 
     /**
      * Initiate the item objects
@@ -28,8 +32,10 @@ public class ModItems
     public static void init()
     {
         testScanner = new ItemTestScanner();
+        creativeHacker = new ItemCreativeHacker();
         potionEffect = new AugmentPotionEffect();
         cyborgArmLeft = new AugmentCyborgArmLeft();
+        cyborgEyes = new AugmentCyborgEyes();
     }
 
     /**
@@ -46,7 +52,11 @@ public class ModItems
     public static void register(final ItemAugment item)
     {
         String name = item.getUnwrappedUnlocalizedName(item.getUnlocalizedName());
-        if(isEnabled(item)) GameRegistry.registerItem(item, name.substring(name.indexOf(":") + 1));
+        if(isEnabled(item))
+        {
+            GameRegistry.registerItem(item, name.substring(name.indexOf(":") + 1));
+            AugmentRegistry.register(item);
+        }
     }
 
     /**

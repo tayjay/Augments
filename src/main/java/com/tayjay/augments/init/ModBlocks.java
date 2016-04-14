@@ -1,6 +1,7 @@
 package com.tayjay.augments.init;
 
 import com.tayjay.augments.block.BlockA;
+import com.tayjay.augments.block.BlockAugmentBuilder;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemBlock;
@@ -14,13 +15,14 @@ public class ModBlocks
     /**
      * Declair all Blocks
      */
+    public static BlockA augmentBuilder;
 
     /**
      * Initiate each block object
      */
     public static void init()
     {
-
+        augmentBuilder = new BlockAugmentBuilder();
     }
 
     /**

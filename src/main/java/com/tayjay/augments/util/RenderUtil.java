@@ -3,10 +3,12 @@ package com.tayjay.augments.util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.AxisAlignedBB;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
@@ -84,5 +86,201 @@ public class RenderUtil
         OpenGlHelper.setActiveTexture(OpenGlHelper.lightmapTexUnit);
         GL11.glDisable(GL11.GL_TEXTURE_2D);
         OpenGlHelper.setActiveTexture(OpenGlHelper.defaultTexUnit);
+    }
+
+    public static void renderAABBWithColour(AxisAlignedBB box, float r, float g, float b, float a, boolean fill, boolean throughWalls)
+    {
+
+        if(box==null)
+            return;
+        GL11.glPushMatrix();
+        /*
+        if(throughWalls)
+        {
+            GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
+        }
+        */
+        GL11.glEnable(GL11.GL_BLEND);
+        GL11.glLineWidth(3.0f);
+        GL11.glDisable(GL11.GL_TEXTURE_2D);
+        GL11.glDisable(GL11.GL_CULL_FACE);
+
+
+
+
+
+        if (fill) {
+            GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
+            renderAABBWithColourPrivate(box,r,g,b,a/2,fill,throughWalls);
+            GL11.glEnable(GL11.GL_POLYGON_OFFSET_LINE);
+            GL11.glPolygonOffset(-1.f,-1.f);
+        }
+        GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
+        renderAABBWithColourPrivate(box, r, g, b, a, fill, throughWalls);
+
+        GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
+        GL11.glEnable(GL11.GL_CULL_FACE);
+        GL11.glEnable(GL11.GL_TEXTURE_2D);
+        GL11.glDisable(GL11.GL_BLEND);
+
+
+        GL11.glPopMatrix();
+    }
+
+    private static void renderAABBWithColourPrivate(AxisAlignedBB box, float r,float g,float b, float a, boolean fill, boolean throughWalls)
+    {
+        Tessellator tessellator = Tessellator.instance;
+        float colorR = r;
+        float colorG = g;
+        float colorB = b;
+        float colorA = a;
+
+        if(throughWalls)
+        {
+            GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
+        }
+
+        tessellator.startDrawing(GL11.GL_QUADS);
+        tessellator.setColorRGBA_F(colorR, colorG, colorB, colorA);
+        tessellator.addVertex(box.minX, box.minY, box.minZ);
+        tessellator.addVertex(box.maxX, box.minY, box.minZ);
+        tessellator.addVertex(box.maxX, box.minY, box.maxZ);
+        tessellator.addVertex(box.minX, box.minY, box.maxZ);
+        tessellator.draw();
+
+        tessellator.startDrawing(GL11.GL_QUADS);
+        tessellator.setColorRGBA_F(colorR, colorG, colorB, colorA);
+        tessellator.addVertex(box.minX, box.maxY, box.minZ);
+        tessellator.addVertex(box.maxX, box.maxY, box.minZ);
+        tessellator.addVertex(box.maxX, box.maxY, box.maxZ);
+        tessellator.addVertex(box.minX, box.maxY, box.maxZ);
+        tessellator.draw();
+
+        tessellator.startDrawing(GL11.GL_QUADS);
+        tessellator.setColorRGBA_F(colorR, colorG, colorB, colorA);
+        tessellator.addVertex(box.minX, box.minY, box.maxZ);
+        tessellator.addVertex(box.minX, box.maxY, box.maxZ);
+        tessellator.addVertex(box.maxX, box.maxY, box.maxZ);
+        tessellator.addVertex(box.maxX, box.minY, box.maxZ);
+        tessellator.draw();
+
+        tessellator.startDrawing(GL11.GL_QUADS);
+        tessellator.setColorRGBA_F(colorR, colorG, colorB, colorA);
+        tessellator.addVertex(box.minX, box.minY, box.minZ);
+        tessellator.addVertex(box.minX, box.maxY, box.minZ);
+        tessellator.addVertex(box.maxX, box.maxY, box.minZ);
+        tessellator.addVertex(box.maxX, box.minY, box.minZ);
+        tessellator.draw();
+
+        tessellator.startDrawing(GL11.GL_QUADS);
+        tessellator.setColorRGBA_F(colorR, colorG, colorB, colorA);
+        tessellator.addVertex(box.minX, box.minY, box.minZ);
+        tessellator.addVertex(box.minX,box.minY, box.maxZ);
+        tessellator.addVertex(box.minX,box.maxY, box.maxZ);
+        tessellator.addVertex(box.minX,box.maxY, box.minZ);
+        tessellator.draw();
+
+        tessellator.startDrawing(GL11.GL_QUADS);
+        tessellator.setColorRGBA_F(colorR, colorG, colorB, colorA);
+        tessellator.addVertex(box.maxX, box.minY, box.minZ);
+        tessellator.addVertex(box.maxX,box.minY, box.maxZ);
+        tessellator.addVertex(box.maxX,box.maxY, box.maxZ);
+        tessellator.addVertex(box.maxX,box.maxY, box.minZ);
+        tessellator.draw();
+    }
+
+    public static void renderOutline(AxisAlignedBB bb,boolean fill,boolean throughWalls) {
+
+        if(bb==null)
+            return;
+        GL11.glPushMatrix();
+
+        //System.out.println(bb);
+
+
+        GL11.glEnable(GL11.GL_BLEND);
+        GL11.glLineWidth(3.0f);
+        GL11.glDisable(GL11.GL_TEXTURE_2D);
+        GL11.glDisable(GL11.GL_CULL_FACE);
+
+        if(throughWalls)
+            GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
+        //GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
+
+        if (fill) { // TODO: depth-sort vertices for real transparency
+            GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
+            renderOutlineDraw(bb);
+            GL11.glEnable(GL11.GL_POLYGON_OFFSET_LINE);
+            GL11.glPolygonOffset(-1.f,-1.f);
+        }
+        GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
+        renderOutlineDraw(bb);
+
+
+
+
+        GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
+        GL11.glEnable(GL11.GL_CULL_FACE);
+        GL11.glEnable(GL11.GL_TEXTURE_2D);
+        GL11.glDisable(GL11.GL_BLEND);
+
+        GL11.glPopMatrix();
+    }
+
+    private static void renderOutlineDraw(AxisAlignedBB bb)
+    {
+
+        Tessellator tessellator = Tessellator.instance;
+        float colorR = 1.0F;
+        float colorG = 0.0F;
+        float colorB = 0.0F;
+        float colorA = 0.5F;
+        tessellator.startDrawing(GL11.GL_QUADS);
+        tessellator.setColorRGBA_F(colorR, colorG, colorB, colorA);
+        tessellator.addVertex(bb.minX, bb.minY, bb.minZ);
+        tessellator.addVertex(bb.maxX, bb.minY, bb.minZ);
+        tessellator.addVertex(bb.maxX, bb.minY, bb.maxZ);
+        tessellator.addVertex(bb.minX, bb.minY, bb.maxZ);
+        tessellator.draw();
+
+        tessellator.startDrawing(GL11.GL_QUADS);
+        tessellator.setColorRGBA_F(colorR, colorG, colorB, colorA);
+        tessellator.addVertex(bb.minX, bb.maxY, bb.minZ);
+        tessellator.addVertex(bb.maxX, bb.maxY, bb.minZ);
+        tessellator.addVertex(bb.maxX, bb.maxY, bb.maxZ);
+        tessellator.addVertex(bb.minX, bb.maxY, bb.maxZ);
+        tessellator.draw();
+
+        tessellator.startDrawing(GL11.GL_QUADS);
+        tessellator.setColorRGBA_F(colorR, colorG, colorB, colorA);
+        tessellator.addVertex(bb.minX, bb.minY, bb.maxZ);
+        tessellator.addVertex(bb.minX, bb.maxY, bb.maxZ);
+        tessellator.addVertex(bb.maxX, bb.maxY, bb.maxZ);
+        tessellator.addVertex(bb.maxX, bb.minY, bb.maxZ);
+        tessellator.draw();
+
+        tessellator.startDrawing(GL11.GL_QUADS);
+        tessellator.setColorRGBA_F(colorR, colorG, colorB, colorA);
+        tessellator.addVertex(bb.minX, bb.minY, bb.minZ);
+        tessellator.addVertex(bb.minX, bb.maxY, bb.minZ);
+        tessellator.addVertex(bb.maxX, bb.maxY, bb.minZ);
+        tessellator.addVertex(bb.maxX, bb.minY, bb.minZ);
+        tessellator.draw();
+
+        tessellator.startDrawing(GL11.GL_QUADS);
+        tessellator.setColorRGBA_F(colorR, colorG, colorB, colorA);
+        tessellator.addVertex(bb.minX, bb.minY, bb.minZ);
+        tessellator.addVertex(bb.minX,bb.minY, bb.maxZ);
+        tessellator.addVertex(bb.minX,bb.maxY, bb.maxZ);
+        tessellator.addVertex(bb.minX,bb.maxY, bb.minZ);
+        tessellator.draw();
+
+        tessellator.startDrawing(GL11.GL_QUADS);
+        tessellator.setColorRGBA_F(colorR, colorG, colorB, colorA);
+        tessellator.addVertex(bb.maxX, bb.minY, bb.minZ);
+        tessellator.addVertex(bb.maxX,bb.minY, bb.maxZ);
+        tessellator.addVertex(bb.maxX,bb.maxY, bb.maxZ);
+        tessellator.addVertex(bb.maxX,bb.maxY, bb.minZ);
+        tessellator.draw();
     }
 }

@@ -32,7 +32,7 @@ public class GuiInventoryAugmentPlayer extends GuiContainer
     private float ySize_lo;
 
     /** Normally I use '(ModInfo.MOD_ID, "textures/...")', but it can be done this way as well */
-    private static final ResourceLocation iconLocation = new ResourceLocation("augments:textures/gui/playerAugmentInventory.png");
+    private static final ResourceLocation iconLocation = new ResourceLocation("augments:textures/gui/playerAugmentInv2.png");//playerAugmentInventory.png
 
     /** Could use IInventory type to be more generic, but this way will save an import... */
     private final InventoryAugmentPlayer inventory;
@@ -43,6 +43,9 @@ public class GuiInventoryAugmentPlayer extends GuiContainer
         super(new ContainerAugmentPlayer(player, inventoryPlayer, inventoryCustom));
         this.inventory = inventoryCustom;
         this.player = player;
+
+        this.width = 512;
+        this.height = 512;
         // if you need the player for something later on, store it in a local variable here as well
     }
 
@@ -52,6 +55,7 @@ public class GuiInventoryAugmentPlayer extends GuiContainer
     public void drawScreen(int mouseX, int mouseY, float f)
     {
         super.drawScreen(mouseX, mouseY, f);
+
         xSize_lo = mouseX;
         ySize_lo = mouseY;
     }

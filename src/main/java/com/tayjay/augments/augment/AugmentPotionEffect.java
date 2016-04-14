@@ -7,7 +7,10 @@ import com.tayjay.augments.init.ModItems;
 import com.tayjay.augments.item.ItemAugment;
 import com.tayjay.augments.util.DummyPlayer;
 import com.tayjay.augments.util.LogHelper;
+import cpw.mods.fml.common.eventhandler.Event;
 import cpw.mods.fml.common.gameevent.TickEvent;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
@@ -15,6 +18,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.AxisAlignedBB;
+
+import java.util.List;
 
 /**
  * Created by tayjm_000 on 2016-01-24.
@@ -96,6 +102,17 @@ public class AugmentPotionEffect extends ItemAugment implements IAugment,IAugmen
 
     }
 
+    @Override
+    public boolean canAdd(ItemStack stack, EntityLivingBase addingTo)
+    {
+        return true;
+    }
+
+    @Override
+    public void onEvent(ItemStack itemStack, Event event)
+    {
+
+    }
 
 
     @Override
@@ -110,7 +127,20 @@ public class AugmentPotionEffect extends ItemAugment implements IAugment,IAugmen
     {
         if (augment.getItemDamage()==0) {
             player.addPotionEffect(new PotionEffect(Potion.invisibility.id,40,0));
-            player.addPotionEffect(new PotionEffect(Potion.resistance.id,40,2));
+            player.addPotionEffect(new PotionEffect(Potion.resistance.id, 40, 2));
+            List<Entity> entities = player.worldObj.getEntitiesWithinAABBExcludingEntity(player, AxisAlignedBB.getBoundingBox(player.posX-10,player.posY-10, player.posZ-10,player.posX+10,player.posY+10, player.posZ+10));
+            for(Entity entity : entities)
+            {
+                if(entity instanceof EntityLiving)
+                {
+                    EntityLiving living = (EntityLiving) entity;
+                    if(living.getAttackTarget()==player)
+                    {
+                        living.setAttackTarget(null);
+                        living.setRevengeTarget(null);
+                    }
+                }
+            }
         }
     }
 

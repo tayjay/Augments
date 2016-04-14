@@ -35,7 +35,7 @@ import java.util.List;
 /**
  * Created by tayjm_000 on 2016-01-31.
  */
-public class AugmentCyborgArmLeft extends ItemAugment implements IAugment, IAugmentRender
+public class AugmentCyborgArmLeft extends ItemAugment implements IAugmentRender
 {
     public ModelBiped modelArm = new ModelSkeleton();
 
@@ -85,6 +85,19 @@ public class AugmentCyborgArmLeft extends ItemAugment implements IAugment, IAugm
 
     @Override
     public void readAugmentFromNBT(NBTTagCompound tag)
+    {
+
+    }
+
+    @Override
+    public boolean canAdd(ItemStack stack, EntityLivingBase addingTo)
+    {
+        return true;
+    }
+
+
+    @Override
+    public void onEvent(ItemStack itemStack, Event event)
     {
 
     }
@@ -157,13 +170,15 @@ public class AugmentCyborgArmLeft extends ItemAugment implements IAugment, IAugm
             }
             else if(event instanceof RenderPlayerEvent.Pre)
             {
-                playerBiped.bipedLeftArm.render(0f);
+                //playerBiped.bipedLeftArm.render(0f);
             }
 
         }
         if(livingRender!=null && stack!=null)
         {
             Field modelField = ReflectionHelper.findField(RendererLivingEntity.class, "mainModel", "field_77045_g");
+
+
             modelField.setAccessible(true);
             ModelBase modelBase=null;
 
@@ -178,7 +193,14 @@ public class AugmentCyborgArmLeft extends ItemAugment implements IAugment, IAugm
             if(modelBase!=null&&modelBase instanceof ModelBiped)
             {
                 ModelBiped biped = (ModelBiped) modelBase;
-                biped.bipedLeftArm.isHidden = true;
+                if(livingRender.entity.getCommandSenderName().equals(NBTHelper.getString(stack, "entityName")))
+                {
+                    biped.bipedLeftArm.isHidden = true;
+                }
+                else
+                {
+                    biped.bipedLeftArm.isHidden = false;
+                }
             }
 
         }

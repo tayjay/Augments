@@ -22,5 +22,6 @@ public class NetworkHandler
         INSTANCE.registerMessage(MessageSyncPlayerAugments.class,MessageSyncPlayerAugments.class,2,Side.SERVER);
         INSTANCE.registerMessage(MessageOpenAugmentInventory.class,MessageOpenAugmentInventory.class,3, Side.SERVER);
         INSTANCE.registerMessage(PacketSyncPlayerAugments.class,PacketSyncPlayerAugments.class,4,Side.CLIENT);
+        INSTANCE.registerMessage(PacketHackEntity.class,PacketHackEntity.class,5,Side.SERVER);
     }
 }

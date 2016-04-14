@@ -2,6 +2,7 @@ package com.tayjay.augments.augment;
 
 import com.tayjay.augments.augment.interfaces.IAugment;
 import com.tayjay.augments.item.ItemAugment;
+import cpw.mods.fml.common.eventhandler.Event;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -15,7 +16,7 @@ import net.minecraft.nbt.NBTTagCompound;
  * Add extra health to an entity
  * Created by tayjm_000 on 2016-01-21.
  */
-public class AugmentHealthBoost extends ItemAugment implements IAugment
+public class AugmentHealthBoost extends ItemAugment
 {
     private String augmentName;
     private int id;
@@ -71,6 +72,18 @@ public class AugmentHealthBoost extends ItemAugment implements IAugment
 
     @Override
     public void readAugmentFromNBT(NBTTagCompound tag)
+    {
+
+    }
+
+    @Override
+    public boolean canAdd(ItemStack stack, EntityLivingBase addingTo)
+    {
+        return true;
+    }
+
+    @Override
+    public void onEvent(ItemStack itemStack, Event event)
     {
 
     }

@@ -4,6 +4,7 @@ import com.tayjay.augments.augment.handlers.ClientAugmentHandler;
 import com.tayjay.augments.augment.handlers.ServerAugmentHandler;
 import com.tayjay.augments.client.KeyInputHandler;
 import com.tayjay.augments.client.Keybindings;
+import com.tayjay.augments.init.EntityRenders;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -43,6 +44,13 @@ public class ClientProxy extends CommonProxy
 
         MinecraftForge.EVENT_BUS.register(new ClientAugmentHandler());
         FMLCommonHandler.instance().bus().register(new ClientAugmentHandler());
+    }
+
+    @Override
+    public void registerRenderers()
+    {
+        EntityRenders.init();
+
     }
 
     @Override

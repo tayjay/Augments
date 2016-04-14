@@ -1,5 +1,6 @@
 package com.tayjay.augments.augment.interfaces;
 
+import cpw.mods.fml.common.eventhandler.Event;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -51,4 +52,24 @@ public interface IAugment
     void writeAugmentToNBT(NBTTagCompound tag);
 
     void readAugmentFromNBT(NBTTagCompound tag);
+
+    /**
+     * Can this augment be added to this Entity.<br>
+     * Check the Entity's augments and type of Entity it is.
+     * @param stack
+     * @param addingTo
+     * @return
+     */
+    boolean canAdd(ItemStack stack, EntityLivingBase addingTo);
+
+    /**
+     * Code to be run on any kind of event. Generic event handler. May replace in future<br>
+     *     This could be PlayerTick, LivingUpdate, DeathEvent, LivingHurt, etc.<br>
+     *         To handle certain events use "instanceof" function.
+     * @param itemStack Itemstack this augment is in.
+     * @param event Event to be handled
+     */
+    void onEvent(ItemStack itemStack, Event event);
+    //todo: Maybe Replace with specialized methods
+
 }

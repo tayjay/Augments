@@ -18,7 +18,7 @@ public class GuiHandler implements IGuiHandler
 {
     public enum GuiIDs
     {
-        ENTITY_INFO,INVENTORY_AUGMENT_PLAYER
+        ENTITY_INFO,INVENTORY_AUGMENT_PLAYER,AUGMENT_BUILDER
     }
     @Override
     public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
@@ -30,6 +30,8 @@ public class GuiHandler implements IGuiHandler
             case INVENTORY_AUGMENT_PLAYER:
                 PlayerHandler.setPlayerAugments(player,PlayerAugmentProperties.get(player).inventory);
                 return new ContainerAugmentPlayer(player,player.inventory, PlayerHandler.getPlayerAugments(player));
+            case AUGMENT_BUILDER:
+                return null;
         }
         throw new IllegalArgumentException("No Container with id "+ID);
     }

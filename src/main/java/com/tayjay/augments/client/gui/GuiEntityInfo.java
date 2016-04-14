@@ -11,6 +11,7 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.passive.EntitySheep;
+import net.minecraft.entity.passive.EntityTameable;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -95,6 +96,11 @@ public class GuiEntityInfo extends GuiContainer
             if(sheepColour.equals("")) sheepColour = "White";
             infoList.add("Sheep Colour: "+sheepColour);
             RenderUtil.drawItemStack(woolStack,xSize-40,8,2f,"");
+        }
+        if(e instanceof EntityTameable)
+        {
+            EntityTameable tameable = (EntityTameable) e;
+            infoList.add(tameable.func_152113_b());
         }
 
         return infoList;

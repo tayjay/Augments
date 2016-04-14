@@ -8,7 +8,9 @@ import com.tayjay.augments.command.CommandSync;
 import com.tayjay.augments.handler.EventHandlerEntity;
 import com.tayjay.augments.handler.EventHandlerNetwork;
 import com.tayjay.augments.handler.GuiHandler;
+import com.tayjay.augments.init.EntityRenders;
 import com.tayjay.augments.init.ModBlocks;
+import com.tayjay.augments.init.ModEntities;
 import com.tayjay.augments.init.ModItems;
 import com.tayjay.augments.network.NetworkHandler;
 import com.tayjay.augments.properties.PropertyHandler;
@@ -65,6 +67,8 @@ public class AugmentsCore
         proxy.preInit();
         ModItems.init();
         ModBlocks.init();
+        ModEntities.init();
+
 
         //Register the GUIHandler for the mod.
         NetworkRegistry.INSTANCE.registerGuiHandler(instance, new GuiHandler());
@@ -90,6 +94,7 @@ public class AugmentsCore
     {
         LogHelper.info("Augmenting your game.");
         proxy.init();
+        proxy.registerRenderers();
     }
 
     @Mod.EventHandler

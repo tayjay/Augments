@@ -9,6 +9,9 @@ import com.tayjay.augments.network.NetworkHandler;
 import com.tayjay.augments.properties.PlayerAugmentProperties;
 import com.tayjay.augments.util.ChatHelper;
 import com.tayjay.augments.util.ClientUtil;
+import com.tayjay.augments.util.LogHelper;
+import cpw.mods.fml.relauncher.ReflectionHelper;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -16,13 +19,17 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.Timer;
 import net.minecraft.world.World;
+
+import java.lang.reflect.Field;
 
 /**
  * Created by tayjm_000 on 2016-01-17.
  */
 public class ItemTestScanner extends ItemA
 {
+    int cooldown = 10;
     public ItemTestScanner()
     {
         super();
@@ -34,6 +41,35 @@ public class ItemTestScanner extends ItemA
     @Override
     public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer player)
     {
+        if(cooldown==10)
+        {
+            Field timerField = ReflectionHelper.findField(Minecraft.class, "timer");
+            try
+            {
+                Timer gameTimer = (Timer) timerField.get(Minecraft.getMinecraft());
+                if (world.isRemote)
+                {
+                    if (gameTimer.timerSpeed != 1.0f)
+                    {
+                        gameTimer.timerSpeed = 1.0f;
+                        ChatHelper.sendTo(player, "Normal Speed.");
+                    } else
+                    {
+                        gameTimer.timerSpeed = .2f;
+                        ChatHelper.sendTo(player, "Slow-mo!");
+                    }
+                    LogHelper.info("Client Speed: " + gameTimer.timerSpeed);
+                } else
+                {
+                    LogHelper.info("Server Speed: " + gameTimer.timerSpeed);
+                }
+
+            } catch (IllegalAccessException e)
+            {
+                e.printStackTrace();
+            }
+        }
+        /*
         if(world.isRemote)
         {
             Entity e = ClientUtil.getEntityLookingAt(world,player);
@@ -63,7 +99,15 @@ public class ItemTestScanner extends ItemA
                 }
             }
         }
+        */
         return super.onItemRightClick(itemStack, world, player);
     }
 
+    @Override
+    public void onUpdate(ItemStack p_77663_1_, World p_77663_2_, Entity p_77663_3_, int p_77663_4_, boolean p_77663_5_)
+    {
+        super.onUpdate(p_77663_1_, p_77663_2_, p_77663_3_, p_77663_4_, p_77663_5_);
+        if(cooldown<10) cooldown++;
+        else cooldown = 10;
+    }
 }

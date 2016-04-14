@@ -25,10 +25,10 @@ import java.lang.ref.WeakReference;
 public class InventoryAugmentPlayer implements IInventory
 {
     /** The name your custom inventory will display in the GUI, possibly just "Inventory" */
-    private final String name = "Custom Inventory";
+    private final String name = "Player Augments";
 
     /** The key used to store and retrieve the inventory from NBT */
-    private final String tagName = "CustomInvTag";
+    private final String tagName = "playerAugInvTag";
 
     /** Define the inventory size here for easy reference */
     // This is also the place to define which slot is which if you have different types,
@@ -114,23 +114,6 @@ public class InventoryAugmentPlayer implements IInventory
         } else {
             return null;
         }
-        /*
-        ItemStack stack = getStackInSlot(slot);
-        if (stack != null)
-        {
-            if (stack.stackSize > amount)
-            {
-                stack = stack.splitStack(amount);
-                this.onInventoryChanged();
-            }
-            else
-            {
-                setInventorySlotContents(slot, null);
-            }
-        }
-        syncSlotToClients(slot);
-        return stack;
-        */
     }
 
     @Override

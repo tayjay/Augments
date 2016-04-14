@@ -40,4 +40,9 @@ public class CommonProxy implements IProxy
     public World getClientWorld() {
         return null;
     }
+
+    public void registerRenderers()
+    {
+
+    }
 }
