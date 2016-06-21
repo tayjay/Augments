@@ -1,8 +1,8 @@
 package com.tayjay.augments.augment.handlers;
 
-import com.tayjay.augments.augment.AugmentCyborgArmLeft;
+
 import com.tayjay.augments.augment.event.AugmentChangeEvent;
-import com.tayjay.augments.augment.interfaces.IAugmentPlayerTick;
+import com.tayjay.augments.augment.interfaces.IPlayerTick;
 import com.tayjay.augments.handler.EventHandlerEntity;
 import com.tayjay.augments.handler.PlayerHandler;
 import com.tayjay.augments.inventory.InventoryAugmentPlayer;
@@ -85,13 +85,9 @@ public class ServerAugmentHandler
         if(event.entityLiving instanceof EntityPlayer)
         {
             EntityPlayer player = (EntityPlayer) event.entityLiving;
-            InventoryAugmentPlayer augments = PlayerHandler.getPlayerAugments(player);
+            InventoryAugmentPlayer augments = PlayerHandler.getPlayerAugmentInventory(player);
             for (int a = 0; a < augments.getSizeInventory(); a++) {
-                if (augments.getStackInSlot(a) != null
-                        && augments.getStackInSlot(a).getItem() instanceof AugmentCyborgArmLeft) {
-                    event.ammount -= 500;
-                    break;
-                }
+
             }
         }
     }
@@ -105,8 +101,8 @@ public class ServerAugmentHandler
         InventoryAugmentPlayer augments = PlayerAugmentProperties.get(player).inventory;
         for (int a = 0; a < augments.getSizeInventory(); a++) {
             if (augments.getStackInSlot(a) != null
-                    && augments.getStackInSlot(a).getItem() instanceof IAugmentPlayerTick) {
-                ((IAugmentPlayerTick) augments.getStackInSlot(a).getItem()).onTick(augments.getStackInSlot(a), player);
+                    && augments.getStackInSlot(a).getItem() instanceof IPlayerTick) {
+                ((IPlayerTick) augments.getStackInSlot(a).getItem()).onTick(augments.getStackInSlot(a), player);
             }
         }
 

@@ -1,6 +1,5 @@
 package com.tayjay.augments.item;
 
-import com.tayjay.augments.entity.IAugmentable;
 import com.tayjay.augments.init.ModItems;
 import com.tayjay.augments.lib.Names;
 import com.tayjay.augments.network.NetworkHandler;
@@ -8,24 +7,18 @@ import com.tayjay.augments.network.PacketHackEntity;
 import com.tayjay.augments.util.ChatHelper;
 import com.tayjay.augments.util.ClientUtil;
 import com.tayjay.augments.util.NBTHelper;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.passive.EntityTameable;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.pathfinding.PathEntity;
-import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by tayjm_000 on 2016-03-26.
  */
-public class ItemCreativeHacker extends ItemA
+public class ItemCreativeHacker extends ItemMod
 {
     private final byte MAX_MODE = 1;
     public ItemCreativeHacker()

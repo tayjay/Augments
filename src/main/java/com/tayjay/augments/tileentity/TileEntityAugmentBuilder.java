@@ -1,5 +1,6 @@
 package com.tayjay.augments.tileentity;
 
+import com.tayjay.augments.util.ChatHelper;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
@@ -180,7 +181,7 @@ public class TileEntityAugmentBuilder extends TileEntityAug implements ISidedInv
     @Override
     public void openInventory()
     {
-
+        ChatHelper.send(this+" has been clicked.");
     }
 
     @Override

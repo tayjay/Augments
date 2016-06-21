@@ -1,6 +1,6 @@
 package com.tayjay.augments.network;
 
-import com.tayjay.augments.AugmentsCore;
+import com.tayjay.augments.AugmentsMod;
 import com.tayjay.augments.lib.Reference;
 import com.tayjay.augments.tileentity.TileEntityAug;
 import cpw.mods.fml.common.network.NetworkRegistry;
@@ -39,7 +39,7 @@ public class DescriptionHandler extends SimpleChannelInboundHandler<FMLProxyPack
         int x = buf.readInt();
         int y = buf.readInt();
         int z = buf.readInt();
-        TileEntity te = AugmentsCore.proxy.getClientPlayer().worldObj.getTileEntity(x,y,z);
+        TileEntity te = AugmentsMod.proxy.getClientPlayer().worldObj.getTileEntity(x,y,z);
         if(te instanceof TileEntityAug)
         {
             ((TileEntityAug)te).readFromPacket(buf);

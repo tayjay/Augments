@@ -1,19 +1,11 @@
 package com.tayjay.augments.inventory;
 
-import com.tayjay.augments.augment.AugmentPotionEffect;
-import com.tayjay.augments.augment.event.AugmentChangeEvent;
 import com.tayjay.augments.augment.interfaces.IAugment;
-import com.tayjay.augments.augment.interfaces.IPlayerAugment;
 import com.tayjay.augments.handler.PlayerHandler;
-import com.tayjay.augments.properties.PlayerAugmentProperties;
-import com.tayjay.augments.util.ChatHelper;
-import com.tayjay.augments.util.LogHelper;
-import cpw.mods.fml.common.eventhandler.EventBus;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.common.MinecraftForge;
 
 /**
  * Created by tayjm_000 on 2016-01-24.
@@ -22,14 +14,14 @@ public class SlotAugment extends Slot
 {
     EntityPlayer player;
     ItemStack stackOld = null;
-    InventoryAugmentPlayer inv;
+    InventoryBodyPart inv;
     public SlotAugment(IInventory inventory,EntityPlayer p, int slotIndex, int x, int y)
     {
         super(inventory, slotIndex, x, y);
         this.player = p;
-        if(PlayerHandler.getPlayerAugments(p).getStackInSlot(slotIndex)!=null)
-            stackOld = PlayerHandler.getPlayerAugments(p).getStackInSlot(slotIndex).copy();
-        inv = (InventoryAugmentPlayer) inventory;
+        if(inventory.getStackInSlot(slotIndex)!=null)
+            stackOld = inventory.getStackInSlot(slotIndex).copy();
+        inv = (InventoryBodyPart) inventory;
     }
 
     /**
@@ -39,6 +31,7 @@ public class SlotAugment extends Slot
     @Override
     public boolean isItemValid(ItemStack stack)
     {
+        //TODO: Check for which Body Part adding to.
         return stack.getItem() instanceof IAugment;
     }
 

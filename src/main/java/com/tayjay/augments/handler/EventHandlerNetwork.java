@@ -1,5 +1,8 @@
 package com.tayjay.augments.handler;
 
+import com.tayjay.augments.network.MessageSyncPlayerAugments;
+import com.tayjay.augments.network.NetworkHandler;
+import com.tayjay.augments.network.PacketSyncPlayerAugments;
 import com.tayjay.augments.properties.PlayerAugmentProperties;
 import com.tayjay.augments.util.ChatHelper;
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -49,29 +52,24 @@ public class EventHandlerNetwork
         List<EntityPlayerMP> players = MinecraftServer.getServer().getConfigurationManager().playerEntityList;
         for(EntityPlayerMP player:players)
         {
-            PlayerHandler.setPlayerAugments(player,PlayerAugmentProperties.get(player).inventory);
+            PlayerHandler.setPlayerAugments(player,PlayerAugmentProperties.get(player).loadAugmentsFromInventory());
             EventHandlerEntity.syncSchedule.add(player.getEntityId());
             ChatHelper.sendTo((EntityPlayer) receiver,"Synced Player Augments for "+player.getCommandSenderName());
         }
-        /*
-        List<EntityPlayerMP> players = MinecraftServer.getServer().getConfigurationManager().playerEntityList;
-        for(EntityPlayerMP player : players)
-        {
-            InventoryAugmentPlayer inv = PlayerAugmentProperties.get(player).inventory;
-            for (int i = 0; i < inv.inventory.length; i++)
-            {
-                NetworkHandler.INSTANCE.sendTo(new PacketSyncPlayerAugments(player, i), (EntityPlayerMP) receiver);
-            }
-        }
-        */
     }
 
     public static void syncAugments(EntityPlayer player)
     {
-        //todo: Change this 4 if augmennt inventory size changes
-        for(int i = 0; i<4; i++)
+        try
         {
-            PlayerHandler.getPlayerAugments(player).syncSlotToClients(i);
+            if(FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
+            {
+                //LogHelper.info("Sending Augments from"+player.get()+" to all.");
+                PlayerAugmentProperties.get(player).syncAll();
+            }
+        } catch (Exception e)
+        {
+            e.printStackTrace();
         }
     }
 }

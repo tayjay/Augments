@@ -1,6 +1,6 @@
 package com.tayjay.augments.network;
 
-import com.tayjay.augments.AugmentsCore;
+import com.tayjay.augments.AugmentsMod;
 import com.tayjay.augments.handler.GuiHandler;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
@@ -13,7 +13,7 @@ public class MessageOpenAugmentInventory extends MessageBase<MessageOpenAugmentI
     @Override
     public void handleServerSide(MessageOpenAugmentInventory message, EntityPlayer player)
     {
-        player.openGui(AugmentsCore.instance, GuiHandler.GuiIDs.INVENTORY_AUGMENT_PLAYER.ordinal(), player.worldObj, (int) player.posX, (int) player.posY, (int) player.posZ);
+        player.openGui(AugmentsMod.instance, GuiHandler.GuiIDs.INVENTORY_AUGMENT_PLAYER.ordinal(), player.worldObj, (int) player.posX, (int) player.posY, (int) player.posZ);
     }
 
     @Override

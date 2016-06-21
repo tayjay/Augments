@@ -15,22 +15,14 @@ public class ExtendedProperties implements IExtendedEntityProperties
 {
     /** Whether properties have changed and need updating*/
     private boolean isDirty;
-    /** Whether this should remain alive after its chunk is unloaded(Save it to disk)*/
-    private boolean keepSpawned;
-    /** Whether this has been augmented or not */
-    private boolean isAugmented;
-    /** All Augments applied to this */
-    private IAugment[] augments;
     /** Extra health to be added to this*/
     private double extraHealth;
-    /** Owner of this mob */
-    private EntityPlayer owner;
     /** Bonus attack damage */
     private double attackBonus;
     /** Whether this is visible or not */
     private boolean visibility;
     /** Does the player experience hunger */
-    private boolean isHungry;
+    private boolean noHunger;
     /** Can this fly */
     private boolean canFly;
     /** Does this have extra Lives, and can survive death. How many times. */
@@ -44,9 +36,7 @@ public class ExtendedProperties implements IExtendedEntityProperties
     /** Size of this entity. 1f is normal. Scale from there. */
     private float size;
     /** Force this potion effect */
-    private PotionEffect activeEffect;
-    /** Keep Chunk Loaded */
-    private boolean forceChunk;
+    private PotionEffect[] activeEffects;
 
 
     @Override

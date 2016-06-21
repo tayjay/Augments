@@ -1,16 +1,12 @@
 package com.tayjay.augments.inventory;
 
-import com.tayjay.augments.AugmentsCore;
 import com.tayjay.augments.augment.interfaces.IAugment;
-import com.tayjay.augments.network.MessageSyncPlayerAugments;
+import com.tayjay.augments.augment.interfaces.IBodyPart;
 import com.tayjay.augments.network.NetworkHandler;
 import com.tayjay.augments.network.PacketSyncPlayerAugments;
-import com.tayjay.augments.util.LogHelper;
-import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -20,7 +16,9 @@ import net.minecraft.nbt.NBTTagList;
 import java.lang.ref.WeakReference;
 
 /**
- * Created by tayjm_000 on 2016-01-24.
+ * Created by TayJay on 2016-01-24.<br/>
+ * Stores all the body parts of the player.<br/>
+ * As well as the augments in those body parts.
  */
 public class InventoryAugmentPlayer implements IInventory
 {
@@ -31,9 +29,11 @@ public class InventoryAugmentPlayer implements IInventory
     private final String tagName = "playerAugInvTag";
 
     /** Define the inventory size here for easy reference */
-    // This is also the place to define which slot is which if you have different types,
-    // for example SLOT_SHIELD = 0, SLOT_AMULET = 1;
-    public static final int INV_SIZE = 4;
+
+    public static final int BODY_SIZE = 9; //Number of body parts for the player.
+    public static final int SLOT_EYES = 1;
+    public static final int INV_SIZE = BODY_SIZE;
+
 
     /** Inventory's size must be same as number of slots you add to the Container class */
     public ItemStack[] inventory = new ItemStack[INV_SIZE];
@@ -82,24 +82,33 @@ public class InventoryAugmentPlayer implements IInventory
 
             if (this.inventory[slot].stackSize <= amount) {
                 itemstack = this.inventory[slot];
-
-                if (itemstack != null && itemstack.getItem() instanceof IAugment) {
-                    ((IAugment) itemstack.getItem()).onAdd(itemstack,
-                            player.get());
+                InventoryBodyPart bodyInv = new InventoryBodyPart(itemstack);
+                for(ItemStack augStack : bodyInv.getAugmentStacks())
+                {
+                    if(augStack !=null && augStack.getItem() instanceof IAugment)
+                    {
+                        ((IAugment) augStack.getItem()).onAdd(augStack,
+                                player.get());
+                    }
                 }
-
                 this.inventory[slot] = null;
 
                 if (eventHandler != null)
                     this.eventHandler.onCraftMatrixChanged(this);
                 syncSlotToClients(slot);
+                markDirty();
                 return itemstack;
             } else {
                 itemstack = this.inventory[slot].splitStack(amount);
 
-                if (itemstack != null && itemstack.getItem() instanceof IAugment) {
-                    ((IAugment) itemstack.getItem()).onRemove(itemstack,
-                            player.get());
+                InventoryBodyPart bodyInv = new InventoryBodyPart(itemstack);
+                for(ItemStack augStack : bodyInv.getAugmentStacks())
+                {
+                    if(augStack !=null && augStack.getItem() instanceof IAugment)
+                    {
+                        ((IAugment) augStack.getItem()).onRemove(augStack,
+                                player.get());
+                    }
                 }
 
                 if (this.inventory[slot].stackSize == 0) {
@@ -108,7 +117,8 @@ public class InventoryAugmentPlayer implements IInventory
 
                 if (eventHandler != null)
                     this.eventHandler.onCraftMatrixChanged(this);
-                syncSlotToClients(slot);
+                //syncSlotToClients(slot);
+                markDirty();
                 return itemstack;
             }
         } else {
@@ -133,8 +143,9 @@ public class InventoryAugmentPlayer implements IInventory
         {
             itemstack.stackSize = this.getInventoryStackLimit();
         }
-        syncSlotToClients(slot);
-        this.onInventoryChanged();
+        //syncSlotToClients(slot);
+        markDirty();
+        //this.onInventoryChanged();
     }
 
     @Override
@@ -162,16 +173,16 @@ public class InventoryAugmentPlayer implements IInventory
     @Override
     public void markDirty()
     {
-
-    }
-
-
-    public void onInventoryChanged()
-    {
-        for (int i = 0; i < getSizeInventory(); ++i)
+        for(int i = 0; i <  getSizeInventory();++i)
         {
-            if (getStackInSlot(i) != null && getStackInSlot(i).stackSize == 0) {
+            if(getStackInSlot(i)!=null && getStackInSlot(i).stackSize == 0)
+            {
                 inventory[i] = null;
+            }
+            if(getStackInSlot(i)!=null && getStackInSlot(i).getItem() instanceof IBodyPart) //Should be by definition but just to be safe.
+            {
+                InventoryBodyPart inv = new InventoryBodyPart(getStackInSlot(i));
+                //inv.getAugmentsBasic();
             }
         }
     }
@@ -208,7 +219,8 @@ public class InventoryAugmentPlayer implements IInventory
         // if (slot == SLOT_SHIELD && itemstack.getItem() instanceof ItemShield) return true;
 
         // For now, only ItemUseMana items can be stored in these slots
-        return itemstack.getItem() instanceof IAugment;
+        return itemstack.getItem() instanceof IBodyPart;
+        // TODO: 2016-05-27 Check for type of bodypart added(Eyes,torso...)
     }
 
 

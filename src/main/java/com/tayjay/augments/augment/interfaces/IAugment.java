@@ -1,35 +1,20 @@
 package com.tayjay.augments.augment.interfaces;
 
-import cpw.mods.fml.common.eventhandler.Event;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
 /**
- * Base Interface for augments to inherit from.
+ * Base Interface for augments to inherit from.<br/>
+ * This will cause them to act like items in the way that they are simply reference for the stack to access.
  * Created by tayjm_000 on 2016-01-18.
  */
 public interface IAugment
 {
-    /**
-     * Get the name of this Augment
-     * @return  Augment Name
-     */
-    String getAugmentName();
 
-    /**
-     * Get this Augment
-     * @return  this
-     */
-    IAugment getAugment();
+    String getUnlocalizedName();
 
-    /**
-     * Get the tier of this augment
-     * @return  Augment's tier
-     */
-    byte getTier();
+    String getName();
 
     /**
      * Code to be run when this augment is added<br/>
@@ -51,25 +36,19 @@ public interface IAugment
 
     void writeAugmentToNBT(NBTTagCompound tag);
 
+
+
     void readAugmentFromNBT(NBTTagCompound tag);
 
-    /**
-     * Can this augment be added to this Entity.<br>
-     * Check the Entity's augments and type of Entity it is.
-     * @param stack
-     * @param addingTo
-     * @return
-     */
-    boolean canAdd(ItemStack stack, EntityLivingBase addingTo);
+
 
     /**
-     * Code to be run on any kind of event. Generic event handler. May replace in future<br>
-     *     This could be PlayerTick, LivingUpdate, DeathEvent, LivingHurt, etc.<br>
-     *         To handle certain events use "instanceof" function.
-     * @param itemStack Itemstack this augment is in.
-     * @param event Event to be handled
+     * Can this augment be added to this BodyPart Inventory.<br>
+     * Check the BodyPart's augments and type of BodyPart it is.
+     * @param augment
+     * @param bodyPart
+     * @return
      */
-    void onEvent(ItemStack itemStack, Event event);
-    //todo: Maybe Replace with specialized methods
+    boolean canAdd(ItemStack augment, ItemStack bodyPart);
 
 }

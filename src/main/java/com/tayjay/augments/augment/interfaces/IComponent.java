@@ -9,6 +9,8 @@ import net.minecraft.nbt.NBTTagCompound;
 public interface IComponent
 {
     String getComponentName();
+    void setComponentId(int id);
+    int getComponentId();
     NBTTagCompound writeToNBT(ItemStack stack);
     IComponent readFromNBT(NBTTagCompound tag);
 }

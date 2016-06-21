@@ -4,6 +4,7 @@ package com.tayjay.augments.util;
  * Created by tayjm_000 on 2016-01-31.
  */
 
+import com.google.common.base.Preconditions;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -150,6 +151,8 @@ public class NBTHelper
     // int
     public static int getInt(ItemStack itemStack, String keyName)
     {
+        if(itemStack== null)
+            return 0;
         initNBTTagCompound(itemStack);
 
         if (!itemStack.stackTagCompound.hasKey(keyName))

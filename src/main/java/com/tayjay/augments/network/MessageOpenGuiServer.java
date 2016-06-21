@@ -1,12 +1,8 @@
 package com.tayjay.augments.network;
 
-import com.tayjay.augments.AugmentsCore;
-import com.tayjay.augments.handler.GuiHandler;
-import com.tayjay.augments.util.ChatHelper;
+import com.tayjay.augments.AugmentsMod;
 import com.tayjay.augments.util.LogHelper;
-import cpw.mods.fml.common.network.ByteBufUtils;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 
 /**
@@ -31,7 +27,7 @@ public class MessageOpenGuiServer extends MessageBase<MessageOpenGuiServer>
     @Override
     public void handleServerSide(MessageOpenGuiServer message, EntityPlayer player)
     {
-        player.openGui(AugmentsCore.instance, message.guiId, player.worldObj, (int) player.posX, (int) player.posY, (int) player.posZ);
+        player.openGui(AugmentsMod.instance, message.guiId, player.worldObj, (int) player.posX, (int) player.posY, (int) player.posZ);
     }
 
     @Override

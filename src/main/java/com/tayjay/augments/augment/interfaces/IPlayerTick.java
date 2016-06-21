@@ -8,7 +8,7 @@ import net.minecraft.item.ItemStack;
  * Defines that this Augment will run something on Player Tick
  * Created by tayjm_000 on 2016-01-18.
  */
-public interface IAugmentPlayerTick
+public interface IPlayerTick
 {
     /**
      * Holds actions to be executed on player tick

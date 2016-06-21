@@ -1,106 +1,56 @@
-package com.tayjay.augments.augment;
+package com.tayjay.augments.item.BodyParts;
 
 import com.tayjay.augments.augment.interfaces.IAugment;
-import com.tayjay.augments.augment.interfaces.IAugmentRender;
 import com.tayjay.augments.augment.interfaces.IHUDProvider;
 import com.tayjay.augments.entity.EntityCyborg;
+import com.tayjay.augments.handler.PlayerHandler;
 import com.tayjay.augments.init.ModItems;
-import com.tayjay.augments.item.ItemAugment;
+import com.tayjay.augments.inventory.InventoryAugmentPlayer;
 import com.tayjay.augments.util.RenderUtil;
-import cpw.mods.fml.common.eventhandler.Event;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.model.ModelBiped;
-import net.minecraft.client.model.ModelSkeleton;
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent;
-import net.minecraftforge.client.event.RenderWorldEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import org.lwjgl.opengl.GL11;
-import scala.collection.parallel.ParIterableLike;
 
+import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by tayjm_000 on 2016-03-19.
+ * Created by tayjay on 2016-06-20.
  */
-public class AugmentCyborgEyes extends ItemAugment implements IAugmentRender, IHUDProvider
+public class ItemCyborgEyes extends ItemBodyPart implements IHUDProvider
 {
 
-    public ModelBiped modelHead = new ModelBiped();
-
-    public AugmentCyborgEyes()
+    public ItemCyborgEyes()
     {
-        super();
-        this.setUnlocalizedName("cyborgEyes");
-        this.maxStackSize = 1;
+        super(Type.EYES,1, 1);
         ModItems.register(this);
     }
 
+    public ModelBiped modelHead = new ModelBiped();
+
+
     @Override
-    public String getAugmentName()
+    public String getName()
     {
-        return null;
+        return this.getUnlocalizedName();
     }
 
     @Override
-    public IAugment getAugment()
+    public void render(ItemStack stack, RenderPlayerEvent e)
     {
-        return null;
-    }
+        RenderUtil.renderModelOnPlayer(e,modelHead.bipedHead,new ResourceLocation("augments:/textures/entity/EntityCyborgTier2.png"),Type.EYES.ordinal());
 
-    @Override
-    public byte getTier()
-    {
-        return 0;
-    }
-
-    @Override
-    public void onAdd(ItemStack stack, EntityLivingBase entity)
-    {
-
-    }
-
-    @Override
-    public void onRemove(ItemStack stack, EntityLivingBase entity)
-    {
-
-    }
-
-    @Override
-    public void writeAugmentToNBT(NBTTagCompound tag)
-    {
-
-    }
-
-    @Override
-    public void readAugmentFromNBT(NBTTagCompound tag)
-    {
-
-    }
-
-    @Override
-    public boolean canAdd(ItemStack stack, EntityLivingBase addingTo)
-    {
-        return true;
-    }
-
-    @Override
-    public void onEvent(ItemStack itemStack, Event event)
-    {
-
-    }
-
-    @Override
-    public void doRender(ItemStack s, Event e)
-    {
+        /*
         if(e instanceof RenderPlayerEvent.Specials.Post)
         {
             RenderPlayerEvent.Specials.Post event = (RenderPlayerEvent.Specials.Post) e;
@@ -108,7 +58,10 @@ public class AugmentCyborgEyes extends ItemAugment implements IAugmentRender, IH
             if(!event.entityPlayer.isInvisible())
             {
                 GL11.glPushMatrix();
-                Minecraft.getMinecraft().renderEngine.bindTexture(new ResourceLocation("augments:/textures/models/eyesBiped.png"));
+
+                Minecraft.getMinecraft().renderEngine.bindTexture(new ResourceLocation("augments:/textures/entity/EntityCyborgTier2.png"));
+
+                //Minecraft.getMinecraft().renderEngine.bindTexture(new ResourceLocation("augments:/textures/models/eyesBiped.png"));
                 float s2 = 1.01F / 16F;
                 GL11.glScalef(s2, s2, s2);
 
@@ -129,16 +82,46 @@ public class AugmentCyborgEyes extends ItemAugment implements IAugmentRender, IH
                 GL11.glPopMatrix();
             }
         }
+        */
+
+    }
+
+    @Override
+    public boolean canAdd(ItemStack bodyStack, EntityLivingBase entity)
+    {
+        return true;
     }
 
     @Override
     public void displayGameOverlay(ItemStack stack, RenderGameOverlayEvent event)
     {
-        FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
-        GL11.glPushMatrix();
-        GL11.glScaled(2,2,2);
-        fontRenderer.drawString("You are a Cyborg!",10,10,0);
-        GL11.glPopMatrix();
+        if(event.type == RenderGameOverlayEvent.ElementType.CROSSHAIRS)
+        {
+            FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
+            GL11.glScaled(2, 2, 2);
+            List<String> toRender = new ArrayList<String>(6);
+            toRender.add("You are a Cyborg!");
+            toRender.add("");
+
+            //************
+            EntityPlayer player = Minecraft.getMinecraft().thePlayer;
+            InventoryAugmentPlayer inv = PlayerHandler.getPlayerAugmentInventory(player);
+            for(int i = 0; i < inv.getSizeInventory(); i++) {
+                ItemStack s = inv.getStackInSlot(i);
+                if(s != null) {
+                    if(s.getItem() instanceof IAugment)
+                    {
+                        toRender.add(((IAugment) s.getItem()).getName());
+                    }
+                }
+            }
+            //***********************
+            int mod = 1;
+            for(String rendering : toRender)
+            {
+                fontRenderer.drawString(rendering, 5, 10*(mod++), Color.RED.getRGB());
+            }
+        }
     }
 
     @Override
@@ -156,4 +139,6 @@ public class AugmentCyborgEyes extends ItemAugment implements IAugmentRender, IH
         }
         GL11.glPopMatrix();
     }
+
+
 }

@@ -1,10 +1,7 @@
 package com.tayjay.augments.network;
 
-import com.tayjay.augments.AugmentsCore;
+import com.tayjay.augments.AugmentsMod;
 import com.tayjay.augments.handler.PlayerHandler;
-import com.tayjay.augments.properties.PlayerAugmentProperties;
-import com.tayjay.augments.util.ChatHelper;
-import com.tayjay.augments.util.LogHelper;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
@@ -29,7 +26,7 @@ public class PacketSyncPlayerAugments implements IMessage, IMessageHandler<Packe
     public PacketSyncPlayerAugments(EntityPlayer player, int slot)
     {
         this.slot = slot;
-        this.augment = PlayerHandler.getPlayerAugments(player).getStackInSlot(slot);
+        this.augment = PlayerHandler.getPlayerAugmentInventory(player).getStackInSlot(slot);
         this.playerId = player.getEntityId();
     }
 
@@ -52,12 +49,12 @@ public class PacketSyncPlayerAugments implements IMessage, IMessageHandler<Packe
     @Override
     public IMessage onMessage(PacketSyncPlayerAugments message, MessageContext ctx)
     {
-        World world = AugmentsCore.proxy.getClientWorld();
+        World world = AugmentsMod.proxy.getClientWorld();
         if(world==null) return null; //Server side
         Entity p = world.getEntityByID(message.playerId);
         if(p instanceof EntityPlayer)
         {
-            PlayerHandler.getPlayerAugments((EntityPlayer)p).inventory[message.slot] = message.augment;
+            PlayerHandler.getPlayerAugmentInventory((EntityPlayer)p).inventory[message.slot] = message.augment;
         }
         return null;
     }

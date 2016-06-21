@@ -1,10 +1,9 @@
 package com.tayjay.augments.block;
 
-import com.tayjay.augments.AugmentsCore;
-import com.tayjay.augments.handler.GuiHandler;
 import com.tayjay.augments.init.ModBlocks;
 import com.tayjay.augments.lib.Names;
 import com.tayjay.augments.tileentity.TileEntityAugmentBuilder;
+import com.tayjay.augments.util.ChatHelper;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
@@ -36,7 +35,9 @@ public class BlockAugmentBuilder extends BlockA implements ITileEntityProvider
         {
             if(!player.isSneaking())
             {
-
+                TileEntityAugmentBuilder builder = (TileEntityAugmentBuilder)world.getTileEntity(x,y,z);
+                builder.openInventory();
+                ChatHelper.send(this+" has been clicked.");
             }
         }
         return true;

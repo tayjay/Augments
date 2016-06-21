@@ -1,11 +1,14 @@
 package com.tayjay.augments.init;
 
-import com.tayjay.augments.augment.interfaces.IAddon;
-import com.tayjay.augments.augment.interfaces.IAugment;
-import com.tayjay.augments.augment.interfaces.IComponent;
+import com.tayjay.augments.augment.*;
+import com.tayjay.augments.augment.interfaces.*;
+import com.tayjay.augments.util.LogHelper;
+import com.tayjay.augments.util.ServerUtil;
+import net.minecraft.item.Item;
+import net.minecraftforge.common.MinecraftForge;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
+import java.util.*;
+
 
 /**
  * Created by tayjm_000 on 2016-04-04.
@@ -13,70 +16,87 @@ import java.util.LinkedHashMap;
 public class AugmentRegistry
 {
 
-    public static void register(Object o)
+    private static int augmentCurrentId=0;
+    /*
+    private LinkedHashMap<Integer,IAugment> augmentMap = new LinkedHashMap<Integer, IAugment>();
+    private LinkedHashMap<String, Integer> augmentNameToId = new LinkedHashMap<String, Integer>();
+    */
+    public static Map<Integer,IAugment> augments = new HashMap<Integer, IAugment>();
+    public static List<IAugment> augmentsRegistered = new ArrayList<IAugment>();
+
+
+    private int bodyPartCurrentId=0;
+    public static LinkedHashMap<Integer,IBodyPart> bodyPartMap = new LinkedHashMap<Integer, IBodyPart>();
+    private LinkedHashMap<String, Integer> bodyPartNameToId = new LinkedHashMap<String, Integer>();
+
+    /*
+    private int componentCurrentId=0;
+    private LinkedHashMap<Integer,IComponent> componentMap = new LinkedHashMap<Integer, IComponent>();
+    private LinkedHashMap<String, Integer> componentNameToId = new LinkedHashMap<String, Integer>();
+    */
+
+
+    public static void registerAugment(IAugment augment)
     {
-        if(o instanceof IAugment)
-            Augment.register((IAugment)o);
-        else if(o instanceof IComponent)
-            Component.register((IComponent)o);
-        else if(o instanceof IAddon)
-            Addon.register((IAddon)o);
-        return;
-    }
-    public static class Augment
-    {
-        private static LinkedHashMap<String,IAugment> augmentMap = new LinkedHashMap<String, IAugment>();
+        if(augment==null)
+            return;
+        augments.put(Item.getIdFromItem((Item)augment),augment);
 
-        public static IAugment getAugment(String name)
-        {
-            if(augmentMap.containsKey(name))
-                return augmentMap.get(name);
-            return null;
-        }
+        augmentsRegistered.add(augment);
 
-        private static void register(IAugment augment)
-        {
-            if(augment==null)
-                return;
-            augmentMap.put(augment.getAugmentName(),augment);
-        }
-    }
 
-    public static class Component
-    {
-        private static LinkedHashMap<String,IComponent> componentMap = new LinkedHashMap<String, IComponent>();
-
-        public static IComponent getComponent(String name)
-        {
-            if(componentMap.containsKey(name))
-                return componentMap.get(name);
-            return null;
-        }
-
-        private static void register(IComponent component)
-        {
-            if(component==null)
-                return;
-            componentMap.put(component.getComponentName(),component);
-        }
+        LogHelper.debug("Registered Augment "+augment.getName()+", ID: "+Item.getIdFromItem((Item)augment));
     }
 
-    public static class Addon
+    public static void registerBodyPart(IBodyPart bodyPart)
     {
-        private static LinkedHashMap<String, IAddon> addonMap = new LinkedHashMap<String, IAddon>();
-
-        public static IAddon getAddon(String name)
-        {
-            if(addonMap.containsKey(name))
-                return addonMap.get(name);
-            return null;
-        }
-
-        private static void register(IAddon addon)
-        {
-            if(addon==null)
-                return;
-            addonMap.put(addon.getAddonName(),addon);
-        }
+        if(bodyPart==null)
+            return;
+        bodyPartMap.put(Item.getIdFromItem((Item)bodyPart),bodyPart);
+        LogHelper.debug("Registered BodyPart "+bodyPart.getName()+", ID: "+Item.getIdFromItem((Item)bodyPart));
     }
+
+    /*
+    public IAugment getAugment(String name)
+    {
+        if(augmentNameToId.containsKey(name))
+            return getAugment(augmentNameToId.get(name));
+        LogHelper.warn("Augment with name "+name+" not found!");
+        return null;
+    }
+
+    public IAugment getAugment(int id)
+    {
+        if(augmentMap.containsKey(id))
+            return augmentMap.get(id);
+        LogHelper.warn("Augment with ID "+id+" not found!");
+        return null;
+    }
+
+    public IBodyPart getBodyPart(String name)
+    {
+        if(bodyPartNameToId.containsKey(name))
+            return getBodyPart(bodyPartNameToId.get(name));
+        LogHelper.warn("BodyPart with name "+name+" not found!");
+        return null;
+    }
+    */
+
+
+
+    public void init()
+    {
+        //Register Augments here
+        
+
+        //Register BodyParts here
+
+
+        //Register Components here
+
+        //All custom augments/bodyparts/components can be registered using this event.
+    }
+
+
+
 }

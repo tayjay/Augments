@@ -1,16 +1,9 @@
 package com.tayjay.augments.handler;
 
-import com.google.common.io.Files;
-import com.tayjay.augments.augment.interfaces.IAugmentPlayerTick;
-import com.tayjay.augments.inventory.InventoryAugmentPlayer;
-import com.tayjay.augments.properties.PlayerAugmentProperties;
-import com.tayjay.augments.util.LogHelper;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.HashSet;
 
 /**
@@ -19,6 +12,7 @@ import java.util.HashSet;
 public class EventHandlerEntity
 {
     public static HashSet<Integer> syncSchedule = new HashSet<Integer>();
+
 
     @SubscribeEvent
     public void  onPlayerTick(PlayerEvent.LivingUpdateEvent event)
@@ -33,13 +27,24 @@ public class EventHandlerEntity
                 syncSchedule.remove(player.getEntityId());
             }
 
+            /*
             InventoryAugmentPlayer augments = PlayerHandler.getPlayerAugments(player);
             for (int a = 0; a < augments.getSizeInventory(); a++) {
                 if (augments.getStackInSlot(a) != null
-                        && augments.getStackInSlot(a).getItem() instanceof IAugmentPlayerTick) {
-                    ((IAugmentPlayerTick) augments.getStackInSlot(a).getItem()).onTick(augments.getStackInSlot(a), player);
+                        && augments.getStackInSlot(a).getItem() instanceof IPlayerTick) {
+                    ((IPlayerTick) augments.getStackInSlot(a).getItem()).onTick(augments.getStackInSlot(a), player);
                 }
             }
+            */
+        }
+    }
+
+    public void onStartTracking(PlayerEvent.StartTracking event)
+    {
+
+        if(!event.target.worldObj.isRemote && event.target instanceof EntityPlayer)
+        {
+            EventHandlerNetwork.syncAllAugmentsToClient((EntityPlayer) event.target);
         }
     }
 

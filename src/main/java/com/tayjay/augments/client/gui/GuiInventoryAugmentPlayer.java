@@ -32,7 +32,7 @@ public class GuiInventoryAugmentPlayer extends GuiContainer
     private float ySize_lo;
 
     /** Normally I use '(ModInfo.MOD_ID, "textures/...")', but it can be done this way as well */
-    private static final ResourceLocation iconLocation = new ResourceLocation("augments:textures/gui/playerAugmentInv2.png");//playerAugmentInventory.png
+    private static final ResourceLocation iconLocation = new ResourceLocation("augments:textures/gui/playerAugmentInventory.png");//playerAugmentInventory.png
 
     /** Could use IInventory type to be more generic, but this way will save an import... */
     private final InventoryAugmentPlayer inventory;

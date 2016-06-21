@@ -1,6 +1,5 @@
 package com.tayjay.augments.item;
 
-import com.tayjay.augments.augment.interfaces.IAddon;
 import com.tayjay.augments.creativetab.CreativeTabA;
 import com.tayjay.augments.lib.Reference;
 import cpw.mods.fml.relauncher.Side;
@@ -10,16 +9,16 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 /**
- * Created by tayjm_000 on 2016-04-04.
+ * Created by tayjm_000 on 2016-01-16.
  */
-public abstract class ItemAddon extends Item implements IAddon
+public class ItemMod extends Item
 {
-    public ItemAddon()
+    public ItemMod()
     {
         super();
-        setCreativeTab(CreativeTabA.AUGMENT_TAB);
-        this.maxStackSize = 1;
+        this.setCreativeTab(CreativeTabA.A_TAB);
     }
+
 
     @Override
     public String getUnlocalizedName()

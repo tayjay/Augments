@@ -1,6 +1,6 @@
 package com.tayjay.augments.init;
 
-import com.tayjay.augments.AugmentsCore;
+import com.tayjay.augments.AugmentsMod;
 import com.tayjay.augments.entity.EntityCyborg;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import net.minecraft.entity.EntityList;
@@ -27,7 +27,7 @@ public class ModEntities
     {
         int randomId = EntityRegistry.findGlobalUniqueEntityId();
         EntityRegistry.registerGlobalEntityID(entityClass,entityName,randomId);
-        EntityRegistry.registerModEntity(entityClass,entityName,randomId, AugmentsCore.instance,64,1,true);
+        EntityRegistry.registerModEntity(entityClass,entityName,randomId, AugmentsMod.instance,64,1,true);
         EntityRegistry.addSpawn(entityClass,2,0,1, EnumCreatureType.creature, BiomeGenBase.forest);
 
         createEgg(randomId,solidColour,spotColour);

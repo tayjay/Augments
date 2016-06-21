@@ -4,13 +4,16 @@ import com.google.common.io.Files;
 import com.tayjay.augments.inventory.InventoryAugmentPlayer;
 import com.tayjay.augments.properties.PlayerAugmentProperties;
 import com.tayjay.augments.util.LogHelper;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -18,7 +21,7 @@ import java.util.HashMap;
  */
 public class PlayerHandler
 {
-    private static HashMap<String, InventoryAugmentPlayer> playerAugments = new HashMap<String, InventoryAugmentPlayer>();
+    private static HashMap<String, ArrayList<ItemStack>> playerAugments = new HashMap<String, ArrayList<ItemStack>>();
     private static HashMap<String, PlayerAugmentProperties> playerProperties = new HashMap<String, PlayerAugmentProperties>();
 
     public static void clearPlayerAugments(EntityPlayer player)
@@ -26,19 +29,19 @@ public class PlayerHandler
         playerAugments.remove(player.getCommandSenderName());
     }
 
-    public static InventoryAugmentPlayer getPlayerAugments(EntityPlayer player)
+    public static ArrayList<ItemStack> getPlayerAugments(EntityPlayer player)
     {
         if(!playerAugments.containsKey(player.getCommandSenderName()))
         {
-            InventoryAugmentPlayer inventory = PlayerAugmentProperties.get(player).inventory;
-            playerAugments.put(player.getCommandSenderName(),inventory);
+            ArrayList<ItemStack> augments = PlayerAugmentProperties.get(player).loadAugmentsFromInventory();
+            playerAugments.put(player.getCommandSenderName(),augments);
         }
         return playerAugments.get(player.getCommandSenderName());
     }
 
-    public static void setPlayerAugments(EntityPlayer player, InventoryAugmentPlayer inventory)
+    public static void setPlayerAugments(EntityPlayer player, ArrayList<ItemStack> augments)
     {
-        playerAugments.put(player.getCommandSenderName(),inventory);
+        playerAugments.put(player.getCommandSenderName(),augments);
         EventHandlerEntity.syncSchedule.add(player.getEntityId());
     }
 
@@ -48,8 +51,17 @@ public class PlayerHandler
         {
             PlayerAugmentProperties props = PlayerAugmentProperties.get(player);
             playerProperties.put(player.getCommandSenderName(),props);
+            Minecraft.getMinecraft().thePlayer.getLocationSkin();
         }
         return playerProperties.get(player.getCommandSenderName());
+    }
+
+    public static InventoryAugmentPlayer getPlayerAugmentInventory(EntityPlayer player)
+    {
+        InventoryAugmentPlayer inv = PlayerAugmentProperties.get(player).inventory;
+        if(inv!=null)
+            return inv;
+        return null;
     }
 
     /*
@@ -116,7 +128,7 @@ public class PlayerHandler
                         Files.copy(file1, file2);
                     } catch (Exception e)
                     {
-                        LogHelper.error("Could not backup old baubles file for player " + player.getCommandSenderName());
+                        LogHelper.error("Could not backup old augments file for player " + player.getCommandSenderName());
                     }
                 }
 

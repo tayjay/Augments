@@ -1,7 +1,10 @@
 package com.tayjay.augments.util;
 
+import com.tayjay.augments.augment.interfaces.IBodyPart;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.model.ModelBiped;
+import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderItem;
@@ -9,6 +12,8 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.event.RenderPlayerEvent;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
@@ -282,5 +287,97 @@ public class RenderUtil
         tessellator.addVertex(bb.maxX,bb.maxY, bb.maxZ);
         tessellator.addVertex(bb.maxX,bb.maxY, bb.minZ);
         tessellator.draw();
+    }
+
+    public static void renderModelOnPlayer(RenderPlayerEvent event, ModelRenderer model, ResourceLocation texture, int type)
+    {
+        GL11.glPushMatrix();
+        Minecraft.getMinecraft().renderEngine.bindTexture(texture);
+
+        switch(type)
+        {
+            case 0://CRANIUM
+                alignModels(event.renderer.modelBipedMain.bipedHead,model);
+                break;
+            case 1://EYES
+                alignModels(event.renderer.modelBipedMain.bipedHead,model);
+                break;
+            case 2://TORSO
+                alignModels(event.renderer.modelBipedMain.bipedBody,model);
+                break;
+            case 3://ARM_LEFT
+                alignModels(event.renderer.modelBipedMain.bipedLeftArm,model);
+                break;
+            case 4://ARM_RIGHT
+                alignModels(event.renderer.modelBipedMain.bipedRightArm,model);
+                break;
+            case 5://LEG_LEFT
+                alignModels(event.renderer.modelBipedMain.bipedLeftLeg,model);
+                break;
+            case 6://LEG_RIGHT
+                alignModels(event.renderer.modelBipedMain.bipedRightLeg,model);
+                break;
+            default:
+                break;
+        }
+        GL11.glScalef(1.1f,1.1f,1.1f);
+        model.render(0.0625f);
+        GL11.glPopMatrix();
+    }
+
+    public static void renderModelOnPlayer(RenderPlayerEvent event, ModelBiped model, ResourceLocation texture, int type)
+    {
+        GL11.glPushMatrix();
+        Minecraft.getMinecraft().renderEngine.bindTexture(texture);
+        GL11.glScalef(1.1f,1.1f,1.1f);
+        switch(type)
+        {
+            case 0://CRANIUM
+                alignModels(event.renderer.modelBipedMain.bipedHead,model.bipedHead);
+                model.bipedHead.render(0.0625f);
+                break;
+            case 1://EYES
+                alignModels(event.renderer.modelBipedMain.bipedHead,model.bipedHead);
+                model.bipedHead.render(0.0625f);
+                break;
+            case 2://TORSO
+                alignModels(event.renderer.modelBipedMain.bipedBody,model.bipedBody);
+                model.bipedBody.render(0.0625f);
+                break;
+            case 3://ARM_LEFT
+                alignModels(event.renderer.modelBipedMain.bipedLeftArm,model.bipedLeftArm);
+                model.bipedLeftArm.render(0.0625f);
+                break;
+            case 4://ARM_RIGHT
+                alignModels(event.renderer.modelBipedMain.bipedRightArm,model.bipedRightArm);
+                model.bipedRightArm.render(0.0625f);
+                break;
+            case 5://LEG_LEFT
+                alignModels(event.renderer.modelBipedMain.bipedLeftLeg,model.bipedLeftArm);
+                model.bipedLeftLeg.render(0.0625f);
+                break;
+            case 6://LEG_RIGHT
+                alignModels(event.renderer.modelBipedMain.bipedRightLeg,model.bipedRightLeg);
+                model.bipedRightLeg.render(0.0625f);
+                break;
+            default:
+                break;
+        }
+        GL11.glPopMatrix();
+    }
+
+    private static void alignModels(ModelRenderer original, ModelRenderer moving)
+    {
+        moving.rotateAngleX =   original.rotateAngleX;
+        moving.rotateAngleY =   original.rotateAngleY;
+        moving.rotateAngleZ =   original.rotateAngleZ;
+        moving.offsetX =        original.offsetX;
+        moving.offsetY =        original.offsetY;
+        moving.offsetZ =        original.offsetZ;
+        moving.rotationPointX = original.rotationPointX;
+        moving.rotationPointY = original.rotationPointY;
+        moving.rotationPointZ = original.rotationPointZ;
+        moving.isHidden = original.isHidden;
+        moving.mirror = original.mirror;
     }
 }

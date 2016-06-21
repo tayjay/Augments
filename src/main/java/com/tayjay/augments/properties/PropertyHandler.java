@@ -17,19 +17,6 @@ import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 public class PropertyHandler
 {
 
-    @SubscribeEvent(priority = EventPriority.NORMAL)
-    public void onConstructingEntity(EntityEvent.EntityConstructing event)
-    {
-
-        if (event.entity instanceof EntityPlayer && PlayerAugmentProperties.get((EntityPlayer) event.entity) == null)
-        {
-            PlayerAugmentProperties.register((EntityPlayer) event.entity);
-        }
-
-
-
-    }
-
     @SubscribeEvent
     public void onEntityConstructing(EntityEvent.EntityConstructing event)
     {
@@ -62,12 +49,6 @@ public class PropertyHandler
                 LogHelper.info("Syncing player data for "+event.entity.getCommandSenderName());
                 LogHelper.info(event.entity.getEntityData());
                 EventHandlerEntity.syncSchedule.add(event.entity.getEntityId());
-                /*
-                PlayerHandler.setPlayerAugments((EntityPlayer) event.entity, PlayerAugmentProperties.get((EntityPlayer) event.entity).inventory);
-                EventHandlerNetwork.syncAugments((EntityPlayer) event.entity);
-                */
-
-                //PlayerAugmentProperties.get((EntityPlayer)event.entity).requestSyncAll();
             }
         }
     }

@@ -9,6 +9,8 @@ public final class Names
     {
         public static final String TEST_SCANNER = "testScanner";
         public static final String CREATIVE_HACKER = "creativeHacker";
+        public static final String CYBORG_EYES = "cyborgEyes";
+        public static final String CARBON_FIBRE_TORSO = "carbonFiberTorso";
     }
 
     public static final class Blocks

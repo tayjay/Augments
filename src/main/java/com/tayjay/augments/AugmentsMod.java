@@ -1,14 +1,9 @@
 package com.tayjay.augments;
 
-import com.tayjay.augments.augment.handlers.ClientAugmentHandler;
-import com.tayjay.augments.augment.handlers.ServerAugmentHandler;
-import com.tayjay.augments.client.KeyInputHandler;
-import com.tayjay.augments.client.Keybindings;
 import com.tayjay.augments.command.CommandSync;
 import com.tayjay.augments.handler.EventHandlerEntity;
 import com.tayjay.augments.handler.EventHandlerNetwork;
 import com.tayjay.augments.handler.GuiHandler;
-import com.tayjay.augments.init.EntityRenders;
 import com.tayjay.augments.init.ModBlocks;
 import com.tayjay.augments.init.ModEntities;
 import com.tayjay.augments.init.ModItems;
@@ -24,26 +19,21 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import net.minecraftforge.common.MinecraftForge;
-import scala.collection.parallel.ParIterableLike;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
- * Created by tayjm_000 on 2016-01-16.
+ * Created by TayJay on 2016-01-16.
  * Main Mod class
  */
 @Mod(modid = Reference.MOD_ID, name = Reference.MOD_NAME, version = Reference.VERSION, guiFactory = Reference.GUI_FACTORY_CLASS)
-public class AugmentsCore
+public class AugmentsMod
 {
     /**
      * Mod Instance for Forge
      */
     @Mod.Instance
-    public static AugmentsCore instance;
+    public static AugmentsMod instance;
 
     public EventHandlerEntity entityEventHandler;
     public EventHandlerNetwork entityEventNetwork;

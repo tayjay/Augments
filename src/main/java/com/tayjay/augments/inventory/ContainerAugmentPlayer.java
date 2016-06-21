@@ -1,6 +1,7 @@
 package com.tayjay.augments.inventory;
 
 import com.tayjay.augments.augment.interfaces.IAugment;
+import com.tayjay.augments.augment.interfaces.IBodyPart;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
@@ -13,22 +14,38 @@ import net.minecraft.item.ItemStack;
  */
 public class ContainerAugmentPlayer extends Container
 {
+    /*
     private static final int ARMOR_START = InventoryAugmentPlayer.INV_SIZE, ARMOR_END = ARMOR_START+3,
             INV_START = ARMOR_END+1, INV_END = INV_START+26, HOTBAR_START = INV_END+1,
             HOTBAR_END = HOTBAR_START+8;
+            */
+    private int ARMOR_START,ARMOR_END,INV_START,INV_END,HOTBAR_START,HOTBAR_END;
+    private int slots=0;
     public InventoryPlayer inv;
 
     public ContainerAugmentPlayer(EntityPlayer player, InventoryPlayer inventoryPlayer, InventoryAugmentPlayer inventoryCustom)
     {
-        int i;
-        this.inv = inventoryPlayer;
 
-        // Add CUSTOM slots - we'll just add two for now, both of the same type.
-        // Make a new Slot class for each different item type you want to add
-        this.addSlotToContainer(new SlotAugment(inventoryCustom,inventoryPlayer.player, 0, 8, 8));
-        this.addSlotToContainer(new SlotAugment(inventoryCustom,inventoryPlayer.player, 1, 8, 26));
-        this.addSlotToContainer(new SlotAugment(inventoryCustom,inventoryPlayer.player, 2, 8, 44));
-        this.addSlotToContainer(new SlotAugment(inventoryCustom,inventoryPlayer.player, 3, 8, 62));
+        inventoryCustom.setEventHandler(this);
+        this.inv = inventoryPlayer;
+        initSlots(inventoryPlayer,inventoryCustom);
+
+
+    }
+
+    public void initSlots(InventoryPlayer inventoryPlayer,InventoryAugmentPlayer inventoryCustom)
+    {
+        int i;
+        for(i = 0; i < inventoryCustom.getSizeInventory();++i)
+        {
+            this.addSlotToContainer(new SlotBodyPart(inventoryCustom,inventoryPlayer.player,i,8,i*20+8));
+            slots++;
+            this.addSlotsFromItemInv(inventoryCustom.getStackInSlot(i),inventoryPlayer.player,8,i*20+8);
+        }
+
+        ARMOR_START = slots; ARMOR_END = ARMOR_START+3;
+        INV_START = ARMOR_END+1; INV_END = INV_START+26; HOTBAR_START = INV_END+1;
+        HOTBAR_END = HOTBAR_START+8;
 
 
         // Add vanilla PLAYER INVENTORY - just copied/pasted from vanilla classes
@@ -47,13 +64,26 @@ public class ContainerAugmentPlayer extends Container
         }
     }
 
+    private void addSlotsFromItemInv(ItemStack stack,EntityPlayer player, int xStart, int yStart)
+    {
+        if(stack!=null && stack.getItem() instanceof IBodyPart)
+        {
+            InventoryBodyPart inv = new InventoryBodyPart(stack);
+            for(int j = 0;j<inv.getSizeInventory();j++)
+            {
+                this.addSlotToContainer(new SlotAugment(inv, player, j,xStart+j*20,yStart+20));
+                slots++;
+            }
+        }
+    }
+
     /**
      * This should always return true, since custom inventory can be accessed from anywhere
      */
     @Override
     public boolean canInteractWith(EntityPlayer player)
     {
-        return true;
+        return player.capabilities.isCreativeMode;
     }
 
     /**
@@ -74,7 +104,7 @@ public class ContainerAugmentPlayer extends Container
             if (par2 < INV_START)
             {
                 // try to place in player inventory / action bar
-                if (!this.mergeItemStack(itemstack1, INV_START, HOTBAR_END +1 - InventoryAugmentPlayer.INV_SIZE, true))
+                if (!this.mergeItemStack(itemstack1, INV_START, HOTBAR_END +1 - slots, true))
                 {
                     return null;
                 }
@@ -87,7 +117,7 @@ public class ContainerAugmentPlayer extends Container
                 // if item is our custom item
                 if (itemstack1.getItem() instanceof IAugment)
                 {
-                    if (!this.mergeItemStack(itemstack1, 0, InventoryAugmentPlayer.INV_SIZE, false))
+                    if (!this.mergeItemStack(itemstack1, 0, slots, false))
                     {
                         return null;
                     }

@@ -6,6 +6,10 @@ import net.minecraft.command.PlayerSelector;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
 /**
  * Created by tayjm_000 on 2016-01-31.
  */
@@ -38,5 +42,28 @@ public class ServerUtil
                 return entityplayermp;
             }
         }
+    }
+
+    public static String toMD5(String input)
+    {
+        try
+        {
+            String output = "";
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            md.reset();
+            md.update(input.getBytes());
+            byte[] digest = md.digest();
+            BigInteger bigInt = new BigInteger(1, digest);
+            output = bigInt.toString(16);
+            while (output.length() < 32) {
+                output = "0" + output;
+            }
+            return output;
+        }
+        catch (NoSuchAlgorithmException e)
+        {
+            e.printStackTrace();
+        }
+        return "";
     }
 }
