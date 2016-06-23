@@ -329,7 +329,7 @@ public class RenderUtil
     {
         GL11.glPushMatrix();
         Minecraft.getMinecraft().renderEngine.bindTexture(texture);
-        GL11.glScalef(1.1f,1.1f,1.1f);
+        GL11.glScalef(1.04f,1.04f,1.04f);
         switch(type)
         {
             case 0://CRANIUM

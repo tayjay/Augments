@@ -19,14 +19,14 @@ public class PacketSyncPlayerAugments implements IMessage, IMessageHandler<Packe
 {
     int slot;
     int playerId;
-    ItemStack augment=null;
+    ItemStack partStack =null;
 
     public PacketSyncPlayerAugments(){}
 
     public PacketSyncPlayerAugments(EntityPlayer player, int slot)
     {
         this.slot = slot;
-        this.augment = PlayerHandler.getPlayerAugmentInventory(player).getStackInSlot(slot);
+        this.partStack = PlayerHandler.getPlayerAugmentInventory(player).getStackInSlot(slot);
         this.playerId = player.getEntityId();
     }
 
@@ -35,7 +35,7 @@ public class PacketSyncPlayerAugments implements IMessage, IMessageHandler<Packe
     {
         slot = buf.readByte();
         playerId = buf.readInt();
-        augment = ByteBufUtils.readItemStack(buf);
+        partStack = ByteBufUtils.readItemStack(buf);
     }
 
     @Override
@@ -43,7 +43,7 @@ public class PacketSyncPlayerAugments implements IMessage, IMessageHandler<Packe
     {
         buf.writeByte(slot);
         buf.writeInt(playerId);
-        ByteBufUtils.writeItemStack(buf,augment);
+        ByteBufUtils.writeItemStack(buf, partStack);
     }
 
     @Override
@@ -54,7 +54,7 @@ public class PacketSyncPlayerAugments implements IMessage, IMessageHandler<Packe
         Entity p = world.getEntityByID(message.playerId);
         if(p instanceof EntityPlayer)
         {
-            PlayerHandler.getPlayerAugmentInventory((EntityPlayer)p).inventory[message.slot] = message.augment;
+            PlayerHandler.getPlayerAugmentInventory((EntityPlayer)p).inventory[message.slot] = message.partStack;
         }
         return null;
     }

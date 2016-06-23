@@ -115,7 +115,7 @@ public class ContainerAugmentPlayer extends Container
             else
             {
                 // if item is our custom item
-                if (itemstack1.getItem() instanceof IAugment)
+                if (itemstack1.getItem() instanceof IBodyPart)
                 {
                     if (!this.mergeItemStack(itemstack1, 0, slots, false))
                     {

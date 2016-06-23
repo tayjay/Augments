@@ -48,7 +48,7 @@ public class ItemCyborgEyes extends ItemBodyPart implements IHUDProvider
     @Override
     public void render(ItemStack stack, RenderPlayerEvent e)
     {
-        RenderUtil.renderModelOnPlayer(e,modelHead.bipedHead,new ResourceLocation("augments:/textures/entity/EntityCyborgTier2.png"),Type.EYES.ordinal());
+        RenderUtil.renderModelOnPlayer(e,modelHead,new ResourceLocation("augments","/textures/models/eyesBiped.png"),Type.EYES.ordinal());//new ResourceLocation("augments","/textures/entity/EntityCyborgTier2.png")
 
         /*
         if(e instanceof RenderPlayerEvent.Specials.Post)

@@ -2,10 +2,12 @@ package com.tayjay.augments.inventory;
 
 import com.tayjay.augments.augment.interfaces.IAugment;
 import com.tayjay.augments.augment.interfaces.IBodyPart;
+import com.tayjay.augments.util.LogHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
+import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 
 /**
@@ -98,7 +100,8 @@ public class ContainerBodyPart extends Container
             if (index < INV_START)
             {
                 // try to place in player inventory / action bar
-                if (!this.mergeItemStack(itemstack1, INV_START, HOTBAR_END+1, true))
+                //TODO: This is causing issues because of ArrayIndexOutOfBounds. Replace INV_MAX_SIZE with variable from bodypart stack.
+                if (!this.mergeItemStack(itemstack1, INV_START, HOTBAR_END+1-(5), true))
                 {
                     return null;
                 }
@@ -108,6 +111,17 @@ public class ContainerBodyPart extends Container
             // Item is in inventory / hotbar, try to place in custom inventory or armor slots
             else
             {
+                if (itemstack1.getItem() instanceof IAugment)
+                {
+                    // Try to merge into your custom inventory slots
+                    // We use 'InventoryItem.INV_SIZE' instead of INV_START just in case
+                    // you also add armor or other custom slots
+                    if (!this.mergeItemStack(itemstack1, 0, InventoryBodyPart.INV_MAX_SIZE, false))
+                    {
+                        return null;
+                    }
+                }
+
 				/*
 				If your inventory only stores certain instances of Items,
 				you can implement shift-clicking to your inventory like this:
@@ -204,12 +218,14 @@ public class ContainerBodyPart extends Container
 Special note: If your custom inventory's stack limit is 1 and you allow shift-clicking itemstacks into it,
 you will need to override mergeStackInSlot to avoid losing all the items but one in a stack when you shift-click.
 */
+
     /**
      * Vanilla mergeItemStack method doesn't correctly handle inventories whose
      * max stack size is 1 when you shift-click into the inventory.
      * This is a modified method I wrote to handle such cases.
      * Note you only need it if your slot / inventory's max stack size is 1
      */
+
     @Override
     protected boolean mergeItemStack(ItemStack stack, int start, int end, boolean backwards)
     {
@@ -255,34 +271,46 @@ you will need to override mergeStackInSlot to avoid losing all the items but one
         {
             k = (backwards ? end - 1 : start);
             while (!backwards && k < end || backwards && k >= start) {
-                slot = (Slot) inventorySlots.get(k);
-                itemstack1 = slot.getStack();
+                try
+                {
+                    slot = (Slot) inventorySlots.get(k);
+                    itemstack1 = slot.getStack();
 
-                if (!slot.isItemValid(stack)) {
-                    k += (backwards ? -1 : 1);
-                    continue;
-                }
-
-                if (itemstack1 == null) {
-                    int l = stack.stackSize;
-                    if (l <= slot.getSlotStackLimit()) {
-                        slot.putStack(stack.copy());
-                        stack.stackSize = 0;
-                        inventory.markDirty();
-                        flag1 = true;
-                        break;
-                    } else {
-                        putStackInSlot(k, new ItemStack(stack.getItem(), slot.getSlotStackLimit(), stack.getItemDamage()));
-                        stack.stackSize -= slot.getSlotStackLimit();
-                        inventory.markDirty();
-                        flag1 = true;
+                    if (!slot.isItemValid(stack))
+                    {
+                        k += (backwards ? -1 : 1);
+                        continue;
                     }
-                }
 
-                k += (backwards ? -1 : 1);
+                    if (itemstack1 == null)
+                    {
+                        int l = stack.stackSize;
+                        if (l <= slot.getSlotStackLimit())
+                        {
+                            slot.putStack(stack.copy());
+                            stack.stackSize = 0;
+                            inventory.markDirty();
+                            flag1 = true;
+                            break;
+                        } else
+                        {
+                            putStackInSlot(k, new ItemStack(stack.getItem(), slot.getSlotStackLimit(), stack.getItemDamage()));
+                            stack.stackSize -= slot.getSlotStackLimit();
+                            inventory.markDirty();
+                            flag1 = true;
+                        }
+                    }
+
+                    k += (backwards ? -1 : 1);
+                }catch(Exception e)
+                {
+                    k += (backwards ? -1 : 1);
+                    LogHelper.error("Invalid Slot in ContainerBodyPart!");
+                }
             }
         }
 
         return flag1;
     }
+
 }

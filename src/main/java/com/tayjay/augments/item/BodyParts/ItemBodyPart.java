@@ -4,6 +4,7 @@ import com.tayjay.augments.AugmentsMod;
 import com.tayjay.augments.augment.interfaces.IBodyPart;
 import com.tayjay.augments.creativetab.CreativeTabA;
 import com.tayjay.augments.handler.GuiHandler;
+import com.tayjay.augments.lib.Reference;
 import com.tayjay.augments.lib.Tags;
 import com.tayjay.augments.util.NBTHelper;
 import com.tayjay.augments.util.RenderUtil;
@@ -97,6 +98,18 @@ public abstract class ItemBodyPart extends Item implements IBodyPart
     public String getUnwrappedUnlocalizedName(String unlocalizedName)
     {
         return unlocalizedName.substring(unlocalizedName.indexOf(".") + 1);
+    }
+
+    @Override
+    public String getUnlocalizedName()
+    {
+        return String.format("item.%s%s", Reference.MOD_ID.toLowerCase() + ":", getUnwrappedUnlocalizedName(super.getUnlocalizedName()));
+    }
+
+    @Override
+    public String getUnlocalizedName(ItemStack itemStack)
+    {
+        return String.format("item.%s%s", Reference.MOD_ID.toLowerCase() + ":", getUnwrappedUnlocalizedName(super.getUnlocalizedName()));
     }
 
 
