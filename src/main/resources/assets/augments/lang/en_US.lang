@@ -1,0 +1,8 @@
+#Creative Tabs
+itemGroup.augments=Augments
+
+#Items
+item.carbonMesh.name=Carbon Mesh
+
+#Blocks
+tile.oreCarbon.name=Carbon Ore
