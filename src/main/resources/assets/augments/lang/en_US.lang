@@ -2,7 +2,7 @@
 itemGroup.augments=Augments
 
 #Items
-item.carbonMesh.name=Carbon Mesh
+item.augments:carbonMesh.name=Carbon Mesh
 
 #Blocks
-tile.oreCarbon.name=Carbon Ore
+tile.augments:oreCarbon.name=Carbon Ore

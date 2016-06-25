@@ -14,9 +14,11 @@ public class ModBlocks
 {
     public static BlockOre oreCarbon;
 
+
     public static void init()
     {
         oreCarbon = register(new BlockOre("oreCarbon"));
+
     }
 
     private static <T extends Block> T register(T block, ItemBlock itemBlock)
