@@ -2,6 +2,7 @@ package com.tayjay.augments.network.packets;
 
 import com.tayjay.augments.Augments;
 import com.tayjay.augments.api.AugmentsAPI;
+import com.tayjay.augments.util.CapHelper;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
@@ -59,7 +60,7 @@ public class PacketSyncPlayerParts extends PacketRunnable<PacketSyncPlayerParts>
                 {
                     //TODO: CONSIDER REVISION! This may not work! May need another packet to sync data from another player.
                     EntityPlayer player = (EntityPlayer) Minecraft.getMinecraft().theWorld.getEntityByID(message.playerId);
-                    player.getCapability(AugmentsAPI.PLAYER_PARTS_CAPABILITY,null).deserializeNBT(message.nbt);
+                    CapHelper.getPlayerPartsCap(player).deserializeNBT(message.nbt);
                 }
             }
         };

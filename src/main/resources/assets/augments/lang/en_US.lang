@@ -3,6 +3,7 @@ itemGroup.augments=Augments
 
 #Items
 item.augments:carbonMesh.name=Carbon Mesh
+item.augments:cyborgEyes.name=Cyborg Eyes
 
 #Blocks
 tile.augments:oreCarbon.name=Carbon Ore

@@ -1,6 +1,8 @@
 package com.tayjay.augments.network.commands;
 
+import com.tayjay.augments.Augments;
 import com.tayjay.augments.api.AugmentsAPI;
+import com.tayjay.augments.handler.GuiHandler;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -31,14 +33,6 @@ public class CommandPlayerParts extends CommandBase
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
     {
         EntityPlayerMP player = (EntityPlayerMP) sender;
-        IItemHandler inv = player.getCapability(AugmentsAPI.PLAYER_PARTS_CAPABILITY,null).getPartsInv();
-        player.addChatMessage(new TextComponentString("BodyParts for "+player.getDisplayNameString()));
-        for(int i = 0; i < inv.getSlots();i++)
-        {
-            if(inv.getStackInSlot(i)!=null)
-                player.addChatMessage(new TextComponentString(inv.getStackInSlot(i).toString()));
-            else
-                player.addChatMessage(new TextComponentString("null"));
-        }
+        player.openGui(Augments.instance, GuiHandler.GuiIDs.PLAYER_PARTS.ordinal(),player.worldObj,(int)player.posX,(int)player.posY,(int)player.posZ);
     }
 }

@@ -1,6 +1,7 @@
-package com.tayjay.augments.api.capabilities;
+package com.tayjay.augments.api.capabilities.impl;
 
 import com.tayjay.augments.api.AugmentsAPI;
+import com.tayjay.augments.api.capabilities.IPlayerPartsProvider;
 import com.tayjay.augments.network.NetworkHandler;
 import com.tayjay.augments.network.packets.PacketSyncPlayerParts;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -24,7 +25,8 @@ public final class PlayerPartsImpl
 {
     public static void init()
     {
-        CapabilityManager.INSTANCE.register(IPlayerPartsProvider.class, new Capability.IStorage<IPlayerPartsProvider>()
+        CapabilityManager.INSTANCE.register(IPlayerPartsProvider.class,
+                new Capability.IStorage<IPlayerPartsProvider>()
         {
             @Override
             public NBTBase writeNBT(Capability<IPlayerPartsProvider> capability, IPlayerPartsProvider instance, EnumFacing side)

@@ -18,4 +18,6 @@ public class CommonProxy
 
     public IPlayerPartsProvider getClientPlayerParts(){return null;}
 
+    public void initRenderOverride() {}
+
 }

@@ -12,5 +12,6 @@ public class ItemAugment extends ItemBase implements IAugment,IItemModelProvider
     public ItemAugment(String name)
     {
         super(name);
+        setMaxStackSize(1);
     }
 }

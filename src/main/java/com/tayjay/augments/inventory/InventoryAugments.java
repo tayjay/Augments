@@ -1,31 +1,25 @@
 package com.tayjay.augments.inventory;
 
 import com.tayjay.augments.Augments;
-import com.tayjay.augments.api.capabilities.IPlayerPartsProvider;
+import com.tayjay.augments.api.capabilities.IAugHolderProvider;
 import com.tayjay.augments.api.item.IAugment;
-import com.tayjay.augments.api.item.IBodyPart;
 import com.tayjay.augments.handler.GuiHandler;
-import com.tayjay.augments.network.NetworkHandler;
-import com.tayjay.augments.network.packets.PacketSyncPlayerParts;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
 /**
- * Created by tayjay on 2016-06-24.
+ * Created by tayjay on 2016-06-25.
  */
-public class InventoryPlayerParts implements IItemHandlerModifiable
+public class InventoryAugments implements IItemHandlerModifiable
 {
-
-    public final EntityPlayer player;
+    public final ItemStack AUGMENT_HOLDER;
     private final IItemHandlerModifiable compose;
-    private final IPlayerPartsProvider provider;
 
-    public InventoryPlayerParts(IPlayerPartsProvider provider, EntityPlayer player)
+    public InventoryAugments(IAugHolderProvider provider, ItemStack stack)
     {
-        this.player = player;
-        this.compose = (IItemHandlerModifiable)provider.getPartsInv();
-        this.provider = provider;
+        AUGMENT_HOLDER = stack;
+        this.compose = (IItemHandlerModifiable)provider.getAugments();
     }
 
     @Override
@@ -33,6 +27,8 @@ public class InventoryPlayerParts implements IItemHandlerModifiable
     {
         compose.setStackInSlot(slot,stack);
     }
+
+
 
     @Override
     public int getSlots()
@@ -43,15 +39,21 @@ public class InventoryPlayerParts implements IItemHandlerModifiable
     @Override
     public ItemStack getStackInSlot(int slot)
     {
-        return compose.getStackInSlot(slot);
+        try
+        {
+            return compose.getStackInSlot(slot);
+        }catch (Exception e)
+        {
+
+        }
+        return null;
     }
 
     @Override
     public ItemStack insertItem(int slot, ItemStack stack, boolean simulate)
     {
-        //TODO: Specify which slot body part can go into.
-        if(!(stack.getItem() instanceof IBodyPart))
-            return stack; //Can't put non BodyParts into inventory
+        if(!(stack.getItem() instanceof IAugment))
+            return stack; //Only Augments allowed
         else
             return compose.insertItem(slot,stack,simulate);
     }
@@ -59,9 +61,6 @@ public class InventoryPlayerParts implements IItemHandlerModifiable
     @Override
     public ItemStack extractItem(int slot, int amount, boolean simulate)
     {
-        //TODO: Make inventory only accessable if player is in Creative mode.
         return compose.extractItem(slot,amount,simulate);
     }
-
-
 }

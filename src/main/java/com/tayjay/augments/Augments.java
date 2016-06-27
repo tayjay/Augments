@@ -1,7 +1,10 @@
 package com.tayjay.augments;
 
-import com.tayjay.augments.api.capabilities.PlayerPartsImpl;
+import com.tayjay.augments.api.capabilities.impl.AugmentHolderImpl;
+import com.tayjay.augments.api.capabilities.impl.PlayerDataImpl;
+import com.tayjay.augments.api.capabilities.impl.PlayerPartsImpl;
 import com.tayjay.augments.client.AugmentsTab;
+import com.tayjay.augments.event.AugmentEvents;
 import com.tayjay.augments.event.PlayerEvents;
 import com.tayjay.augments.handler.GuiHandler;
 import com.tayjay.augments.init.ModBlocks;
@@ -44,16 +47,21 @@ public class Augments
         ModItems.init();
 
         PlayerPartsImpl.init();
+        PlayerDataImpl.init();
+        AugmentHolderImpl.init();
 
         MinecraftForge.EVENT_BUS.register(new PlayerEvents());
+        MinecraftForge.EVENT_BUS.register(new AugmentEvents());
 
         NetworkRegistry.INSTANCE.registerGuiHandler(instance,new GuiHandler());
+
+
     }
 
     @Mod.EventHandler
     public void init(FMLInitializationEvent event)
     {
-
+        proxy.initRenderOverride();
     }
 
     @Mod.EventHandler
