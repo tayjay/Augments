@@ -1,5 +1,10 @@
 package com.tayjay.augments.api.render;
 
+import com.tayjay.augments.api.capabilities.IPlayerPartsProvider;
+import com.tayjay.augments.api.item.IBodyPart;
+import com.tayjay.augments.api.item.PartType;
+import com.tayjay.augments.util.CapHelper;
+import com.tayjay.augments.util.RenderUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelBiped;
@@ -13,6 +18,7 @@ import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.items.IItemHandler;
 import org.lwjgl.opengl.GL11;
 
 /**
@@ -25,6 +31,11 @@ public class RenderPlayerAugments extends RenderPlayer
         super(renderManager);
     }
 
+    public RenderPlayerAugments(RenderManager renderManager,boolean smallArms)
+    {
+        super(renderManager,smallArms);
+    }
+
     @Override
     public ModelPlayer getMainModel()
     {
@@ -34,6 +45,7 @@ public class RenderPlayerAugments extends RenderPlayer
     //ModelBiped modelBiped = new ModelBiped();
     public void renderRightArm(AbstractClientPlayer clientPlayer)
     {
+        GL11.glPushMatrix();
         float f = 1.0F;
         GlStateManager.color(f, f, f);
         float f1 = 0.0625F;
@@ -44,16 +56,29 @@ public class RenderPlayerAugments extends RenderPlayer
         modelplayer.isSneak = false;
         modelplayer.setRotationAngles(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F, clientPlayer);
         modelplayer.bipedRightArm.rotateAngleX = 0.0F;
+        modelplayer.bipedRightArm.setTextureOffset(-100,-100);
         modelplayer.bipedRightArm.render(0.0625F);
         modelplayer.bipedRightArmwear.rotateAngleX = 0.0F;
         modelplayer.bipedRightArmwear.render(0.0625F);
 
+        IItemHandler parts = CapHelper.getPlayerPartsCap(clientPlayer).getPartsInv();
+        for(int i =0;i<parts.getSlots();i++)//TODO: Only check right arm slot
+        {
+            if(parts.getStackInSlot(i) !=null && parts.getStackInSlot(i).getItem() instanceof IBodyPart && ((IBodyPart) parts.getStackInSlot(i).getItem()).getPartType(parts.getStackInSlot(i))== PartType.ARM_RIGHT)
+            {
+                //Minecraft.getMinecraft().renderEngine.bindTexture(((IBodyPart) parts.getStackInSlot(i).getItem()).getTexture(parts.getStackInSlot(i), RenderUtil.hasSmallArms(getMainModel())));
+                GL11.glColor4d(1,1,1,1);
+                //modelplayer.bipedRightArm.setTextureOffset(-100,-100);
+                if(clientPlayer.isSneaking())
+                    GL11.glTranslated(0,-0.2,0);
+                ((IBodyPart) parts.getStackInSlot(i).getItem()).renderOnPlayer(parts.getStackInSlot(i),clientPlayer,this);
+                //modelplayer.bipedRightArm.render(0.0625F);
+            }
+        }
 
-        Minecraft.getMinecraft().renderEngine.bindTexture(new ResourceLocation("augments", "textures/models/blankBiped.png"));
-        GL11.glColor4d(1,1,1,1);
-        modelplayer.bipedRightArm.render(0.0625F);
 
         GlStateManager.disableBlend();
+        GL11.glPopMatrix();
     }
 
     public void renderLeftArm(AbstractClientPlayer clientPlayer)

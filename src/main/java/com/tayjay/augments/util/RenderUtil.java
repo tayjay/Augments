@@ -1,12 +1,14 @@
 package com.tayjay.augments.util;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
 import java.util.HashMap;
 
@@ -36,5 +38,16 @@ public class RenderUtil
     private static void drawItemStack(ItemStack stack, int x, int y, float scale)
     {
         itemRender.renderItemIntoGUI(stack,x,y);
+    }
+
+    public static boolean isPlayerSlim(EntityPlayer player)
+    {
+        return (player.getUniqueID().hashCode() & 1) == 1;
+    }
+
+    public static boolean hasSmallArms(ModelPlayer playerModel)
+    {
+        boolean smallArms = ReflectionHelper.getPrivateValue(ModelPlayer.class,playerModel,"smallArms");
+        return smallArms;
     }
 }

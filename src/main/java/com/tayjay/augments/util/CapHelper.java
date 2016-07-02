@@ -2,8 +2,9 @@ package com.tayjay.augments.util;
 
 import com.tayjay.augments.api.AugmentsAPI;
 import com.tayjay.augments.api.capabilities.IAugHolderProvider;
+import com.tayjay.augments.api.capabilities.IPlayerDataProvider;
 import com.tayjay.augments.api.capabilities.IPlayerPartsProvider;
-import com.tayjay.augments.api.events.IAugmentHolder;
+import com.tayjay.augments.api.item.IAugmentHolder;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 
@@ -41,4 +42,19 @@ public class CapHelper
     {
         return stack!=null && stack.hasCapability(AugmentsAPI.AUGMENT_HOLDER_CAPABILITY,null);
     }
+
+    public static IPlayerDataProvider getPlayerDataCap(EntityPlayer player)
+    {
+        if (hasPlayerDataCap(player))
+        {
+            return player.getCapability(AugmentsAPI.PLAYER_DATA_CAPABILITY, null);
+        }
+        return null;
+    }
+
+    public static boolean hasPlayerDataCap(EntityPlayer player)
+    {
+        return player.hasCapability(AugmentsAPI.PLAYER_DATA_CAPABILITY, null);
+    }
+
 }

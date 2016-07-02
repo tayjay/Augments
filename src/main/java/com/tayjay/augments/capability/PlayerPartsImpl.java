@@ -1,4 +1,4 @@
-package com.tayjay.augments.api.capabilities.impl;
+package com.tayjay.augments.capability;
 
 import com.tayjay.augments.api.AugmentsAPI;
 import com.tayjay.augments.api.capabilities.IPlayerPartsProvider;

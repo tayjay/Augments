@@ -1,13 +1,12 @@
-package com.tayjay.augments.item;
+package com.tayjay.augments.item.bodyParts;
 
 import com.tayjay.augments.api.item.PartType;
+import com.tayjay.augments.util.RenderUtil;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
 /**
@@ -16,57 +15,56 @@ import org.lwjgl.opengl.GL11;
  */
 public class ItemBodySet extends ItemBodyPart
 {
-    public ItemBodySet(String name, int tier, PartType type)
+    public ItemBodySet(String name, int tier,String textureName, PartType type)
     {
-        super(name, tier,type);
+        super(name, tier,textureName,type);
         this.type = type;
     }
 
-
-
-    ModelBiped modelBiped = new ModelBiped();
     @Override
     public void renderOnPlayer(ItemStack stack, EntityPlayer playerIn, RenderPlayer renderPlayer)
     {
         ModelRenderer parent;
         ModelRenderer model;
+        boolean smallArms = RenderUtil.hasSmallArms(renderPlayer.getMainModel());
         switch (getPartType(stack))
         {
             case HEAD:
-                parent = renderPlayer.getMainModel().bipedHead;
-                model = modelBiped.bipedHead;
+                parent = renderPlayer.getMainModel().bipedHeadwear;
+                model = modelSteve.bipedHeadwear;
                 break;
             case EYES:
                 parent = renderPlayer.getMainModel().bipedHead;
-                model = modelBiped.bipedHead;
+                model = modelSteve.bipedHead;
                 break;
             case TORSO:
                 parent = renderPlayer.getMainModel().bipedBody;
-                model = modelBiped.bipedBody;
+                model = modelSteve.bipedBody;
                 break;
             case ARM_RIGHT:
                 parent = renderPlayer.getMainModel().bipedRightArm;
-                model = modelBiped.bipedRightArm;
+                model = smallArms ? modelAlex.bipedRightArm : modelSteve.bipedRightArm;
                 break;
             case ARM_LEFT:
                 parent = renderPlayer.getMainModel().bipedLeftArm;
-                model = modelBiped.bipedLeftArm;
+                model = smallArms ? modelAlex.bipedLeftArm : modelSteve.bipedLeftArm;
                 break;
             case LEG_RIGHT:
                 parent = renderPlayer.getMainModel().bipedRightLeg;
-                model = modelBiped.bipedRightLeg;
+                model = modelSteve.bipedRightLeg;
                 break;
             case LEG_LEFT:
                 parent = renderPlayer.getMainModel().bipedLeftLeg;
-                model = modelBiped.bipedLeftLeg;
+                model = modelSteve.bipedLeftLeg;
                 break;
             default:
                 parent = renderPlayer.getMainModel().bipedHeadwear;
-                model = modelBiped.bipedHeadwear;
+                model = modelSteve.bipedHeadwear;
                 break;
         }
         GL11.glPushMatrix();
-        Minecraft.getMinecraft().renderEngine.bindTexture(new ResourceLocation("augments", "textures/models/blankBiped.png"));
+
+        Minecraft.getMinecraft().renderEngine.bindTexture(getTexture(stack,smallArms));
 
         alignModels(parent,model,playerIn.isSneaking());
 

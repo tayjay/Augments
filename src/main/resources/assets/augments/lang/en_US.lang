@@ -2,8 +2,15 @@
 itemGroup.augments=Augments
 
 #Items
+item.augments:augmentTest.name=Test Augment
 item.augments:carbonMesh.name=Carbon Mesh
 item.augments:cyborgEyes.name=Cyborg Eyes
+item.augments:headTest.name=Head Test
+item.augments:torsoTest.name=Torso Test
+item.augments:armLeftTest.name=Left Arm Test
+item.augments:armRightTest.name=Right Arm Test
+item.augments:legLeftTest.name=Left Leg Test
+item.augments:legRightTest.name=Right Leg Test
 
 #Blocks
 tile.augments:oreCarbon.name=Carbon Ore

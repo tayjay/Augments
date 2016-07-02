@@ -1,9 +1,11 @@
 package com.tayjay.augments.event;
 
+import com.tayjay.augments.api.capabilities.IPlayerDataProvider;
 import com.tayjay.augments.api.capabilities.IPlayerPartsProvider;
-import com.tayjay.augments.api.capabilities.impl.PlayerPartsImpl;
+import com.tayjay.augments.capability.PlayerDataImpl;
+import com.tayjay.augments.capability.PlayerPartsImpl;
 import com.tayjay.augments.network.NetworkHandler;
-import com.tayjay.augments.network.packets.PacketREQSync;
+import com.tayjay.augments.network.packets.PacketREQSyncParts;
 import com.tayjay.augments.util.CapHelper;
 import com.tayjay.augments.util.LogHelper;
 import com.tayjay.augments.util.RenderUtil;
@@ -31,7 +33,7 @@ import java.util.HashMap;
 public class PlayerEvents
 {
     @SideOnly(Side.CLIENT)
-    public static HashMap<Integer,PacketREQSync> toREQSync = new HashMap<Integer,PacketREQSync>();
+    public static HashMap<Integer,PacketREQSyncParts> toREQSync = new HashMap<Integer,PacketREQSyncParts>();
     public static final int SYNC_TICKS = 20;
 
     @SideOnly(Side.CLIENT)
@@ -50,7 +52,10 @@ public class PlayerEvents
     public void cloneEvent(PlayerEvent.Clone event)
     {
         NBTTagCompound parts = CapHelper.getPlayerPartsCap(event.getOriginal()).serializeNBT();
+        NBTTagCompound data = CapHelper.getPlayerDataCap(event.getOriginal()).serializeNBT();
         CapHelper.getPlayerPartsCap(event.getEntityPlayer()).deserializeNBT(parts);
+        CapHelper.getPlayerPartsCap(event.getEntityPlayer()).deserializeNBT(data);
+
         LogHelper.debug("Cloned Body Parts for "+event.getEntityPlayer().getName());
     }
 
@@ -60,7 +65,8 @@ public class PlayerEvents
         if(event.getEntity() instanceof EntityPlayer)
         {
             event.addCapability(PlayerPartsImpl.Provider.NAME,new PlayerPartsImpl.Provider());
-            LogHelper.debug("PlayerParts Capability added to player");
+            event.addCapability(PlayerDataImpl.Provider.NAME,new PlayerDataImpl.Provider((EntityPlayer) event.getEntity()));
+            LogHelper.debug("Player Capabilities added to player");
         }
     }
 
@@ -71,7 +77,9 @@ public class PlayerEvents
         {
             EntityPlayerMP player = ((EntityPlayerMP) event.getEntity());
             IPlayerPartsProvider parts = CapHelper.getPlayerPartsCap(player);
+            IPlayerDataProvider data = CapHelper.getPlayerDataCap(player);
             parts.sync((EntityPlayerMP)event.getEntity());
+            data.sync((EntityPlayerMP)event.getEntity());
             LogHelper.info("Synced own Capabilities to client");
             //todo: Not including this yet. Hopefully "StartTracking" event will handle this.
             //NetworkHandler.INSTANCE.sendToAllAround(new PacketSyncPlayerParts(parts.serializeNBT(),player),new NetworkRegistry.TargetPoint(player.dimension,player.posX,player.posY,player.posZ,40));
@@ -95,12 +103,5 @@ public class PlayerEvents
         {
             //Clear any offline data
         }
-    }
-
-    //NOT WORKING! DEPRECATED
-    @SubscribeEvent
-    public void onRenderPlayer(RenderPlayerEvent event)
-    {
-        RenderUtil.addRenderPlayer(event.getEntityPlayer(),event.getRenderer());
     }
 }

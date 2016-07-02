@@ -1,17 +1,25 @@
 package com.tayjay.augments.proxy;
 
 import com.tayjay.augments.Augments;
+import com.tayjay.augments.api.capabilities.IPlayerDataProvider;
 import com.tayjay.augments.api.render.LayerAugments;
 import com.tayjay.augments.api.capabilities.IPlayerPartsProvider;
 import com.tayjay.augments.api.render.RenderPlayerAugments;
+import com.tayjay.augments.client.handler.KeyInputHandler;
+import com.tayjay.augments.client.settings.Keybindings;
 import com.tayjay.augments.util.CapHelper;
 import com.tayjay.augments.util.ReflectHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.entity.RenderPlayer;
+import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.item.Item;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.FMLClientHandler;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.gameevent.InputEvent;
 
 import java.util.Map;
 
@@ -33,6 +41,12 @@ public class ClientProxy extends CommonProxy
     }
 
     @Override
+    public IPlayerDataProvider getClientPlayerData()
+    {
+        return CapHelper.getPlayerDataCap(FMLClientHandler.instance().getClientPlayerEntity());
+    }
+
+    @Override
     public void initRenderOverride()
     {
         //Override RenderPlayer
@@ -42,21 +56,64 @@ public class ClientProxy extends CommonProxy
         manager.getSkinMap().put("slim",new RenderPlayerWithEvents(manager,true));
         */
 
-        ReflectHelper.changeRenderPlayer("default",new RenderPlayerAugments(Minecraft.getMinecraft().getRenderManager()));
-        ReflectHelper.changeRenderPlayer("slim",new RenderPlayerAugments(Minecraft.getMinecraft().getRenderManager()));
+        if(Augments.renderType == 0)
+        {
+            //Don't handle any rendering of Augments
+        }
+        else if(Augments.renderType == 1)
+        {
+            ReflectHelper.changeRenderPlayer("default", new RenderPlayerAugments(Minecraft.getMinecraft().getRenderManager()));
+            ReflectHelper.changeRenderPlayer("slim", new RenderPlayerAugments(Minecraft.getMinecraft().getRenderManager(),true));
 
-        Map<String, RenderPlayer> skinMap = Minecraft.getMinecraft().getRenderManager().getSkinMap();
-        RenderPlayer render;
-        //Get Steve Render
+            Map<String, RenderPlayer> skinMap = Minecraft.getMinecraft().getRenderManager().getSkinMap();
+            RenderPlayer render;
+            //Get Steve Render
 
-        render = skinMap.get("default");
-        render.addLayer(new LayerAugments(render));
+            render = skinMap.get("default");
+            render.addLayer(new LayerAugments(render));
 
-        //Get Alex Render
+            //Get Alex Render
 
-        render = skinMap.get("slim");
-        render.addLayer(new LayerAugments(render));
+            render = skinMap.get("slim");
+            render.addLayer(new LayerAugments(render));
+        }
+        else if(Augments.renderType == 2)
+        {
+            //Only render over skin. No overriding
+            Map<String, RenderPlayer> skinMap = Minecraft.getMinecraft().getRenderManager().getSkinMap();
+            RenderPlayer render;
+            //Get Steve Render
+
+            render = skinMap.get("default");
+            render.addLayer(new LayerAugments(render));
+
+            //Get Alex Render
+
+            render = skinMap.get("slim");
+            render.addLayer(new LayerAugments(render));
+        }
 
 
+    }
+
+    public static KeyBinding[] keyBindings;
+
+    public void init()
+    {
+
+    }
+
+    public void preInit()
+    {
+        registerKeyBindings();
+    }
+
+    public void registerKeyBindings()
+    {
+        MinecraftForge.EVENT_BUS.register(new KeyInputHandler());
+        for(Keybindings key : Keybindings.values())
+        {
+            ClientRegistry.registerKeyBinding(key.getKeybind());
+        }
     }
 }

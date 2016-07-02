@@ -1,6 +1,7 @@
 package com.tayjay.augments.proxy;
 
 import com.tayjay.augments.api.AugmentsAPI;
+import com.tayjay.augments.api.capabilities.IPlayerDataProvider;
 import com.tayjay.augments.api.capabilities.IPlayerPartsProvider;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -18,6 +19,14 @@ public class CommonProxy
 
     public IPlayerPartsProvider getClientPlayerParts(){return null;}
 
+    public IPlayerDataProvider getClientPlayerData(){return null;}
+
     public void initRenderOverride() {}
+
+    public void init(){}
+
+    public void preInit(){}
+
+    public void registerKeyBindings(){}
 
 }

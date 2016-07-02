@@ -1,4 +1,4 @@
-package com.tayjay.augments.api.events;
+package com.tayjay.augments.api.item;
 
 import com.tayjay.augments.api.capabilities.IAugHolderProvider;
 import net.minecraft.item.ItemBlock;

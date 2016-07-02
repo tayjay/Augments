@@ -7,6 +7,8 @@ import com.tayjay.augments.inventory.InventoryAugments;
 import com.tayjay.augments.util.CapHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -39,7 +41,9 @@ public class GuiBodyPartAugments extends GuiContainer
         ContainerAugments container = (ContainerAugments)inventorySlots;
         int posX = guiLeft+16;
         int posY = guiTop+17;
+        RenderHelper.enableGUIStandardItemLighting();
         itemRender.renderItemIntoGUI(container.inventoryAugments.AUGMENT_HOLDER, posX,posY);
+        RenderHelper.disableStandardItemLighting();
         if(mouseX > posX && mouseX <=posX+16 && mouseY > posY && mouseY <=posY+16)
         {
             drawHoveringText(container.inventoryAugments.AUGMENT_HOLDER.getTooltip(Minecraft.getMinecraft().thePlayer,true),mouseX,mouseY);

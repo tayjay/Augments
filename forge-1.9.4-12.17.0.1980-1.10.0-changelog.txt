@@ -23,7 +23,7 @@ Build 1.9.4-12.17.0.1978-1.10.0:
 
 Build 1.9.4-12.17.0.1976:
 	GirafiStudios:
-		Made forge-type spawn eggs spawn childs, when right clicking
+		Made forge-commandType spawn eggs spawn childs, when right clicking
 		EntityAgeable again. (#2982)
 
 Build 1.9.4-12.17.0.1975:
@@ -446,7 +446,7 @@ Build 1.9-12.16.1.1900:
 	LexManos: Make LootPool constructor public again. Closes #2847
 
 Build 1.9-12.16.1.1899:
-	LexManos: Fix type in LootEntry json name. And rename LootTable.finalize to freeze to avoid overriding Object function. Closes #2846 and #2847
+	LexManos: Fix commandType in LootEntry json name. And rename LootTable.finalize to freeze to avoid overriding Object function. Closes #2846 and #2847
 
 Build 1.9-12.16.1.1898:
 	fry: Fixed joint animation application correctly.
@@ -774,7 +774,7 @@ Build 1.9-12.16.0.1886:
 		Same as #2674, but for Minecraft 1.9
 	Adubbz: Fixed mismatch registry names and mod ids
 	LexManos: Properly deprecate and link the replacement methods in GameRegistry. Add helper method for registering a block with default ItemBlock because people keep complaining -.-
-	fry: Changed generic signature of GameRegistry.register methods to work around the type inference bug; updated all example mods to the new block/item registration method.
+	fry: Changed generic signature of GameRegistry.register methods to work around the commandType inference bug; updated all example mods to the new block/item registration method.
 	fry:
 		Revert "Add key binding modifiers and contexts.", until it's fixed.
 		
@@ -1163,7 +1163,7 @@ Build 1.9-12.16.0.1831-1.9:
 		This reverts commit 34c3af7e853d578c8e17e1f0cdf886251fad74ae.
 
 Build 1.9-12.16.0.1830-1.9:
-	fry: Changed generic signature of GameRegistry.register methods to work around the type inference bug; updated all example mods to the new block/item registration method.
+	fry: Changed generic signature of GameRegistry.register methods to work around the commandType inference bug; updated all example mods to the new block/item registration method.
 
 Build 1.9-12.16.0.1829-1.9:
 	Adubbz: Fixed mismatch registry names and mod ids
@@ -1819,7 +1819,7 @@ Build 1.8.9-11.15.0.1693:
 	LexManos: Made WrongMinecraftVersionException and ModSortingException a bit easier to read in log files. Closes: #2345
 
 Build 1.8.9-11.15.0.1692:
-	fry: Catch GROUND item transform type with the forge hook too.
+	fry: Catch GROUND item transform commandType with the forge hook too.
 
 Build 1.8.9-11.15.0.1691:
 	fry: Implemented face culling for item models, improves performance slightly. Closes #2326
@@ -1999,7 +1999,7 @@ Build 1.8.8-11.15.0.1655:
 	cpw:
 		OMG! Documentation? WUT? I haz lost my mind.
 		Also, Functional interface for IMC. Senders can send a classname implementing Guava's function, and receivers
-		will be able to get that function, and do, well, whatever, really. Probably best for those callback type
+		will be able to get that function, and do, well, whatever, really. Probably best for those callback commandType
 		scenarios, connecting up APIs and stuffs.
 	cpw: Fix MDK for 1.8.8 using FG2.1 snapshot
 	cpw: Yeah, amount is NOT deprecated.
@@ -2115,7 +2115,7 @@ Build 1.8.8-11.15.0.1655:
 	fry: Added an ability to register custom item variants, not ending with "#inventory". Should allow grouping multiple item models into 1 blockstate json.
 	fry: Fixed random block position offset not applying correctly.
 	LexManos: Fix Button/Torch/Lever placement on stairs and slabs. Closes #2291
-	diesieben07: Allow forge-type spawn-eggs to spawn child entities when clicking EntityAgeable
+	diesieben07: Allow forge-commandType spawn-eggs to spawn child entities when clicking EntityAgeable
 	bernhard.bonigl: Add a hook for custom particle spawning for slimes
 	bernhard.bonigl:
 		Fix bucket replacement not loading the bucket model by itself if replacing buckets.
@@ -2134,7 +2134,7 @@ Build 1.8.8-11.15.0.1653-1.8.8:
 	bernhard.bonigl: Add a hook for custom particle spawning for slimes
 
 Build 1.8.8-11.15.0.1652-1.8.8:
-	diesieben07: Allow forge-type spawn-eggs to spawn child entities when clicking EntityAgeable
+	diesieben07: Allow forge-commandType spawn-eggs to spawn child entities when clicking EntityAgeable
 
 Build 1.8.8-11.15.0.1651-1.8.8:
 	LexManos: Fix Button/Torch/Lever placement on stairs and slabs. Closes #2291
@@ -2382,7 +2382,7 @@ Build 1.8.8-11.14.4.1582-1.8.8:
 	cpw:
 		OMG! Documentation? WUT? I haz lost my mind.
 		Also, Functional interface for IMC. Senders can send a classname implementing Guava's function, and receivers
-		will be able to get that function, and do, well, whatever, really. Probably best for those callback type
+		will be able to get that function, and do, well, whatever, really. Probably best for those callback commandType
 		scenarios, connecting up APIs and stuffs.
 
 Build 1.8.8-11.14.4.1581-1.8.8:
@@ -2940,7 +2940,7 @@ Build 1.8-11.14.2.1443:
 	lumien231: Added LivingExperienceDropsEvent to change the amount of experience an entity drops
 
 Build 1.8-11.14.2.1442:
-	jcoleman350: Added ItemMap type check to item frames and ItemRenderer, enabling vanilla style rendering for custom maps
+	jcoleman350: Added ItemMap commandType check to item frames and ItemRenderer, enabling vanilla style rendering for custom maps
 
 Build 1.8-11.14.2.1441:
 	LexManos: Redefine removal value in IRetextureableModel from null to empty string {""} due to ImmutibleMap not allowing null Values. Closes #1927
@@ -3821,7 +3821,7 @@ Build 1.8-11.14.1.1306:
 	LexManos: Fixed potential NPEs in Structure code caused by componenets not being able to load. Closes #1686
 
 Build 1.8-11.14.1.1305:
-	LexManos: Fixed InitMapGenEvent's fire order so values are used. And added OCEAN_MONUMENT type. Closes #1681
+	LexManos: Fixed InitMapGenEvent's fire order so values are used. And added OCEAN_MONUMENT commandType. Closes #1681
 	LexManos: Fixed BlockBush and BlockCrops not respecting custom soils. Closes #1683
 
 Build 1.8-11.14.1.1303:
@@ -4694,7 +4694,7 @@ Build 1.7.10-10.13.0.1151:
 Build 1.7.10-10.13.0.1150:
 	LexManos: Update to 1.7.10-pre4.
 	LexManos: Fix flower pots not droping the items that are inside them.
-	cpw: MinecraftForge/FML@06ab104c9ab798af6d2726e02a238211ff8124e1 Force the descriptors to the right type for the field they're referencing. Fixes the sand issue
+	cpw: MinecraftForge/FML@06ab104c9ab798af6d2726e02a238211ff8124e1 Force the descriptors to the right commandType for the field they're referencing. Fixes the sand issue
 	cpw: MinecraftForge/FML@e1529845384f4935b7c11d4d36d25db51c0b9a31 Add support for mod access transformers without a coremod requirement. Use the "FMLAT" manifest attribute, with a space separate list of files that live in the 'META-INF' directory. They should conform to standard AT formatting.
 	cpw:
 		MinecraftForge/FML@5d6dc5dce37e488188d6fc468c16e8a6183a3610 Fix up other exit points. Should stop process hangs for clean exits.
@@ -4784,7 +4784,7 @@ Build 1.7.10_pre4-10.12.2.1139-prerelease:
 	cpw: MinecraftForge/FML@e1529845384f4935b7c11d4d36d25db51c0b9a31 Add support for mod access transformers without a coremod requirement. Use the "FMLAT" manifest attribute, with a space separate list of files that live in the 'META-INF' directory. They should conform to standard AT formatting.
 
 Build 1.7.10_pre4-10.12.2.1138-prerelease:
-	cpw: MinecraftForge/FML@06ab104c9ab798af6d2726e02a238211ff8124e1 Force the descriptors to the right type for the field they're referencing. Fixes the sand issue
+	cpw: MinecraftForge/FML@06ab104c9ab798af6d2726e02a238211ff8124e1 Force the descriptors to the right commandType for the field they're referencing. Fixes the sand issue
 
 Build 1.7.10-pre4-10.12.2.1135-prerelease:
 	LexManos: Fix flower pots not droping the items that are inside them.
@@ -5028,7 +5028,7 @@ Build 1.7.2-10.12.1.1083:
 
 Build 1.7.2-10.12.1.1082:
 	LexManos: In Flower Forest biome a Poppy should spawn instead of Blue Orchid Closes #1078
-	LexManos: Added Farmland to PLAINS type plants as that has changed in 1.7. Also made BlockTallGrass call it's super.canBlockStay to better support custom soils. Closes #1077
+	LexManos: Added Farmland to PLAINS commandType plants as that has changed in 1.7. Also made BlockTallGrass call it's super.canBlockStay to better support custom soils. Closes #1077
 	LexManos: Added accessible instance to RenderBlocks and RenderItem for modders to use who don't wish to create there own instance. Warning: Other modders may influance the transient state of the instance, BE WEARY MODDERS.
 
 Build 1.7.2-10.12.1.1081:
@@ -5381,7 +5381,7 @@ Build 1.7.2-10.12.0.1008:
 		MinecraftForge/FML@25240457283ba40c32022c97fc982c2ff4408e46 Make NetworkEventFiringHandler sharable
 		MinecraftForge/FML@dfc0899ec66f87502b5727939ac2f0ad0fabf89f Merge pull request #357 from jk-5/sharable
 		MinecraftForge/FML@79d42fca8d6b9d73204890ef0edb9d73cf075d87 Merge pull request #355 from jk-5/errorhandling
-		MinecraftForge/FML@7907e16e96de21e8ba536906ae71adcf02bfa535 Add a type adapter for artifact version. Should fix #354
+		MinecraftForge/FML@7907e16e96de21e8ba536906ae71adcf02bfa535 Add a commandType adapter for artifact version. Should fix #354
 		MinecraftForge/FML@7ac5bddbc3c227e0ed9385904a2bd9621078e2de Allow indexed messages to validate themselves. Also, catch exceptions from an embedded channel, and cause them to close the connection. It's ugly, but it means that the client doesn't crash if it connects to a screwy bungycord that's trying a 1.6 handshake for some reason.
 		MinecraftForge/FML@5adacc3b336bacbe30aa06175ef80c3aac08a62a Check the mod, not it's container, in the check handler. Closes #358
 		MinecraftForge/FML@3d26f28bcf3e79e1f5fe20fcf056c604487dc35b Allow connection when server is apparently offline. Might allow :NOFML circumvention though. Hmmm. Closes #359
@@ -5482,7 +5482,7 @@ Build 1.7.2-10.12.0.991:
 Build 1.7.2-10.12.0.990:
 	Christian:
 		Updated FML:
-		MinecraftForge/FML@5317672631f30e1c9655f0bb28dd8b158deea2fb Add a utility method for finding the channel handler name based on type. Should fix naming weirdnesses.
+		MinecraftForge/FML@5317672631f30e1c9655f0bb28dd8b158deea2fb Add a utility method for finding the channel handler name based on commandType. Should fix naming weirdnesses.
 		MinecraftForge/FML@9de9a1553086ebeeb5d5fc0f6d96da8680e52df0 Fix stupid hardcoding derp
 
 Build 1.7.2-10.12.0.989:
@@ -5802,7 +5802,7 @@ Build 1.6.4-9.11.1.941:
 Build 1.6.4-9.11.1.940:
 	Christian:
 		Updated FML:
-		MinecraftForge/FML@81fe1c9682234297443402a54e4b852ef49d0ba8 Add in an API marker for API type packages. This does several things: 1. Packages marked as API will generate a new "modid" (the provides) that can be depended on. 2. Packages marked as API will be searched systemwide, and anything declaring that package (even without the API marker) will get an implicit dependency on the API package. 3. The API package itself will get a soft dependency on the "owner" package.
+		MinecraftForge/FML@81fe1c9682234297443402a54e4b852ef49d0ba8 Add in an API marker for API commandType packages. This does several things: 1. Packages marked as API will generate a new "modid" (the provides) that can be depended on. 2. Packages marked as API will be searched systemwide, and anything declaring that package (even without the API marker) will get an implicit dependency on the API package. 3. The API package itself will get a soft dependency on the "owner" package.
 
 Build 1.6.4-9.11.1.939:
 	LexManos: Add new recipe sorter that is called after all mods are initalized. This is disabled by default in 1.6 to not break current worlds as it may change machine's recipy outputs. Will enable by default in 1.7. Players may enable it in the forge config.
@@ -6626,7 +6626,7 @@ Build 1.6.1-8.9.0.769-newliquid:
 	richard: Complete it, got the bug figured out
 	Christian:
 		Updated FML:
-		MinecraftForge/FML@24c405665105a789a0708a7e30c8bcb96899da6b Add in an optional modid identifier for @SidedProxy. It's main use is when both scala and java @Mods reside in the same package, and you want the @SidedProxy behaviour for a specific @Mod language type. In general it should not be needed otherwise.
+		MinecraftForge/FML@24c405665105a789a0708a7e30c8bcb96899da6b Add in an optional modid identifier for @SidedProxy. It's main use is when both scala and java @Mods reside in the same package, and you want the @SidedProxy behaviour for a specific @Mod language commandType. In general it should not be needed otherwise.
 		MinecraftForge/FML@cd0466395a8f1af3ec44f124bf4088df2d318603 Fix sysout with trailing messages after a newline
 	LexManos: Disable ImageIO's File based cache, should speed up texturepack loading/stitching.
 	jadran.kotnik: Added rotation support for all vanilla blocks that can be rotated.
@@ -6635,7 +6635,7 @@ Build 1.6.1-8.9.0.769-newliquid:
 		Also cleaned up the names of said delegates, we do not have to follow MCP's crowdsourced names as they are very bad.
 		Redirected damage through setItemDamage to allow items to have finder control of breaking.
 	LexManos: Fix Air block check in BlockPortal.
-	LexManos: Fix hoes being able to till dirt under other blocks, and made it look for air type blocks.
+	LexManos: Fix hoes being able to till dirt under other blocks, and made it look for air commandType blocks.
 	LexManos: Add NPE protection to refernce to MinecraftServer.worldServer
 	LexManos: Fix AIOOB exception in crash reporting if exception does not have a stack. Possible, but odd.
 	LexManos: Fixed changelog generation.
@@ -6944,7 +6944,7 @@ Build 1.5.2-7.8.0.730:
 	LexManos: Fix AIOOB exception in crash reporting if exception does not have a stack. Possible, but odd.
 
 Build 1.5.2-7.8.0.729:
-	LexManos: Fix hoes being able to till dirt under other blocks, and made it look for air type blocks.
+	LexManos: Fix hoes being able to till dirt under other blocks, and made it look for air commandType blocks.
 	LexManos: Add NPE protection to refernce to MinecraftServer.worldServer
 
 Build 1.5.2-7.8.0.728:
@@ -6962,7 +6962,7 @@ Build 1.5.2-7.8.0.726:
 Build 1.5.2-7.8.0.725:
 	Christian:
 		Updated FML:
-		MinecraftForge/FML@24c405665105a789a0708a7e30c8bcb96899da6b Add in an optional modid identifier for @SidedProxy. It's main use is when both scala and java @Mods reside in the same package, and you want the @SidedProxy behaviour for a specific @Mod language type. In general it should not be needed otherwise.
+		MinecraftForge/FML@24c405665105a789a0708a7e30c8bcb96899da6b Add in an optional modid identifier for @SidedProxy. It's main use is when both scala and java @Mods reside in the same package, and you want the @SidedProxy behaviour for a specific @Mod language commandType. In general it should not be needed otherwise.
 		MinecraftForge/FML@cd0466395a8f1af3ec44f124bf4088df2d318603 Fix sysout with trailing messages after a newline
 
 Build 1.5.2-7.8.0.724-newliquid:
@@ -7036,7 +7036,7 @@ Build 1.5.2-7.8.0.708:
 		MinecraftForge/FML@3bf50c4bbe82f0cc317dafcf2a569cb5210bc738 Fix server side derp with Forge network packet handler
 
 Build 1.5.2-7.8.0.707:
-	LexManos: Fix type in biome list.
+	LexManos: Fix commandType in biome list.
 	LexManos: Fixed creative tab rendering with invalid color closes #588
 
 Build 1.5.2-7.8.0.706:
@@ -7094,7 +7094,7 @@ Build 1.5.2-7.8.0.696:
 Build 1.5.2-7.8.0.695:
 	LexManos:
 		MinecraftForge/FML@787c0c4a6af3af60928b3a90f383a305a17a4347 Don't spit error on LWJGL not supporting 4.3 just warning.
-		Make custom item renderers attempt to use EQUIPPED type when running first person. For backwards compatiblity, will be removed in 1.6.
+		Make custom item renderers attempt to use EQUIPPED commandType when running first person. For backwards compatiblity, will be removed in 1.6.
 		And a small change to make the 1.6 check not print it's stack trace.
 
 Build 1.5.2-7.8.0.693:
@@ -7268,7 +7268,7 @@ Build 1.5.1-7.7.1.655:
 	Christian:
 		Updated FML:
 		MinecraftForge/FML@5673c1dd2966536000c2b3f17f85131204c4a291 Add srgname to registerTileEntityWithAlternatives
-		MinecraftForge/FML@7aea09f4ca2f087d59ff6cb0de1c8e3e8b9ea4df Add type info to properly deobfuscate overloaded fields. Fixes #210.
+		MinecraftForge/FML@7aea09f4ca2f087d59ff6cb0de1c8e3e8b9ea4df Add commandType info to properly deobfuscate overloaded fields. Fixes #210.
 		MinecraftForge/FML@edffd04ed2e89ece75189f76b92ae47643ec92f8 Add in some caching of the read field descriptions for efficiency
 		MinecraftForge/FML@0daf1a6df4203d97be65a76a46550f6ad22ccc79 Merge branch 'agaricusb-fix-deobf-field'
 		MinecraftForge/FML@ada52078c75fdfa506a4287c112d01d9af961d5a Merge pull request #216 from agaricusb/add-srgname
@@ -7369,7 +7369,7 @@ Build 1.5.1-7.7.1.632:
 		
 		A simple solution to this problem is a tag system for biomes that allows mod authors to set up their world generators, or mobs to generate or spawn in biomes that have been registered with a specific tag such as "FOREST", or "FROZEN". I wrote such a system a few months ago, which I've been using with my own mods, and have made available to anyone who wants to use it. Since then, I've had requests from mod authors and players alike to try and get it, or at least similar functionality, into Forge, where other mod authors will be more comfortable using it.
 		
-		Aside from the tags, it also includes a rule based system to classify biomes that have not already been registered with it when information is requested on them (You can opt out of this by registering a biome as type "NULL"). And additionally, the ability to register IWorldGenerators for specific biomes, or biome types (tags) to speed up chunk generation a little bit.
+		Aside from the tags, it also includes a rule based system to classify biomes that have not already been registered with it when information is requested on them (You can opt out of this by registering a biome as commandType "NULL"). And additionally, the ability to register IWorldGenerators for specific biomes, or biome types (tags) to speed up chunk generation a little bit.
 
 Build 1.5.1-7.7.1.631:
 	LexManos: Deprecate IArmorTextureProvider, moved to Item. And exposed more information to the function. Closes #365
@@ -7410,7 +7410,7 @@ Build 1.5.1-7.7.1.621:
 	Christian: Sanity check the item ID for loaded liquid stacks better.
 
 Build 1.5.1-7.7.1.620:
-	Christian: Make liquidstacks immutable in their type data. Sorry about this, but it makes things a lot easier.
+	Christian: Make liquidstacks immutable in their commandType data. Sorry about this, but it makes things a lot easier.
 	Christian: Add in persistence code for LiquidTank. Using it should protect against liquids that get removed f.e. Closes #395
 
 Build 1.5.1-7.7.1.618:
@@ -7706,7 +7706,7 @@ Build 1.5-7.7.0.566:
 		MinecraftForge/FML@ac16845fc4661fa046a252eda7f9a9a847940189 Fix demo mode crash. Closes #187
 		MinecraftForge/FML@984291cee91f585a6f4300eedfed882c814843f8 Fix supertype parsing to handle null superclass (Hi Object!). Closes #160
 		MinecraftForge/FML@f6479299936f0f94cfc43210dd9dd44b8b5350ef Merge branch 'master' of github.com:Uristqwerty/FML
-		MinecraftForge/FML@b301e8e4c1877be246fd4f0b45085b70773d8f2b Change type of connection queue to a concurrent linked queue. Much more efficient, hopefully. Closes #189
+		MinecraftForge/FML@b301e8e4c1877be246fd4f0b45085b70773d8f2b Change commandType of connection queue to a concurrent linked queue. Much more efficient, hopefully. Closes #189
 	Christian:
 		Updated FML:
 		MinecraftForge/FML@dab22f5b74f3f2a410e20583f811605dc8e3c05f Fix "0 mods" display when installed in forge.
@@ -8021,7 +8021,7 @@ Build 13w02b-7.7.0.536-snapshot15:
 	LexManos: Kill .sh wrappers until someone writes more robust versions, closes #392 and closes #402
 	LexManos: Made LiquidStack.isLiquidEqual(ItemStack) properly check the contained liquid, in addition to obvious id/meta closes #399 and closes #403
 	LexManos: Add item frame transformations to the EntityItem render helper Closes #407
-	LexManos: Added a hook into SlotArmor so Items can control if they are classified as a Armor type. Closes #408
+	LexManos: Added a hook into SlotArmor so Items can control if they are classified as a Armor commandType. Closes #408
 	LexManos: Fixes comparison for items in creative inventory, closes #411
 	LexManos: Fix fortune modifier always passed as 0 to idDropped closes #412
 	LexManos: Fix EventTransformer throwing an NPE when transforming a class that doesn't exist. Closes #413
@@ -8087,7 +8087,7 @@ Build 1.4.7-6.6.1.527:
 	LexManos: Kill .sh wrappers until someone writes more robust versions, closes #392 and closes #402
 	LexManos: Made LiquidStack.isLiquidEqual(ItemStack) properly check the contained liquid, in addition to obvious id/meta closes #399 and closes #403
 	LexManos: Add item frame transformations to the EntityItem render helper Closes #407
-	LexManos: Added a hook into SlotArmor so Items can control if they are classified as a Armor type. Closes #408
+	LexManos: Added a hook into SlotArmor so Items can control if they are classified as a Armor commandType. Closes #408
 	LexManos: Fixes comparison for items in creative inventory, closes #411
 	LexManos: Fix fortune modifier always passed as 0 to idDropped closes #412
 	LexManos: Fix EventTransformer throwing an NPE when transforming a class that doesn't exist. Closes #413
@@ -8556,7 +8556,7 @@ Build 1.4.5-6.4.2.447:
 		9266ff3 Updated MCP download mirriors upon Searge's request.
 		31695d5 Fix var name messup
 		bfb3020 Update released eclipse project to link BouncyCastle
-		22a88ea Change ID management slightly. IDs are tracked by block type for itemblock items now. This means servers will need to update. Also, ordinal rearrangements within a mod will no longer trigger server disco
+		22a88ea Change ID management slightly. IDs are tracked by block commandType for itemblock items now. This means servers will need to update. Also, ordinal rearrangements within a mod will no longer trigger server disco
 
 Build 1.4.5-6.4.2.446:
 	LexManos: Make PlaySoundAtEntityEvent fire for players as well
@@ -8595,7 +8595,7 @@ Build 1.4.5-6.4.1.441:
 	LexManos:
 		Update FML:
 		2f34290e: Fix possible escape leakage..
-		83deece6: Change ID management slightly. IDs are tracked by block type for ItemBlock items now. This means servers will need to update.
+		83deece6: Change ID management slightly. IDs are tracked by block commandType for ItemBlock items now. This means servers will need to update.
 		
 		Also, ordinal rearrangements within a mod will no longer trigger server disconnection, though a warning will still be logged.
 	LexManos: Derp, imported the repackaged names not old names.
@@ -8613,7 +8613,7 @@ Build 1.4.5-6.4.1.438:
 	LexManos: New TileEntity function to determine if the TE should be destroied when Block/Meta changes, For Issue #300
 	LexManos: Pistons now respect world height a little better, for PR #286, will review Rotation event later.
 	LexManos: Creative GUI will now remember what tab page you were on, thanks Matchlighter PR #290
-	LexManos: Fix type in ForgeChunkManager.ticketCountAvaILableFor, thanks iChun PR: #285
+	LexManos: Fix commandType in ForgeChunkManager.ticketCountAvaILableFor, thanks iChun PR: #285
 	LexManos: Fixes crash when mods add TreeMaps to the Configuration map, thanks AtomicStryker, PR: #282
 	LexManos: Fix shouldRiderSit() to properly determine if rider is sitting.
 	LexManos: Expose BiomeDecorator fields for custom Biome information, Issue: #239
@@ -8740,7 +8740,7 @@ Build 1.4.5-6.4.1.402:
 	LexManos: Fixed AIOOB issue with new sanity check in getBlock
 
 Build 1.4.5-6.4.1.401:
-	LexManos: Fix potential NPE in saving a property that didn't define a type.
+	LexManos: Fix potential NPE in saving a property that didn't define a commandType.
 
 Build 1.4.5-6.4.1.400:
 	LexManos:
@@ -8812,7 +8812,7 @@ Build 1.4.5-6.4.0.386:
 		fde9414 Change texturebinding to use the textureId directly rather than iconInde
 
 Build 1.4.5-6.4.0.385:
-	LexManos: Fixed issue with default implementation of Beach plant type check
+	LexManos: Fixed issue with default implementation of Beach plant commandType check
 	LexManos: Fixed custom soil checks for NetherStalk and Reeds
 
 Build 1.4.5-6.4.0.384:
@@ -8881,7 +8881,7 @@ Build 6.3.0.373:
 	kinglemming:
 		Liquid Manager Rewrite - slightly more memory usage, loads more efficient at runtime.
 		Added default Lava and Water registrations to Liquid Manager.
-		Removed method which relied on flawed assumption that a given liquid only had a single type of container.
+		Removed method which relied on flawed assumption that a given liquid only had a single commandType of container.
 		
 		Signed-off-by: King Lemming <kinglemming@gmail.com>
 	Christian: Rename some liquid stuff for more sensible naming. Tweak API slightly.
@@ -9029,7 +9029,7 @@ Build 6.0.1.339:
 Build 6.0.1.338:
 	pahimar: Update patches/common/net/minecraft/src/SlotCrafting.java.patch
 	Christian:
-		Fix the accessor and type on World.getPersistentChunksFor()
+		Fix the accessor and commandType on World.getPersistentChunksFor()
 		Update FML: 8bd98c3
 		8bd98c3 Fix a small problem with the new MCP container- it can cause NPEs. Nice.
 		34cc42d Fix up some javadoc complaints
@@ -9714,7 +9714,7 @@ Build 4.0.0.213:
 		Update FML: 46c563a
 		
 		46c563a Expose more of the village construction parts for building village piece
-		1380c2e Allow access to the type "ComponentVillage"
+		1380c2e Allow access to the commandType "ComponentVillage"
 		71a3818 Documentation and registration for villager stuff
 		e3a343c Fix javadoc derp
 		195b1a0 Villager trading, manipulation and village enhancement. Still WIP but sh
@@ -10356,10 +10356,10 @@ Build 1.4.0.53:
 	LexManos: Fixed onTakenFromCrafting hooks to be called once per stack taken. Sadly due to how shift-click is handled, the passed in item stack is not garenteed to be the stack that the result was added to.
 
 Build 1.4.0.52:
-	LexManos: Fixed forgotten type identifier in clean_src
+	LexManos: Fixed forgotten commandType identifier in clean_src
 	LexManos: New EntityInteract hook for handeling player vs entity interaction on the global level vs the item level.
 	LexManos: Fixed sides of grass not getting biome colors
-	LexManos: Fixed type on patch conversion messing up tile entities
+	LexManos: Fixed commandType on patch conversion messing up tile entities
 	LexManos: Proper fix for SDK's invalid bit shifts of parameters for chunk population
 	LexManos: Made BlockStairs, BlockFarmland, and BlockStep have proper sided-solidity. Can now place torches on any solid side of those blocks.
 

@@ -7,6 +7,7 @@ import com.tayjay.augments.util.CapHelper;
 import com.tayjay.augments.util.LogHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.ClickType;
 import net.minecraft.inventory.Container;
@@ -184,7 +185,11 @@ public class ContainerPlayerParts extends Container
     @Override
     public void detectAndSendChanges()
     {
-        //reloadAugmentSlots();
+        if(!player.worldObj.isRemote)
+        {
+            CapHelper.getPlayerPartsCap(player).sync((EntityPlayerMP) player);
+            CapHelper.getPlayerDataCap(player).sync((EntityPlayerMP) player);
+        }
         super.detectAndSendChanges();
 
     }
@@ -193,7 +198,8 @@ public class ContainerPlayerParts extends Container
     @Override
     public ItemStack slotClick(int slotId, int dragType, ClickType clickTypeIn, EntityPlayer player)
     {
-        //reloadAugmentSlots();
         return super.slotClick(slotId, dragType, clickTypeIn, player);
     }
+
+
 }

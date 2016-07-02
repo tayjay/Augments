@@ -4,6 +4,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.RenderPlayer;
+import net.minecraft.entity.Entity;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
 import java.lang.reflect.Field;
@@ -19,5 +20,10 @@ public class ReflectHelper
         Map<String, RenderPlayer> skinMapReflect = ReflectionHelper.getPrivateValue(RenderManager.class, Minecraft.getMinecraft().getRenderManager(),"skinMap","field_178636_l");
         skinMapReflect.put(id,renderPlayer);
         ReflectionHelper.setPrivateValue(RenderManager.class,Minecraft.getMinecraft().getRenderManager(),skinMapReflect,"skinMap","field_178636_l");
+    }
+
+    public static void setEntityGlowing(Entity entity, boolean glow)
+    {
+        ReflectionHelper.setPrivateValue(Entity.class,entity,glow,"glowing");//TODO: Set deobf/srg names
     }
 }

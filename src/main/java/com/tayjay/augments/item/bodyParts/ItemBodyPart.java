@@ -1,4 +1,4 @@
-package com.tayjay.augments.item;
+package com.tayjay.augments.item.bodyParts;
 
 import com.tayjay.augments.Augments;
 import com.tayjay.augments.api.capabilities.IAugHolderProvider;
@@ -6,7 +6,9 @@ import com.tayjay.augments.api.item.IBodyPart;
 import com.tayjay.augments.api.item.PartType;
 import com.tayjay.augments.handler.GuiHandler;
 import com.tayjay.augments.init.IItemModelProvider;
+import com.tayjay.augments.item.ItemBase;
 import com.tayjay.augments.util.CapHelper;
+import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.entity.player.EntityPlayer;
@@ -16,6 +18,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagInt;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
 import java.util.List;
@@ -27,12 +30,35 @@ public class ItemBodyPart extends ItemBase implements IBodyPart,IItemModelProvid
 {
     protected int tier;
     protected PartType type;
-    public ItemBodyPart(String name,int tier, PartType type)
+    public ResourceLocation textureSteve = new ResourceLocation("augments", "textures/models/steve.png");
+    public ResourceLocation textureAlex = new ResourceLocation("augments", "textures/models/alex.png");
+    ModelPlayer modelSteve = new ModelPlayer(0f,false);
+    ModelPlayer modelAlex = new ModelPlayer(0f,true);
+    public ItemBodyPart(String name,int tier,String textureSteve, PartType type)
+    {
+        this(name,tier,textureSteve,textureSteve+"_slim",type);
+    }
+
+    public ItemBodyPart(String name,int tier,String texture,String textureS, PartType type)
     {
         super(name);
         this.tier = tier;
         this.type = type;
+        textureSteve = new ResourceLocation("augments","textures/models/"+texture+".png");
+        textureAlex = new ResourceLocation("augments","textures/models/"+textureS+".png");
         setMaxStackSize(1);
+    }
+
+    @Override
+    public ResourceLocation getTexture(ItemStack stack,boolean hasSmallArms)
+    {
+        return hasSmallArms ? textureAlex : textureSteve;
+    }
+
+    public void setTextureName(String name)
+    {
+        textureSteve = new ResourceLocation("augments","textures/models/"+name+".png");
+        textureAlex = new ResourceLocation("augments","textures/models/"+name+"_slim.png");
     }
 
     @Override
@@ -46,6 +72,8 @@ public class ItemBodyPart extends ItemBase implements IBodyPart,IItemModelProvid
     {
 
     }
+
+
 
     @Override
     public PartType getPartType(ItemStack stack)

@@ -1,10 +1,9 @@
 package com.tayjay.augments.api.item;
 
-import com.tayjay.augments.api.events.IAugmentHolder;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 
 /**
  * Created by tayjay on 2016-06-23.
@@ -19,6 +18,8 @@ public interface IBodyPart extends IAugmentHolder
     PartType getPartType(ItemStack stack);
 
     void setPartType(ItemStack stack, PartType type);
+
+    ResourceLocation getTexture(ItemStack stack,boolean hasSmallArms);
 
     //TODO: Check if correct player to wear part
 }

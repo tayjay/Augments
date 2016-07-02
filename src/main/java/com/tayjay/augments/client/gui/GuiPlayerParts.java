@@ -41,6 +41,7 @@ public class GuiPlayerParts extends GuiContainer
 
         drawEntityOnScreen(guiLeft + 210, guiTop + 120, 40, (float)(guiLeft + 210) - mouseX, (float)(guiTop + 120 - 50) - mouseY, this.mc.thePlayer);
         ContainerPlayerParts container = (ContainerPlayerParts)inventorySlots;
+        RenderHelper.enableGUIStandardItemLighting();
         for(int i = 0;i<container.inventory.getSlots();i++)
         {
             if(container.inventory.getStackInSlot(i)!=null)
@@ -52,11 +53,13 @@ public class GuiPlayerParts extends GuiContainer
                     {
                         int posX =guiLeft + 69 + j * 18;
                         int posY =guiTop + 5 + i * 18;
+
                         itemRender.renderItemIntoGUI(items.getStackInSlot(j), posX, posY);
                     }
                 }
             }
         }
+        RenderHelper.disableStandardItemLighting();
 
         for(int i = 0;i<container.inventory.getSlots();i++)
         {

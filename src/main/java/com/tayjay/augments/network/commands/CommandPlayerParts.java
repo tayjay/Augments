@@ -15,12 +15,18 @@ import net.minecraftforge.items.IItemHandler;
 /**
  * Created by tayjay on 2016-06-24.
  */
-public class CommandPlayerParts extends CommandBase
+public class CommandPlayerParts extends CommandAugmentBase
 {
     @Override
     public String getCommandName()
     {
-        return "aug_playerParts";
+        return "aug_viewPlayerParts";
+    }
+
+    @Override
+    public int getRequiredPermissionLevel()
+    {
+        return 0;
     }
 
     @Override

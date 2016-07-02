@@ -4,10 +4,13 @@ import com.tayjay.augments.Augments;
 import com.tayjay.augments.api.capabilities.IPlayerPartsProvider;
 import com.tayjay.augments.api.item.IAugment;
 import com.tayjay.augments.api.item.IBodyPart;
+import com.tayjay.augments.api.item.IEnergySupply;
 import com.tayjay.augments.handler.GuiHandler;
 import com.tayjay.augments.network.NetworkHandler;
 import com.tayjay.augments.network.packets.PacketSyncPlayerParts;
+import com.tayjay.augments.util.CapHelper;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
@@ -53,7 +56,9 @@ public class InventoryPlayerParts implements IItemHandlerModifiable
         if(!(stack.getItem() instanceof IBodyPart))
             return stack; //Can't put non BodyParts into inventory
         else
-            return compose.insertItem(slot,stack,simulate);
+        {
+            return compose.insertItem(slot, stack, simulate);
+        }
     }
 
     @Override
@@ -62,6 +67,8 @@ public class InventoryPlayerParts implements IItemHandlerModifiable
         //TODO: Make inventory only accessable if player is in Creative mode.
         return compose.extractItem(slot,amount,simulate);
     }
+
+
 
 
 }
