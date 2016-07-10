@@ -15,14 +15,31 @@ public class PacketChangeEnergy extends PacketRunnable<PacketChangeEnergy>
 
     public PacketChangeEnergy(){}
 
+
+
     public PacketChangeEnergy(float amount, EnergyType type)
     {
         this.amount = amount;
         this.type = type.ordinal();
     }
 
+
     @Override
-    public Runnable getRunnable(final PacketChangeEnergy message, final MessageContext ctx)
+    public void fromBytes(ByteBuf buf)
+    {
+        this.amount = buf.readFloat();
+        this.type = buf.readInt();
+    }
+
+    @Override
+    public void toBytes(ByteBuf buf)
+    {
+        buf.writeFloat(amount);
+        buf.writeInt(type);
+    }
+
+    @Override
+    public Runnable getServerRunnable(final PacketChangeEnergy message, final MessageContext ctx)
     {
         return new Runnable()
         {
@@ -43,17 +60,9 @@ public class PacketChangeEnergy extends PacketRunnable<PacketChangeEnergy>
     }
 
     @Override
-    public void fromBytes(ByteBuf buf)
+    public Runnable getClientRunnable(PacketChangeEnergy message, MessageContext ctx)
     {
-        this.amount = buf.readFloat();
-        this.type = buf.readInt();
-    }
-
-    @Override
-    public void toBytes(ByteBuf buf)
-    {
-        buf.writeFloat(amount);
-        buf.writeInt(type);
+        return null;
     }
 
     public enum EnergyType

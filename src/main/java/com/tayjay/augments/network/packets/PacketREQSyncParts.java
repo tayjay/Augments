@@ -16,13 +16,27 @@ public class PacketREQSyncParts extends PacketRunnable<PacketREQSyncParts>
 
     public PacketREQSyncParts(){}
 
+
+
     public PacketREQSyncParts(EntityOtherPlayerMP other)
     {
         this.playerId = other.getEntityId();
     }
 
     @Override
-    public Runnable getRunnable(final PacketREQSyncParts message, final MessageContext ctx)
+    public void fromBytes(ByteBuf buf)
+    {
+        this.playerId = buf.readInt();
+    }
+
+    @Override
+    public void toBytes(ByteBuf buf)
+    {
+        buf.writeInt(this.playerId);
+    }
+
+    @Override
+    public Runnable getServerRunnable(final PacketREQSyncParts message, final MessageContext ctx)
     {
         return new Runnable()
         {
@@ -36,14 +50,8 @@ public class PacketREQSyncParts extends PacketRunnable<PacketREQSyncParts>
     }
 
     @Override
-    public void fromBytes(ByteBuf buf)
+    public Runnable getClientRunnable(PacketREQSyncParts message, MessageContext ctx)
     {
-        this.playerId = buf.readInt();
-    }
-
-    @Override
-    public void toBytes(ByteBuf buf)
-    {
-        buf.writeInt(this.playerId);
+        return null;
     }
 }

@@ -54,7 +54,8 @@ public class PlayerEvents
         NBTTagCompound parts = CapHelper.getPlayerPartsCap(event.getOriginal()).serializeNBT();
         NBTTagCompound data = CapHelper.getPlayerDataCap(event.getOriginal()).serializeNBT();
         CapHelper.getPlayerPartsCap(event.getEntityPlayer()).deserializeNBT(parts);
-        CapHelper.getPlayerPartsCap(event.getEntityPlayer()).deserializeNBT(data);
+        CapHelper.getPlayerDataCap(event.getEntityPlayer()).deserializeNBT(data);
+        CapHelper.getPlayerDataCap(event.getEntityPlayer()).reboot();
 
         LogHelper.debug("Cloned Body Parts for "+event.getEntityPlayer().getName());
     }

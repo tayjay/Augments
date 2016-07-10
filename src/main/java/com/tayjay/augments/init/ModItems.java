@@ -2,10 +2,7 @@ package com.tayjay.augments.init;
 
 import com.tayjay.augments.api.item.PartType;
 import com.tayjay.augments.item.*;
-import com.tayjay.augments.item.augments.ItemAugment;
-import com.tayjay.augments.item.augments.ItemDefib;
-import com.tayjay.augments.item.augments.ItemLandingSystem;
-import com.tayjay.augments.item.augments.ItemSonar;
+import com.tayjay.augments.item.augments.*;
 import com.tayjay.augments.item.bodyParts.ItemBodyPart;
 import com.tayjay.augments.item.bodyParts.ItemBodySet;
 import com.tayjay.augments.item.bodyParts.ItemCyborgEyes;
@@ -20,33 +17,64 @@ public class ModItems
 {
 
     public static ItemBase carbonMesh;
+    public static ItemTablet tablet;
+    public static ItemAugmentKit praxisKit;
+
     public static ItemBodyPart cyborgEyes;
     public static ItemAugment augmentTest;
     public static ItemAugment landingSystem;
     public static ItemAugment defibrillator;
     public static ItemAugment sonar;
+    public static ItemAugElytra augElytra;
+    public static ItemAugment overShield;
+    public static ItemAugment typhoon;
+
     public static ItemBodySet armLeftTest;
     public static ItemBodySet armRightTest;
     public static ItemBodySet torsoTest;
     public static ItemBodySet headTest;
     public static ItemBodySet legLeftTest;
     public static ItemBodySet legRightTest;
+
+    public static ItemBodySet headIron;
+    public static ItemBodySet torsoIron;
+    public static ItemBodySet armLeftIron;
+    public static ItemBodySet armRightIron;
+    public static ItemBodySet legLeftIron;
+    public static ItemBodySet legRightIron;
+
     public static ItemEnergyCell energyCellBasic;
 
     public static void init()
     {
         carbonMesh = register(new ItemBase("carbonMesh"));
+        tablet = register(new ItemTablet("tablet"));
+        praxisKit = register(new ItemAugmentKit("praxisKit"));
+
         cyborgEyes = register(new ItemCyborgEyes("cyborgEyes",2));
         augmentTest = register(new ItemAugment("augmentTest"));
         landingSystem = register(new ItemLandingSystem("landingSystem"));
         defibrillator = register(new ItemDefib("defibrillator"));
         sonar =  register(new ItemSonar("sonar"));
-        armLeftTest = register(new ItemBodySet("armLeftTest",3,"template", PartType.ARM_LEFT));
-        armRightTest = register(new ItemBodySet("armRightTest",3,"template", PartType.ARM_RIGHT));//TODO: Use metadata instead of diff item?
-        torsoTest = register(new ItemBodySet("torsoTest",4,"template", PartType.TORSO));
-        headTest = register(new ItemBodySet("headTest",2,"template", PartType.HEAD));
-        legLeftTest = register(new ItemBodySet("legLeftTest",3,"template", PartType.LEG_LEFT));
-        legRightTest = register(new ItemBodySet("legRightTest",3,"template", PartType.LEG_RIGHT));
+        augElytra = register(new ItemAugElytra("augElytra"));
+        overShield = register(new ItemOvershield("overshield"));
+        typhoon = register(new ItemExplosiveSystem("typhoon"));
+
+        armLeftTest = register(new ItemBodySet("armLeftTest",2,3,2,"template", PartType.ARM_LEFT));
+        armRightTest = register(new ItemBodySet("armRightTest",2,3,2,"template", PartType.ARM_RIGHT));//TODO: Use metadata instead of diff item?
+        torsoTest = register(new ItemBodySet("torsoTest",2,5,3,"template", PartType.TORSO));
+        headTest = register(new ItemBodySet("headTest",2,4,2,"template", PartType.HEAD));
+        legLeftTest = register(new ItemBodySet("legLeftTest",2,3,2,"template", PartType.LEG_LEFT));
+        legRightTest = register(new ItemBodySet("legRightTest",2,3,2,"template", PartType.LEG_RIGHT));
+
+        //TODO: Make iron texture
+        headIron = register(new ItemBodySet("headIron",1,3,2,"iron",PartType.HEAD));
+        torsoIron = register(new ItemBodySet("torsoIron",1,4,3,"iron",PartType.TORSO));
+        armLeftIron = register(new ItemBodySet("armLeftIron",1,2,2,"iron",PartType.ARM_LEFT));
+        armRightIron = register(new ItemBodySet("armRightIron",1,2,2,"iron",PartType.ARM_RIGHT));
+        legLeftIron = register(new ItemBodySet("legLeftIron",1,2,2,"iron",PartType.LEG_LEFT));
+        legRightIron = register(new ItemBodySet("legRightIron",1,2,2,"iron",PartType.LEG_RIGHT));
+
         energyCellBasic = register(new ItemEnergyCell("energyCellBasic",1,1));
 
     }

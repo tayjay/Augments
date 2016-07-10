@@ -28,4 +28,6 @@ public interface IAugment
     boolean validate(ItemStack augment, ItemStack bodyPart, EntityPlayer player);
 
     float getEnergyUse(ItemStack stack);
+
+
 }

@@ -1,5 +1,6 @@
-package com.tayjay.augments.client.gui;
+package com.tayjay.augments.client;
 
+import com.tayjay.augments.client.gui.ModGuiConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraftforge.fml.client.IModGuiFactory;

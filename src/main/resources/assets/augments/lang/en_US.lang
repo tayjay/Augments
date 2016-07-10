@@ -3,6 +3,12 @@ itemGroup.augments=Augments
 
 #Items
 item.augments:augmentTest.name=Test Augment
+item.augments:sonar.name=Sonar
+item.augments:landingSystem.name=Landing System
+item.augments:defibrillator.name=Defibrillator
+item.augments:overshield.name=Overshield
+
+
 item.augments:carbonMesh.name=Carbon Mesh
 item.augments:cyborgEyes.name=Cyborg Eyes
 item.augments:headTest.name=Head Test
@@ -11,6 +17,13 @@ item.augments:armLeftTest.name=Left Arm Test
 item.augments:armRightTest.name=Right Arm Test
 item.augments:legLeftTest.name=Left Leg Test
 item.augments:legRightTest.name=Right Leg Test
+
+item.augments:headIron.name=Iron Head
+item.augments:torsoIron.name=Iron Torso
+item.augments:armLeftIron.name=Iron Left Arm
+item.augments:armRightIron.name=Iron Right Arm
+item.augments:legLeftIron.name=Iron Left Leg
+item.augments:legRightIron.name=Iron Right Leg
 
 #Blocks
 tile.augments:oreCarbon.name=Carbon Ore

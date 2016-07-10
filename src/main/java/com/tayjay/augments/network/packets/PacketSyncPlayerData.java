@@ -20,24 +20,12 @@ public class PacketSyncPlayerData extends PacketRunnable<PacketSyncPlayerData>
 
     public PacketSyncPlayerData(){}
 
+
+
     public PacketSyncPlayerData(NBTTagCompound tag, EntityPlayer player)
     {
         this.playerId = player.getEntityId();
         this.nbt = tag;
-    }
-
-    @Override
-    public Runnable getRunnable(final PacketSyncPlayerData message, MessageContext ctx)
-    {
-        return new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                if(message.playerId == Minecraft.getMinecraft().thePlayer.getEntityId())
-                    Augments.proxy.getClientPlayerData().deserializeNBT(message.nbt);
-            }
-        };
     }
 
     @Override
@@ -52,5 +40,25 @@ public class PacketSyncPlayerData extends PacketRunnable<PacketSyncPlayerData>
     {
         buf.writeInt(this.playerId);
         ByteBufUtils.writeTag(buf,this.nbt);
+    }
+
+    @Override
+    public Runnable getServerRunnable(final PacketSyncPlayerData message, final MessageContext ctx)
+    {
+        return null;
+    }
+
+    @Override
+    public Runnable getClientRunnable(final PacketSyncPlayerData message, final MessageContext ctx)
+    {
+        return new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                if(message.playerId == Minecraft.getMinecraft().thePlayer.getEntityId())
+                    Augments.proxy.getClientPlayerData().deserializeNBT(message.nbt);
+            }
+        };
     }
 }

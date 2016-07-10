@@ -21,11 +21,18 @@ public abstract class PacketRunnable<REQ extends IMessage> implements IMessage, 
     public REQ onMessage(REQ message, MessageContext ctx)
     {
         if(ctx.side == Side.CLIENT)
-            Minecraft.getMinecraft().addScheduledTask(getRunnable(message,ctx));
+            Minecraft.getMinecraft().addScheduledTask(getClientRunnable(message,ctx));
         else
-            ctx.getServerHandler().playerEntity.getServerWorld().addScheduledTask(getRunnable(message,ctx));
+            ctx.getServerHandler().playerEntity.getServerWorld().addScheduledTask(getServerRunnable(message,ctx));
         return null;
     }
 
-    public abstract Runnable getRunnable(REQ message,MessageContext ctx);
+    /*
+    @Deprecated
+    public abstract Runnable getRunnable(final REQ message,final MessageContext ctx);
+    */
+
+    public abstract Runnable getServerRunnable(final REQ message,final MessageContext ctx);
+
+    public abstract Runnable getClientRunnable(final REQ message,final MessageContext ctx);
 }

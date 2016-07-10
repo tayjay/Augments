@@ -2,6 +2,9 @@ package com.tayjay.augments.client.handler;
 
 import com.tayjay.augments.api.events.IActivate;
 import com.tayjay.augments.client.settings.Keybindings;
+import com.tayjay.augments.handler.GuiHandler;
+import com.tayjay.augments.network.NetworkHandler;
+import com.tayjay.augments.network.packets.PacketOpenGui;
 import com.tayjay.augments.util.CapHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -53,6 +56,8 @@ public class KeyInputHandler
                         }
                     }
                     break;
+                case OPEN_PLAYER_PARTS_GUI:
+                    NetworkHandler.INSTANCE.sendToServer(new PacketOpenGui(GuiHandler.GuiIDs.PLAYER_PARTS.ordinal()));
 
             }
         }

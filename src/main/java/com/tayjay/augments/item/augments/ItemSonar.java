@@ -10,11 +10,14 @@ import com.tayjay.augments.util.CapHelper;
 import com.tayjay.augments.util.ChatHelper;
 import com.tayjay.augments.util.ReflectHelper;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.ISound;
+import net.minecraft.client.audio.Sound;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -46,14 +49,17 @@ public class ItemSonar extends ItemAugment implements IActivate
     {
         if(validate(stack,null,player))
         {
+            CapHelper.getPlayerDataCap(player).removeEnergy(getEnergyUse(stack));
+            NetworkHandler.INSTANCE.sendToServer(new PacketChangeEnergy(getEnergyUse(stack), PacketChangeEnergy.EnergyType.CURRENT));
             double posX = player.posX;
             double posY = player.posY;
             double posZ = player.posZ;
             int range = 20;
             AxisAlignedBB box = new AxisAlignedBB(posX - range, posY - range, posZ - range, posX + range, posY + range, posZ + range);
             List<Entity> entities = player.worldObj.getEntitiesWithinAABBExcludingEntity(Minecraft.getMinecraft().thePlayer, box);
-            new TaskEntityGlow(entities, 80).activate();
+
             ChatHelper.send(player,"Pinging "+entities.size()+" mobs!");
+
         }
         else
         {
@@ -64,11 +70,16 @@ public class ItemSonar extends ItemAugment implements IActivate
     @Override
     public boolean validate(ItemStack augment, ItemStack bodyPart, EntityPlayer player)
     {
-        if(CapHelper.getPlayerDataCap(player).removeEnergy(2))
+        if(CapHelper.getPlayerDataCap(player).getCurrentEnergy()>=getEnergyUse(augment))
         {
-            NetworkHandler.INSTANCE.sendToServer(new PacketChangeEnergy(2, PacketChangeEnergy.EnergyType.CURRENT));
             return true;
         }
         return false;
+    }
+
+    @Override
+    public float getEnergyUse(ItemStack stack)
+    {
+        return 1F;
     }
 }

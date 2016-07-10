@@ -2,6 +2,7 @@ package com.tayjay.augments.api.item;
 
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
@@ -18,6 +19,8 @@ public interface IBodyPart extends IAugmentHolder
     PartType getPartType(ItemStack stack);
 
     void setPartType(ItemStack stack, PartType type);
+
+    int getArmour(ItemStack stack);
 
     ResourceLocation getTexture(ItemStack stack,boolean hasSmallArms);
 

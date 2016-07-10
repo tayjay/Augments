@@ -45,6 +45,7 @@ public class RenderPlayerAugments extends RenderPlayer
     //ModelBiped modelBiped = new ModelBiped();
     public void renderRightArm(AbstractClientPlayer clientPlayer)
     {
+
         GL11.glPushMatrix();
         float f = 1.0F;
         GlStateManager.color(f, f, f);
@@ -62,18 +63,13 @@ public class RenderPlayerAugments extends RenderPlayer
         modelplayer.bipedRightArmwear.render(0.0625F);
 
         IItemHandler parts = CapHelper.getPlayerPartsCap(clientPlayer).getPartsInv();
-        for(int i =0;i<parts.getSlots();i++)//TODO: Only check right arm slot
+
+        if(parts.getStackInSlot(4)!=null)
         {
-            if(parts.getStackInSlot(i) !=null && parts.getStackInSlot(i).getItem() instanceof IBodyPart && ((IBodyPart) parts.getStackInSlot(i).getItem()).getPartType(parts.getStackInSlot(i))== PartType.ARM_RIGHT)
-            {
-                //Minecraft.getMinecraft().renderEngine.bindTexture(((IBodyPart) parts.getStackInSlot(i).getItem()).getTexture(parts.getStackInSlot(i), RenderUtil.hasSmallArms(getMainModel())));
-                GL11.glColor4d(1,1,1,1);
-                //modelplayer.bipedRightArm.setTextureOffset(-100,-100);
-                if(clientPlayer.isSneaking())
-                    GL11.glTranslated(0,-0.2,0);
-                ((IBodyPart) parts.getStackInSlot(i).getItem()).renderOnPlayer(parts.getStackInSlot(i),clientPlayer,this);
-                //modelplayer.bipedRightArm.render(0.0625F);
-            }
+            GL11.glColor4d(1,1,1,1);
+            if(clientPlayer.isSneaking())
+                GL11.glTranslated(0,-0.2,0);
+            ((IBodyPart) parts.getStackInSlot(4).getItem()).renderOnPlayer(parts.getStackInSlot(4),clientPlayer,this);
         }
 
 
@@ -83,6 +79,7 @@ public class RenderPlayerAugments extends RenderPlayer
 
     public void renderLeftArm(AbstractClientPlayer clientPlayer)
     {
+        GL11.glPushMatrix();
         float f = 1.0F;
         GlStateManager.color(f, f, f);
         float f1 = 0.0625F;
@@ -96,7 +93,18 @@ public class RenderPlayerAugments extends RenderPlayer
         modelplayer.bipedLeftArm.render(0.0625F);
         modelplayer.bipedLeftArmwear.rotateAngleX = 0.0F;
         modelplayer.bipedLeftArmwear.render(0.0625F);
+
+        IItemHandler parts = CapHelper.getPlayerPartsCap(clientPlayer).getPartsInv();
+        if(parts.getStackInSlot(3)!=null)
+        {
+            GL11.glColor4d(1,1,1,1);
+            if(clientPlayer.isSneaking())
+                GL11.glTranslated(0,-0.2,0);
+            ((IBodyPart) parts.getStackInSlot(3).getItem()).renderOnPlayer(parts.getStackInSlot(3),clientPlayer,this);
+        }
+
         GlStateManager.disableBlend();
+        GL11.glPopMatrix();
     }
 
     private void setModelVisibilities(AbstractClientPlayer clientPlayer)

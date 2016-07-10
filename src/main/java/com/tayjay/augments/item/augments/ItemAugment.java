@@ -27,6 +27,19 @@ public class ItemAugment extends ItemBase implements IAugment,IItemModelProvider
     }
 
     @Override
+    public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced)
+    {
+        super.addInformation(stack, playerIn, tooltip, advanced);
+        String adding = "Can add to: ";
+        for(PartType type : acceptedParts)
+        {
+            adding = adding+type.name()+", ";
+        }
+        tooltip.add(adding);
+        tooltip.add("Energy use: "+this.getEnergyUse(stack));
+    }
+
+    @Override
     public List<PartType> getParentTypes(ItemStack stack)
     {
         return acceptedParts;

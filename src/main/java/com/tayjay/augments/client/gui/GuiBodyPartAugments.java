@@ -46,7 +46,7 @@ public class GuiBodyPartAugments extends GuiContainer
         RenderHelper.disableStandardItemLighting();
         if(mouseX > posX && mouseX <=posX+16 && mouseY > posY && mouseY <=posY+16)
         {
-            drawHoveringText(container.inventoryAugments.AUGMENT_HOLDER.getTooltip(Minecraft.getMinecraft().thePlayer,true),mouseX,mouseY);
+            drawHoveringText(container.inventoryAugments.AUGMENT_HOLDER.getTooltip(Minecraft.getMinecraft().thePlayer,false),mouseX,mouseY);
         }
 
     }

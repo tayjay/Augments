@@ -13,6 +13,8 @@ public class PacketSpawnDiamond extends PacketRunnable<PacketSpawnDiamond>
 
     public PacketSpawnDiamond(){}
 
+
+
     public PacketSpawnDiamond(World world, int x, int y, int z, int amount)
     {
         this.x = x;
@@ -31,11 +33,7 @@ public class PacketSpawnDiamond extends PacketRunnable<PacketSpawnDiamond>
         buf.writeInt(this.amount);
     }
 
-    @Override
-    public Runnable getRunnable(PacketSpawnDiamond message, MessageContext ctx)
-    {
-        return new TaskSpawnDiamond(message,ctx);
-    }
+
 
     @Override
     public void fromBytes(ByteBuf buf)
@@ -45,5 +43,17 @@ public class PacketSpawnDiamond extends PacketRunnable<PacketSpawnDiamond>
         this.y = buf.readInt();
         this.z = buf.readInt();
         this.amount = buf.readInt();
+    }
+
+    @Override
+    public Runnable getServerRunnable(PacketSpawnDiamond message, MessageContext ctx)
+    {
+        return new TaskSpawnDiamond(message,ctx);
+    }
+
+    @Override
+    public Runnable getClientRunnable(PacketSpawnDiamond message, MessageContext ctx)
+    {
+        return null;
     }
 }

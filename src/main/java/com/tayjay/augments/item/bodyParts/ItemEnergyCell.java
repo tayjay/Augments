@@ -15,7 +15,7 @@ public class ItemEnergyCell extends ItemBodyPart implements IEnergySupply
 
     public ItemEnergyCell(String name, int tier,int energyMax)
     {
-        super(name, tier,"","", PartType.POWER);
+        super(name, tier,0,0,"","", PartType.POWER);
         this.maxEnergy = energyMax;
     }
 
@@ -28,7 +28,7 @@ public class ItemEnergyCell extends ItemBodyPart implements IEnergySupply
     @Override
     public int maxEnergy(ItemStack stack)
     {
-        return this.maxEnergy+7;
+        return this.maxEnergy+3;
     }
 
     @Override

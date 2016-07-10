@@ -12,6 +12,7 @@ import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagByte;
 import net.minecraft.nbt.NBTTagCompound;
@@ -30,20 +31,24 @@ public class ItemBodyPart extends ItemBase implements IBodyPart,IItemModelProvid
 {
     protected int tier;
     protected PartType type;
+    protected int armourValue;
+    protected int storageSize;
     public ResourceLocation textureSteve = new ResourceLocation("augments", "textures/models/steve.png");
     public ResourceLocation textureAlex = new ResourceLocation("augments", "textures/models/alex.png");
     ModelPlayer modelSteve = new ModelPlayer(0f,false);
     ModelPlayer modelAlex = new ModelPlayer(0f,true);
-    public ItemBodyPart(String name,int tier,String textureSteve, PartType type)
+    public ItemBodyPart(String name,int tier,int armourValue, int storageSize,String textureSteve, PartType type)
     {
-        this(name,tier,textureSteve,textureSteve+"_slim",type);
+        this(name,tier,armourValue,storageSize,textureSteve,textureSteve+"_slim",type);
     }
 
-    public ItemBodyPart(String name,int tier,String texture,String textureS, PartType type)
+    public ItemBodyPart(String name,int tier,int armourValue, int storageSize, String texture,String textureS, PartType type)
     {
         super(name);
         this.tier = tier;
         this.type = type;
+        this.armourValue = armourValue;
+        this.storageSize = storageSize;
         textureSteve = new ResourceLocation("augments","textures/models/"+texture+".png");
         textureAlex = new ResourceLocation("augments","textures/models/"+textureS+".png");
         setMaxStackSize(1);
@@ -73,8 +78,6 @@ public class ItemBodyPart extends ItemBase implements IBodyPart,IItemModelProvid
 
     }
 
-
-
     @Override
     public PartType getPartType(ItemStack stack)
     {
@@ -86,6 +89,12 @@ public class ItemBodyPart extends ItemBase implements IBodyPart,IItemModelProvid
     public void setPartType(ItemStack stack, PartType type)
     {
         //Maybe not needed
+    }
+
+    @Override
+    public int getArmour(ItemStack stack)
+    {
+        return armourValue;
     }
 
     protected static void alignModels(ModelRenderer original, ModelRenderer moving, boolean isSneaking)
@@ -121,7 +130,7 @@ public class ItemBodyPart extends ItemBase implements IBodyPart,IItemModelProvid
     @Override
     public int getHolderSize(ItemStack stack)
     {
-        return tier;//TODO: Temp implementation
+        return storageSize;//TODO: Temp implementation
     }
 
     @Override
@@ -138,5 +147,11 @@ public class ItemBodyPart extends ItemBase implements IBodyPart,IItemModelProvid
             playerIn.openGui(Augments.instance, GuiHandler.GuiIDs.BODY_PART_AUGS.ordinal(),worldIn,0,0,0);
         }
         return super.onItemRightClick(itemStackIn, worldIn, playerIn, hand);
+    }
+
+    @Override
+    public void registerItemModel(Item item)
+    {
+        super.registerItemModel(item);
     }
 }

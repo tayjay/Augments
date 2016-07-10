@@ -54,6 +54,8 @@ public interface IPlayerDataProvider extends INBTSerializable<NBTTagCompound>
 
     void rechargeTick();
 
+    void reboot();
+
     //ItemStack getAllAugments();
 
 

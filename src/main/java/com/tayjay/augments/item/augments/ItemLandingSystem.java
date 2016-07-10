@@ -34,31 +34,33 @@ public class ItemLandingSystem extends ItemAugment implements IPlayerTick
     {
         IItemHandler playerParts = CapHelper.getPlayerPartsCap(player).getPartsInv();
         IPlayerDataProvider playerData = CapHelper.getPlayerDataCap(player);
-            if (bodyPart.getItem() instanceof IBodyPart)
+        if(playerData.getCurrentEnergy()<getEnergyUse(augment))
+            return false;
+        if (bodyPart.getItem() instanceof IBodyPart)
+        {
+            IItemHandler augs;
+            if (playerParts.getStackInSlot(6) != null && ((IBodyPart) bodyPart.getItem()).getPartType(bodyPart) == PartType.LEG_LEFT)
             {
-                IItemHandler augs;
-                if (playerParts.getStackInSlot(6) != null && ((IBodyPart) bodyPart.getItem()).getPartType(bodyPart) == PartType.LEG_LEFT)
+                augs = CapHelper.getAugHolderCap(playerParts.getStackInSlot(6)).getAugments();//CHECK RIGHT_LEG TODO: Change magic number
+                for (int i = 0; i < augs.getSlots(); i++)
                 {
-                    augs = CapHelper.getAugHolderCap(playerParts.getStackInSlot(6)).getAugments();//CHECK RIGHT_LEG TODO: Change magic number
-                    for (int i = 0; i < augs.getSlots(); i++)
+                    if (augs.getStackInSlot(i) != null && augs.getStackInSlot(i).getItem() == augment.getItem())
                     {
-                        if (augs.getStackInSlot(i) != null && augs.getStackInSlot(i).getItem() == augment.getItem())
-                        {
-                            return true;
-                        }
+                        return true;
                     }
-                } else if (playerParts.getStackInSlot(5) != null && ((IBodyPart) bodyPart.getItem()).getPartType(bodyPart) == PartType.LEG_RIGHT)
+                }
+            } else if (playerParts.getStackInSlot(5) != null && ((IBodyPart) bodyPart.getItem()).getPartType(bodyPart) == PartType.LEG_RIGHT)
+            {
+                augs = CapHelper.getAugHolderCap(playerParts.getStackInSlot(5)).getAugments();//CHECK RIGHT_LEG TODO: Change magic number
+                for (int i = 0; i < augs.getSlots(); i++)
                 {
-                    augs = CapHelper.getAugHolderCap(playerParts.getStackInSlot(5)).getAugments();//CHECK RIGHT_LEG TODO: Change magic number
-                    for (int i = 0; i < augs.getSlots(); i++)
+                    if (augs.getStackInSlot(i).getItem() == augment.getItem())
                     {
-                        if (augs.getStackInSlot(i).getItem() == augment.getItem())
-                        {
-                            return true;
-                        }
+                        return true;
                     }
                 }
             }
+        }
         return false;
     }
 
@@ -68,8 +70,9 @@ public class ItemLandingSystem extends ItemAugment implements IPlayerTick
     {
         if(!event.player.worldObj.isRemote && event.player.fallDistance >= 3f && event.player.worldObj.getBlockState(new BlockPos(event.player.posX,event.player.posY-1,event.player.posZ)).getBlock() != Blocks.AIR && validate(augmentStack,bodyPartStack,event.player))
         {
-            if(CapHelper.getPlayerDataCap(event.player).removeEnergy(getEnergyUse(augmentStack)))
+            if(validate(augmentStack,bodyPartStack,event.player))
             {
+                CapHelper.getPlayerDataCap(event.player).removeEnergy(getEnergyUse(augmentStack));
                 event.player.fallDistance = 0;
                 ChatHelper.send(event.player, "Landing System engaged!");
                 event.player.motionY = 0;

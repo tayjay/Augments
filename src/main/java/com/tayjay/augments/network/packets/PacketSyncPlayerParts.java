@@ -47,7 +47,13 @@ public class PacketSyncPlayerParts extends PacketRunnable<PacketSyncPlayerParts>
     }
 
     @Override
-    public Runnable getRunnable(final PacketSyncPlayerParts message, MessageContext ctx)
+    public Runnable getServerRunnable(PacketSyncPlayerParts message, MessageContext ctx)
+    {
+        return null;
+    }
+
+    @Override
+    public Runnable getClientRunnable(final PacketSyncPlayerParts message,final MessageContext ctx)
     {
         return new Runnable()
         {
@@ -65,6 +71,4 @@ public class PacketSyncPlayerParts extends PacketRunnable<PacketSyncPlayerParts>
             }
         };
     }
-
-
 }

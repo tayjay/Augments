@@ -8,23 +8,39 @@ import com.tayjay.augments.capability.AugmentHolderImpl;
 import com.tayjay.augments.api.item.IAugmentHolder;
 import com.tayjay.augments.api.events.IHUDProvider;
 import com.tayjay.augments.api.item.IBodyPart;
+import com.tayjay.augments.init.ModItems;
+import com.tayjay.augments.network.NetworkHandler;
+import com.tayjay.augments.network.packets.PacketAugElytra;
 import com.tayjay.augments.util.CapHelper;
+import com.tayjay.augments.util.LogHelper;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.ElytraSound;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Items;
+import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.item.ItemElytra;
+import net.minecraft.item.ItemStack;
+import net.minecraft.network.play.client.CPacketEntityAction;
 import net.minecraft.util.DamageSource;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.InputEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.IItemHandler;
+import scala.collection.parallel.ParIterableLike;
 
 import java.util.*;
 
@@ -37,49 +53,6 @@ public class AugmentEvents
 
     //TODO: *******Event to sort all augments by type so it is only needed to do the O(n^2) one per tick instead of every event*******
 
-    public static HashSet<IRenderTask<RenderWorldLastEvent>> extraWorldRendering = new HashSet<IRenderTask<RenderWorldLastEvent>>();
-
-    public static void addExtraWorldRender(IRenderTask<RenderWorldLastEvent> rendering)
-    {
-        try
-        {
-            extraWorldRendering.add(rendering);
-        }catch(ConcurrentModificationException e)
-        {
-
-        }
-    }
-
-    public static void removeExtraWorldRender(IRenderTask<RenderWorldLastEvent> rendering)
-    {
-        try
-        {
-            extraWorldRendering.remove(rendering);
-        }catch(ConcurrentModificationException e)
-        {
-
-        }
-    }
-
-    public void doExtraWorldRendering(RenderWorldLastEvent event)
-    {
-        try
-        {
-            Iterator<IRenderTask<RenderWorldLastEvent>> iterator = extraWorldRendering.iterator();
-            while (iterator.hasNext())
-            {
-                IRenderTask<RenderWorldLastEvent> task = iterator.next();
-
-                if (!task.shouldRemove())
-                    task.render(event);
-                else
-                    removeExtraWorldRender(task);
-            }
-        }catch (ConcurrentModificationException e)
-        {
-
-        }
-    }
 
     @SubscribeEvent
     public void createAugmentHolderItem(AttachCapabilitiesEvent.Item event)
@@ -121,7 +94,7 @@ public class AugmentEvents
     }
 
     @SubscribeEvent
-    public void handleRecharge(TickEvent.PlayerTickEvent event)
+    public void handleRecharge(TickEvent.PlayerTickEvent event) //TODO: Only do recharge when energy not being drained/just used energy(cool down)
     {
         if(event.player.worldObj.isRemote)
             return;
@@ -144,7 +117,7 @@ public class AugmentEvents
             if(parts.getStackInSlot(i)!=null && parts.getStackInSlot(i).getItem() instanceof IHUDProvider)
             {
                 ((IHUDProvider) parts.getStackInSlot(i).getItem()).drawWorldElements(parts.getStackInSlot(i), event);
-                doExtraWorldRendering(event);
+
             }
 
         }
@@ -180,7 +153,7 @@ public class AugmentEvents
             {
                 if(playerParts.getStackInSlot(i) != null && playerParts.getStackInSlot(i).getItem() instanceof IBodyPart)
                 {
-                    amountStart = amountStart * (1-(((IBodyPart) playerParts.getStackInSlot(i).getItem()).getTier(playerParts.getStackInSlot(i)))/5);
+                    amountStart = amountStart * (1-(((IBodyPart) playerParts.getStackInSlot(i).getItem()).getArmour(playerParts.getStackInSlot(i)))/7);
                 }
             }
             event.setAmount(amountStart);
@@ -214,5 +187,38 @@ public class AugmentEvents
     {
 
     }
+
+    /*
+    @SideOnly(Side.CLIENT)
+    @SubscribeEvent
+    public void activateAugElytra(TickEvent.PlayerTickEvent event)
+    {
+        if(!event.player.worldObj.isRemote || !(event.player instanceof EntityPlayerSP))
+            return;
+
+        EntityPlayerSP playerSP = (EntityPlayerSP)event.player;
+        boolean flag = playerSP.movementInput.jump;
+        if ( playerSP.movementInput.jump && !flag && !playerSP.onGround && playerSP.motionY < 0.0D && !playerSP.isElytraFlying() && !playerSP.capabilities.isFlying)
+        {
+            ItemStack part = CapHelper.getPlayerPartsCap(playerSP).getPartsInv().getStackInSlot(2);
+            if (part != null)
+            {
+                IItemHandler augments = CapHelper.getAugHolderCap(part).getAugments();
+
+                for (int i = 0; i < augments.getSlots(); i++)
+                {
+                    if (augments.getStackInSlot(i) != null && augments.getStackInSlot(i).getItem() == ModItems.augElytra)
+                    {
+                        NetworkHandler.INSTANCE.sendToServer(new PacketAugElytra(playerSP));
+                        LogHelper.info("Sending AugElytraPacket!");
+                        Minecraft.getMinecraft().getSoundHandler().playSound(new ElytraSound(playerSP));
+                    }
+                }
+            }
+
+        }
+
+    }
+    */
 
 }

@@ -1,10 +1,12 @@
 package com.tayjay.augments.item.bodyParts;
 
 import com.tayjay.augments.api.item.PartType;
+import com.tayjay.augments.api.render.LayerAugments;
 import com.tayjay.augments.util.RenderUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.entity.RenderPlayer;
+import net.minecraft.client.renderer.entity.layers.LayerArmorBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import org.lwjgl.opengl.GL11;
@@ -15,10 +17,9 @@ import org.lwjgl.opengl.GL11;
  */
 public class ItemBodySet extends ItemBodyPart
 {
-    public ItemBodySet(String name, int tier,String textureName, PartType type)
+    public ItemBodySet(String name, int tier,int armourValue, int storageSize, String textureName, PartType type)
     {
-        super(name, tier,textureName,type);
-        this.type = type;
+        super(name, tier,armourValue,storageSize,textureName,type);
     }
 
     @Override
@@ -69,6 +70,8 @@ public class ItemBodySet extends ItemBodyPart
         alignModels(parent,model,playerIn.isSneaking());
 
         model.render(0.0625f);
+        //LayerAugments.renderEnchantedGlint(renderPlayer,playerIn, model);
+
 
         GL11.glPopMatrix();
     }

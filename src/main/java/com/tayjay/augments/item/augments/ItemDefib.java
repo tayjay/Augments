@@ -21,6 +21,12 @@ public class ItemDefib extends ItemAugment implements ILivingDeath
     }
 
     @Override
+    public boolean validate(ItemStack augment, ItemStack bodyPart, EntityPlayer player)
+    {
+        return true;
+    }
+
+    @Override
     public void onDeath(ItemStack augment, EntityPlayer dieing, LivingDeathEvent event)
     {
         IPlayerDataProvider data = CapHelper.getPlayerDataCap(dieing);

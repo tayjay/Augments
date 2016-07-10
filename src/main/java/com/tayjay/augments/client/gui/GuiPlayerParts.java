@@ -1,6 +1,7 @@
 package com.tayjay.augments.client.gui;
 
 import com.tayjay.augments.Augments;
+import com.tayjay.augments.api.item.IAugment;
 import com.tayjay.augments.inventory.ContainerPlayerParts;
 import com.tayjay.augments.inventory.InventoryPlayerParts;
 import com.tayjay.augments.util.CapHelper;
@@ -17,6 +18,9 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.items.IItemHandler;
 import org.lwjgl.opengl.GL11;
+
+import java.awt.*;
+
 
 /**
  * Created by tayjay on 2016-06-24.
@@ -54,6 +58,10 @@ public class GuiPlayerParts extends GuiContainer
                         int posX =guiLeft + 69 + j * 18;
                         int posY =guiTop + 5 + i * 18;
 
+                        if(!((IAugment)items.getStackInSlot(j).getItem()).validate(items.getStackInSlot(j),container.inventory.getStackInSlot(i),this.mc.thePlayer))
+                            this.drawGradientRect(posX-2,posY-2,posX+18,posY+18, Color.RED.getRGB(),Color.RED.getRGB());
+                        else
+                            this.drawGradientRect(posX-2,posY-2,posX+18,posY+18, Color.GREEN.getRGB(),Color.GREEN.getRGB());
                         itemRender.renderItemIntoGUI(items.getStackInSlot(j), posX, posY);
                     }
                 }
@@ -61,6 +69,7 @@ public class GuiPlayerParts extends GuiContainer
         }
         RenderHelper.disableStandardItemLighting();
 
+        java.util.List<String> tooltip;
         for(int i = 0;i<container.inventory.getSlots();i++)
         {
             if(container.inventory.getStackInSlot(i)!=null)
@@ -74,7 +83,12 @@ public class GuiPlayerParts extends GuiContainer
                         int posY =guiTop + 5 + i * 18;
                         if(mouseX > posX && mouseX <=posX+16 && mouseY > posY && mouseY <=posY+16)
                         {
-                            drawHoveringText(items.getStackInSlot(j).getTooltip(Minecraft.getMinecraft().thePlayer,true),mouseX,mouseY);
+                            tooltip = items.getStackInSlot(j).getTooltip(Minecraft.getMinecraft().thePlayer,false);
+                            if(!((IAugment)items.getStackInSlot(j).getItem()).validate(items.getStackInSlot(j),container.inventory.getStackInSlot(i),this.mc.thePlayer))
+                                tooltip.add("INVALID SETUP");
+                            else
+                                tooltip.add("READY TO USE");
+                            drawHoveringText(tooltip,mouseX,mouseY);
                         }
                     }
                 }

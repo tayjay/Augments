@@ -148,7 +148,8 @@ public class ContainerPlayerParts extends Container
     @Override
     public boolean canInteractWith(EntityPlayer playerIn)
     {
-        return playerIn.isCreative();
+        //return playerIn.isCreative();TODO: Restrict use later
+        return true;
     }
 
     @Nullable

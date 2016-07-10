@@ -4,8 +4,10 @@ import com.tayjay.augments.api.AugmentsAPI;
 import com.tayjay.augments.api.capabilities.IPlayerDataProvider;
 import com.tayjay.augments.api.item.IEnergySupply;
 import com.tayjay.augments.network.NetworkHandler;
+import com.tayjay.augments.network.packets.PacketChangeEnergy;
 import com.tayjay.augments.network.packets.PacketSyncPlayerData;
 import com.tayjay.augments.util.CapHelper;
+import com.tayjay.augments.util.ChatHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
@@ -18,6 +20,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nullable;
@@ -142,6 +146,8 @@ public class PlayerDataImpl
             if(this.currentEnergy>=energyIn)
             {
                 this.currentEnergy-=energyIn;
+                if(FMLCommonHandler.instance().getEffectiveSide()== Side.CLIENT)
+                    NetworkHandler.INSTANCE.sendToServer(new PacketChangeEnergy(energyIn, PacketChangeEnergy.EnergyType.CURRENT));
                 return true;
             }
             return false;
@@ -152,6 +158,13 @@ public class PlayerDataImpl
         public void rechargeTick()
         {
             addEnergy(getRechargeRate());
+        }
+
+        @Override
+        public void reboot()
+        {
+            setCurrentEnergy(0);
+            ChatHelper.send(player,"Rebooting...");
         }
 
         private NBTTagCompound writeNBT()

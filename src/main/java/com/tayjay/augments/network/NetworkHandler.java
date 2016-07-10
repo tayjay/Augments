@@ -17,10 +17,13 @@ public class NetworkHandler
     {
         int desc = 0;
         INSTANCE.registerMessage(PacketSpawnDiamond.class,PacketSpawnDiamond.class,desc++, Side.SERVER);
+        INSTANCE.registerMessage(PacketOpenGui.class,PacketOpenGui.class,desc++, Side.SERVER);
         INSTANCE.registerMessage(PacketSyncPlayerParts.class,PacketSyncPlayerParts.class,desc++,Side.CLIENT);
         INSTANCE.registerMessage(PacketREQSyncParts.class, PacketREQSyncParts.class,desc++,Side.SERVER);
         INSTANCE.registerMessage(PacketSyncPlayerData.class,PacketSyncPlayerData.class,desc++,Side.CLIENT);
         INSTANCE.registerMessage(PacketChangeEnergy.class,PacketChangeEnergy.class,desc++,Side.SERVER);
+        INSTANCE.registerMessage(PacketAugElytra.class,PacketAugElytra.class,desc++,Side.SERVER);
+        INSTANCE.registerMessage(PacketExplode.class,PacketExplode.class,desc++,Side.SERVER);
     }
 
 

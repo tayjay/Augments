@@ -101,7 +101,7 @@ public class AugmentHolderImpl
     }
     public static class Provider implements ICapabilitySerializable<NBTTagCompound>
     {
-        public static final ResourceLocation NAME = new ResourceLocation("augmetns","augment_storage");
+        public static final ResourceLocation NAME = new ResourceLocation("augments","augment_storage");
 
         private final IAugHolderProvider cap;
 

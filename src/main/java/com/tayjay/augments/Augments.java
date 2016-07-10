@@ -31,7 +31,7 @@ public class Augments
     public static final String modId = "augments";
     public static final String name = "Augments";
     public static final String version = "0.0.1.0";//MAJORMOD.MAJORAPI.MINOR.PATCH
-    public static final String guiFactory = "com.tayjay.augments.client.gui.GuiFactory";
+    public static final String guiFactory = "com.tayjay.augments.client.GuiFactory";
 
     @Mod.Instance(modId)
     public static Augments instance;

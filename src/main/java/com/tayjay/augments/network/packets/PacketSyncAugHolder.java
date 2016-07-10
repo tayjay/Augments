@@ -16,15 +16,11 @@ public class PacketSyncAugHolder extends PacketRunnable<PacketSyncAugHolder>
 
     public PacketSyncAugHolder(){}
 
+
+
     public PacketSyncAugHolder(NBTTagCompound nbt)
     {
         this.nbt = nbt;
-    }
-
-    @Override
-    public Runnable getRunnable(PacketSyncAugHolder message, MessageContext ctx)
-    {
-        return null;
     }
 
     @Override
@@ -37,5 +33,17 @@ public class PacketSyncAugHolder extends PacketRunnable<PacketSyncAugHolder>
     public void toBytes(ByteBuf buf)
     {
         ByteBufUtils.writeTag(buf,this.nbt);
+    }
+
+    @Override
+    public Runnable getServerRunnable(PacketSyncAugHolder message, MessageContext ctx)
+    {
+        return null;
+    }
+
+    @Override
+    public Runnable getClientRunnable(PacketSyncAugHolder message, MessageContext ctx)
+    {
+        return null;
     }
 }

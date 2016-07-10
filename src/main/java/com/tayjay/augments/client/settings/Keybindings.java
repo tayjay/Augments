@@ -9,7 +9,8 @@ import org.lwjgl.input.Keyboard;
  */
 public enum Keybindings
 {
-    ACTIVATE("keys.augments.activate", Keyboard.KEY_F);
+    ACTIVATE("keys.augments.activate", Keyboard.KEY_G),
+    OPEN_PLAYER_PARTS_GUI("keys.augments.openpartgui", Keyboard.KEY_I);
 
     private final KeyBinding keyBinding;
 
