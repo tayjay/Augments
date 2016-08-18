@@ -4,6 +4,7 @@ import com.tayjay.augments.network.NetworkHandler;
 import com.tayjay.augments.util.CapHelper;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.entity.EntityOtherPlayerMP;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
@@ -18,7 +19,7 @@ public class PacketREQSyncParts extends PacketRunnable<PacketREQSyncParts>
 
 
 
-    public PacketREQSyncParts(EntityOtherPlayerMP other)
+    public PacketREQSyncParts(EntityPlayer other)
     {
         this.playerId = other.getEntityId();
     }
@@ -44,7 +45,7 @@ public class PacketREQSyncParts extends PacketRunnable<PacketREQSyncParts>
             public void run()
             {
                 EntityPlayerMP playerOther = (EntityPlayerMP) ctx.getServerHandler().playerEntity.worldObj.getEntityByID(message.playerId);
-                NetworkHandler.INSTANCE.sendTo(new PacketSyncPlayerParts(CapHelper.getPlayerPartsCap(playerOther).serializeNBT(),playerOther),ctx.getServerHandler().playerEntity);
+                NetworkHandler.sendTo(new PacketSyncPlayerParts(CapHelper.getPlayerPartsCap(playerOther).serializeNBT(),playerOther),ctx.getServerHandler().playerEntity);
             }
         };
     }

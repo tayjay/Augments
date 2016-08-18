@@ -4,8 +4,14 @@ import com.tayjay.augments.api.item.IAugment;
 import com.tayjay.augments.api.item.PartType;
 import com.tayjay.augments.init.IItemModelProvider;
 import com.tayjay.augments.item.ItemBase;
+import com.tayjay.augments.util.CapHelper;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.text.TextComponentBase;
+import net.minecraft.util.text.TextComponentUtils;
+import net.minecraft.util.text.TextFormatting;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,14 +22,17 @@ import java.util.List;
  */
 public class ItemAugment extends ItemBase implements IAugment,IItemModelProvider
 {
-    List<PartType> acceptedParts;
 
-    public ItemAugment(String name)
+    List<PartType> acceptedParts;
+    float energyUse;
+
+    public ItemAugment(String name, float energyUse)
     {
         super(name);
         setMaxStackSize(1);
         acceptedParts = new ArrayList<PartType>();
-        //acceptedParts.add(PartType.HEAD);//TODO: Just for testing, remove soon!
+        this.energyUse = energyUse;
+
     }
 
     @Override
@@ -33,10 +42,18 @@ public class ItemAugment extends ItemBase implements IAugment,IItemModelProvider
         String adding = "Can add to: ";
         for(PartType type : acceptedParts)
         {
-            adding = adding+type.name()+", ";
+            adding = adding+type.toString()+", ";
         }
         tooltip.add(adding);
-        tooltip.add("Energy use: "+this.getEnergyUse(stack));
+        tooltip.add(TextFormatting.BLUE+"Energy use: "+this.getEnergyUse(stack));
+        tooltip.add(TextFormatting.BOLD+"Hold Shift for instructions!");
+        if(GuiScreen.isShiftKeyDown())
+        {
+            tooltip.remove(tooltip.size()-1);
+            tooltip.add("For this augment to work you need:");
+            tooltip.add("This item on both legs.");
+
+        }
     }
 
     @Override
@@ -48,12 +65,12 @@ public class ItemAugment extends ItemBase implements IAugment,IItemModelProvider
     @Override
     public boolean validate(ItemStack augment, ItemStack bodyPart, EntityPlayer player)
     {
-        return false;
+        return CapHelper.getPlayerDataCap(player).validate();
     }
 
     @Override
     public float getEnergyUse(ItemStack stack)
     {
-        return 0;
+        return energyUse;
     }
 }

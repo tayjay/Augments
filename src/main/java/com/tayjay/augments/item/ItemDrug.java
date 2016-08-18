@@ -1,30 +1,33 @@
 package com.tayjay.augments.item;
 
-import com.tayjay.augments.util.ChatHelper;
-import com.tayjay.augments.util.EntityUtil;
-import net.minecraft.entity.EntityLivingBase;
+import com.tayjay.augments.util.CapHelper;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
 
 /**
- * Created by tayjay on 2016-07-08.
+ * Created by tayjay on 2016-07-31.
  */
-public class ItemAugmentKit extends ItemBase
+public class ItemDrug extends ItemBase
 {
-    public ItemAugmentKit(String name)
+    int restoreAmount;
+    public ItemDrug(String name,int restoreAmount)
     {
         super(name);
+        this.maxStackSize = 1;
+        this.restoreAmount = restoreAmount;
     }
 
     @Override
     public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn, EnumHand hand)
     {
-        if(!playerIn.worldObj.isRemote && playerIn.rayTrace(1,0).entityHit.getDataManager().get(EntityUtil.ENERGY)!=null)
+        if(!worldIn.isRemote)
         {
-            ChatHelper.send(playerIn,playerIn.rayTrace(1,0).entityHit.getDataManager().get(EntityUtil.ENERGY).toString());
+            CapHelper.getPlayerDataCap(playerIn).addDrugTimer(this.restoreAmount);
+            itemStackIn = null;
         }
         return super.onItemRightClick(itemStackIn, worldIn, playerIn, hand);
     }

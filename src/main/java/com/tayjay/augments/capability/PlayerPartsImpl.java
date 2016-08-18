@@ -2,9 +2,11 @@ package com.tayjay.augments.capability;
 
 import com.tayjay.augments.api.AugmentsAPI;
 import com.tayjay.augments.api.capabilities.IPlayerPartsProvider;
+import com.tayjay.augments.api.item.PartType;
 import com.tayjay.augments.network.NetworkHandler;
 import com.tayjay.augments.network.packets.PacketSyncPlayerParts;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -45,7 +47,7 @@ public final class PlayerPartsImpl
 
     private static class DefaultImpl implements IPlayerPartsProvider
     {
-        private final int SLOTS_COUNT = 8;
+        private final int SLOTS_COUNT = PartType.values().length;
         private IItemHandler partInventory = new ItemStackHandler(SLOTS_COUNT);
         private final String TAG_NAME = "player_parts";
 
@@ -53,6 +55,12 @@ public final class PlayerPartsImpl
         public IItemHandler getPartsInv()
         {
             return partInventory;
+        }
+
+        @Override
+        public ItemStack getStackByPart(PartType type) //TODO: Make this the prefered manor of getting itemstacks
+        {
+            return partInventory.getStackInSlot(type.ordinal());
         }
 
         private NBTTagCompound writeNBT()
@@ -84,13 +92,13 @@ public final class PlayerPartsImpl
         @Override
         public void sync(EntityPlayerMP player)
         {
-            NetworkHandler.INSTANCE.sendTo(new PacketSyncPlayerParts(writeNBT(),player),player);
+            NetworkHandler.sendTo(new PacketSyncPlayerParts(writeNBT(),player),player);
         }
 
         @Override
         public void syncToOther(EntityPlayerMP player, EntityPlayerMP other)
         {
-            NetworkHandler.INSTANCE.sendTo(new PacketSyncPlayerParts(writeNBT(),player),other);
+            NetworkHandler.sendTo(new PacketSyncPlayerParts(writeNBT(),player),other);
         }
 
 

@@ -11,6 +11,7 @@ import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.renderer.entity.RenderLivingBase;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.entity.player.EnumPlayerModelParts;
@@ -18,6 +19,8 @@ import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.event.RenderLivingEvent;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.items.IItemHandler;
 import org.lwjgl.opengl.GL11;
 
@@ -26,14 +29,17 @@ import org.lwjgl.opengl.GL11;
  */
 public class RenderPlayerAugments extends RenderPlayer
 {
-    public RenderPlayerAugments(RenderManager renderManager)
+    public RenderPlayerAugments(RenderPlayer overriding, RenderManager renderManager)
     {
-        super(renderManager);
+        this(overriding,renderManager,false);
     }
 
-    public RenderPlayerAugments(RenderManager renderManager,boolean smallArms)
+    public RenderPlayerAugments(RenderPlayer overriding, RenderManager renderManager,boolean smallArms)
     {
         super(renderManager,smallArms);
+        this.layerRenderers = ReflectionHelper.getPrivateValue(RenderLivingBase.class,overriding,"layerRenderers");
+        this.mainModel = overriding.getMainModel();
+
     }
 
     @Override
@@ -62,14 +68,14 @@ public class RenderPlayerAugments extends RenderPlayer
         modelplayer.bipedRightArmwear.rotateAngleX = 0.0F;
         modelplayer.bipedRightArmwear.render(0.0625F);
 
-        IItemHandler parts = CapHelper.getPlayerPartsCap(clientPlayer).getPartsInv();
+        ItemStack rightArm = CapHelper.getPlayerPartsCap(clientPlayer).getStackByPart(PartType.ARM_RIGHT);
 
-        if(parts.getStackInSlot(4)!=null)
+        if(rightArm!=null)
         {
             GL11.glColor4d(1,1,1,1);
             if(clientPlayer.isSneaking())
                 GL11.glTranslated(0,-0.2,0);
-            ((IBodyPart) parts.getStackInSlot(4).getItem()).renderOnPlayer(parts.getStackInSlot(4),clientPlayer,this);
+            ((IBodyPart) rightArm.getItem()).renderOnPlayer(rightArm,clientPlayer,this);
         }
 
 
@@ -94,13 +100,13 @@ public class RenderPlayerAugments extends RenderPlayer
         modelplayer.bipedLeftArmwear.rotateAngleX = 0.0F;
         modelplayer.bipedLeftArmwear.render(0.0625F);
 
-        IItemHandler parts = CapHelper.getPlayerPartsCap(clientPlayer).getPartsInv();
-        if(parts.getStackInSlot(3)!=null)
+        ItemStack leftArm = CapHelper.getPlayerPartsCap(clientPlayer).getStackByPart(PartType.ARM_LEFT);
+        if(leftArm!=null)
         {
             GL11.glColor4d(1,1,1,1);
             if(clientPlayer.isSneaking())
                 GL11.glTranslated(0,-0.2,0);
-            ((IBodyPart) parts.getStackInSlot(3).getItem()).renderOnPlayer(parts.getStackInSlot(3),clientPlayer,this);
+            ((IBodyPart) leftArm.getItem()).renderOnPlayer(leftArm,clientPlayer,this);
         }
 
         GlStateManager.disableBlend();

@@ -13,7 +13,8 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 /**
  * Created by tayjay on 2016-06-24.<br/>
- * Sync all parts on a player to the client.
+ * Sync all parts on a player to the client.,br/>
+ * This could be for Client player themselves or for another player to update what to render.
  */
 public class PacketSyncPlayerParts extends PacketRunnable<PacketSyncPlayerParts>
 {

@@ -1,7 +1,9 @@
 package com.tayjay.augments.client.gui;
 
+import com.mojang.realmsclient.gui.ChatFormatting;
 import com.tayjay.augments.Augments;
 import com.tayjay.augments.api.item.IAugment;
+import com.tayjay.augments.api.item.PartType;
 import com.tayjay.augments.inventory.ContainerPlayerParts;
 import com.tayjay.augments.inventory.InventoryPlayerParts;
 import com.tayjay.augments.util.CapHelper;
@@ -46,6 +48,7 @@ public class GuiPlayerParts extends GuiContainer
         drawEntityOnScreen(guiLeft + 210, guiTop + 120, 40, (float)(guiLeft + 210) - mouseX, (float)(guiTop + 120 - 50) - mouseY, this.mc.thePlayer);
         ContainerPlayerParts container = (ContainerPlayerParts)inventorySlots;
         RenderHelper.enableGUIStandardItemLighting();
+        int shift = 0;//Left align all augments in gui to make cleaner.
         for(int i = 0;i<container.inventory.getSlots();i++)
         {
             if(container.inventory.getStackInSlot(i)!=null)
@@ -55,7 +58,7 @@ public class GuiPlayerParts extends GuiContainer
                 {
                     if (items.getStackInSlot(j) != null)
                     {
-                        int posX =guiLeft + 69 + j * 18;
+                        int posX =guiLeft + 69 + shift++ * 18;
                         int posY =guiTop + 5 + i * 18;
 
                         if(!((IAugment)items.getStackInSlot(j).getItem()).validate(items.getStackInSlot(j),container.inventory.getStackInSlot(i),this.mc.thePlayer))
@@ -66,6 +69,7 @@ public class GuiPlayerParts extends GuiContainer
                     }
                 }
             }
+            shift = 0;
         }
         RenderHelper.disableStandardItemLighting();
 
@@ -79,20 +83,21 @@ public class GuiPlayerParts extends GuiContainer
                 {
                     if (items.getStackInSlot(j) != null)
                     {
-                        int posX =guiLeft + 69 + j * 18;
+                        int posX =guiLeft + 69 + shift++ * 18;
                         int posY =guiTop + 5 + i * 18;
                         if(mouseX > posX && mouseX <=posX+16 && mouseY > posY && mouseY <=posY+16)
                         {
                             tooltip = items.getStackInSlot(j).getTooltip(Minecraft.getMinecraft().thePlayer,false);
                             if(!((IAugment)items.getStackInSlot(j).getItem()).validate(items.getStackInSlot(j),container.inventory.getStackInSlot(i),this.mc.thePlayer))
-                                tooltip.add("INVALID SETUP");
+                                tooltip.add(ChatFormatting.RED+"INVALID SETUP");
                             else
-                                tooltip.add("READY TO USE");
+                                tooltip.add(ChatFormatting.GREEN+"READY TO USE");
                             drawHoveringText(tooltip,mouseX,mouseY);
                         }
                     }
                 }
             }
+            shift = 0;
         }
 
     }
@@ -104,14 +109,23 @@ public class GuiPlayerParts extends GuiContainer
         int p = 0;
         int posX1 =5;
         int posY1 =10+p++ * 22;
-        fontRendererObj.drawString("Head",posX1,posY1,0);posY1 =p++ * 22+5;
-        fontRendererObj.drawString("Eyes",posX1,posY1,0);posY1 =p++ * 22+2;
-        fontRendererObj.drawString("Torso",posX1,posY1,0);posY1 =p++ * 22-3;
-        fontRendererObj.drawString("ArmLeft",posX1,posY1,0);posY1 =p++ * 22-6;
-        fontRendererObj.drawString("ArmRight",posX1,posY1,0);posY1 =p++ * 22-10;
-        fontRendererObj.drawString("LegLeft",posX1,posY1,0);posY1 =p++ * 22-14;
-        fontRendererObj.drawString("LegRight",posX1,posY1,0);posY1 =p++ * 22-18;
-        fontRendererObj.drawString("Power",posX1,posY1,0);
+        /*
+        for(PartType type : PartType.values())
+        {
+            fontRendererObj.drawString(type.toString(),posX1,posY1,0);posY1 =p++ * 22;
+        }
+        */
+
+        fontRendererObj.drawString("Brain",posX1,posY1,0);posY1 =p++ * 22+5;
+        fontRendererObj.drawString("Head",posX1,posY1,0);posY1 =p++ * 22+2;
+        fontRendererObj.drawString("Eyes",posX1,posY1,0);posY1 =p++ * 22-3;
+        fontRendererObj.drawString("Torso",posX1,posY1,0);posY1 =p++ * 22-6;
+        fontRendererObj.drawString("ArmLeft",posX1,posY1,0);posY1 =p++ * 22-10;
+        fontRendererObj.drawString("ArmRight",posX1,posY1,0);posY1 =p++ * 22-14;
+        fontRendererObj.drawString("LegLeft",posX1,posY1,0);posY1 =p++ * 22-18;
+        fontRendererObj.drawString("LegRight",posX1,posY1,0);posY1 =(p-2) * 22-11;posX1 = 90;
+        fontRendererObj.drawString("Power",posX1+50,posY1,0);
+
         fontRendererObj.drawString(Minecraft.getMinecraft().thePlayer.getDisplayNameString(),190,15,0);
 
 

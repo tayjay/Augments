@@ -46,13 +46,14 @@ public class InventoryPlayerParts implements IItemHandlerModifiable
     @Override
     public ItemStack getStackInSlot(int slot)
     {
-        return compose.getStackInSlot(slot);
+        if(compose.getStackInSlot(slot)!=null)
+            return compose.getStackInSlot(slot);
+        return null;
     }
 
     @Override
     public ItemStack insertItem(int slot, ItemStack stack, boolean simulate)
     {
-        //TODO: Specify which slot body part can go into.
         if(!(stack.getItem() instanceof IBodyPart))
             return stack; //Can't put non BodyParts into inventory
         else

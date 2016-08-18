@@ -12,18 +12,14 @@ import java.util.Map;
 
 /**
  * Created by tayjay on 2016-06-26.
+ * Get Deobf names from MCP Mapping Viewer
  */
 public class ReflectHelper
 {
     public static void changeRenderPlayer(String id, RenderPlayer renderPlayer)
     {
-        Map<String, RenderPlayer> skinMapReflect = ReflectionHelper.getPrivateValue(RenderManager.class, Minecraft.getMinecraft().getRenderManager(),"skinMap","field_178636_l");
+        Map<String, RenderPlayer> skinMapReflect = ReflectionHelper.getPrivateValue(RenderManager.class, Minecraft.getMinecraft().getRenderManager(),"skinMap","field_178636_l","l");
         skinMapReflect.put(id,renderPlayer);
-        ReflectionHelper.setPrivateValue(RenderManager.class,Minecraft.getMinecraft().getRenderManager(),skinMapReflect,"skinMap","field_178636_l");
-    }
-
-    public static void setEntityGlowing(Entity entity, boolean glow)
-    {
-        ReflectionHelper.setPrivateValue(Entity.class,entity,glow,"glowing");//TODO: Set deobf/srg names
+        //ReflectionHelper.setPrivateValue(RenderManager.class,Minecraft.getMinecraft().getRenderManager(),skinMapReflect,"skinMap","field_178636_l");
     }
 }

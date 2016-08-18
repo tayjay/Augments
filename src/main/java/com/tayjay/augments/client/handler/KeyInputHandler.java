@@ -7,6 +7,8 @@ import com.tayjay.augments.network.NetworkHandler;
 import com.tayjay.augments.network.packets.PacketOpenGui;
 import com.tayjay.augments.util.CapHelper;
 import net.minecraft.client.Minecraft;
+import net.minecraftforge.fml.client.FMLClientHandler;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
 import net.minecraftforge.fml.relauncher.Side;
@@ -50,14 +52,15 @@ public class KeyInputHandler
                             {
                                 if(augments.getStackInSlot(j)!=null && augments.getStackInSlot(j).getItem() instanceof IActivate)
                                 {
-                                    ((IActivate) augments.getStackInSlot(j).getItem()).activate(augments.getStackInSlot(j),Minecraft.getMinecraft().thePlayer);
+                                    ((IActivate) augments.getStackInSlot(j).getItem()).activate(augments.getStackInSlot(j),playerParts.getStackInSlot(i),Minecraft.getMinecraft().thePlayer);
                                 }
                             }
                         }
                     }
                     break;
                 case OPEN_PLAYER_PARTS_GUI:
-                    NetworkHandler.INSTANCE.sendToServer(new PacketOpenGui(GuiHandler.GuiIDs.PLAYER_PARTS.ordinal()));
+                    NetworkHandler.sendToServer(new PacketOpenGui(GuiHandler.GuiIDs.PLAYER_PARTS.ordinal()));
+                    break;
 
             }
         }

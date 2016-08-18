@@ -11,5 +11,5 @@ public interface IActivate
 {
 
     KeyBinding getKey();
-    void activate(ItemStack stack, EntityPlayer player);//TODO: Add bodypart stack to param
+    void activate(ItemStack augment,ItemStack bodyPart, EntityPlayer player);
 }

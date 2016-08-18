@@ -7,7 +7,7 @@ public class ItemPotionInjector extends ItemAugment
 {
     public ItemPotionInjector(String name)
     {
-        super(name);
+        super(name,1);
 
     }
 }

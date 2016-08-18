@@ -27,11 +27,6 @@ public abstract class PacketRunnable<REQ extends IMessage> implements IMessage, 
         return null;
     }
 
-    /*
-    @Deprecated
-    public abstract Runnable getRunnable(final REQ message,final MessageContext ctx);
-    */
-
     public abstract Runnable getServerRunnable(final REQ message,final MessageContext ctx);
 
     public abstract Runnable getClientRunnable(final REQ message,final MessageContext ctx);

@@ -16,14 +16,14 @@ public class ItemDefib extends ItemAugment implements ILivingDeath
 {
     public ItemDefib(String name)
     {
-        super(name);
+        super(name,99);
         acceptedParts.add(PartType.TORSO);
     }
 
     @Override
     public boolean validate(ItemStack augment, ItemStack bodyPart, EntityPlayer player)
     {
-        return true;
+        return super.validate(augment,bodyPart,player);
     }
 
     @Override

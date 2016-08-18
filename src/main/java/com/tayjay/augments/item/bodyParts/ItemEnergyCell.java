@@ -31,9 +31,4 @@ public class ItemEnergyCell extends ItemBodyPart implements IEnergySupply
         return this.maxEnergy+3;
     }
 
-    @Override
-    public int currentEnergy(ItemStack stack)
-    {
-        return this.maxEnergy;
-    }
 }

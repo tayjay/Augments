@@ -1,5 +1,6 @@
 package com.tayjay.augments.item.bodyParts;
 
+import com.mojang.realmsclient.gui.ChatFormatting;
 import com.tayjay.augments.Augments;
 import com.tayjay.augments.api.capabilities.IAugHolderProvider;
 import com.tayjay.augments.api.item.IBodyPart;
@@ -8,6 +9,7 @@ import com.tayjay.augments.handler.GuiHandler;
 import com.tayjay.augments.init.IItemModelProvider;
 import com.tayjay.augments.item.ItemBase;
 import com.tayjay.augments.util.CapHelper;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.entity.RenderPlayer;
@@ -84,15 +86,8 @@ public class ItemBodyPart extends ItemBase implements IBodyPart,IItemModelProvid
         return type;
     }
 
-    //TODO: Make this through capability or something else
     @Override
-    public void setPartType(ItemStack stack, PartType type)
-    {
-        //Maybe not needed
-    }
-
-    @Override
-    public int getArmour(ItemStack stack)
+    public int getArmourValue(ItemStack stack)
     {
         return armourValue;
     }
@@ -118,11 +113,17 @@ public class ItemBodyPart extends ItemBase implements IBodyPart,IItemModelProvid
         super.addInformation(stack, playerIn, tooltip, advanced);
         tooltip.add("Tier: "+this.tier);
         tooltip.add("PartType: "+this.getPartType(stack));
-        IAugHolderProvider augments = CapHelper.getAugHolderCap(stack);
-        for(int i=0;i<augments.getSize();i++)
+        tooltip.add(ChatFormatting.BOLD+"Hold Shift for Augments");
+        if(GuiScreen.isShiftKeyDown())
         {
-            if(augments.getAugments().getStackInSlot(i)!=null)
-                tooltip.add(augments.getAugments().getStackInSlot(i).getDisplayName());
+            tooltip.remove(tooltip.size()-1);
+            tooltip.add(ChatFormatting.GOLD+"Augments:");
+            IAugHolderProvider augments = CapHelper.getAugHolderCap(stack);
+            for (int i = 0; i < augments.getSize(); i++)
+            {
+                if (augments.getAugments().getStackInSlot(i) != null)
+                    tooltip.add(augments.getAugments().getStackInSlot(i).getDisplayName());
+            }
         }
 
     }

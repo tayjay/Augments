@@ -35,9 +35,9 @@ public class LayerAugments implements LayerRenderer<EntityPlayer>
     {
         renderer = renderIn;
     }
-    public ResourceLocation TEXTURE_ELYTRA = new ResourceLocation("textures/entity/elytra.png");
+
     private static final ResourceLocation LIGHTNING_TEXTURE = new ResourceLocation("textures/entity/creeper/creeper_armor.png");
-    public ModelElytra modelElytra = new ModelElytra();
+
 
     @Override
     public void doRenderLayer(EntityPlayer playerIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale)
@@ -47,8 +47,7 @@ public class LayerAugments implements LayerRenderer<EntityPlayer>
             return;
         GL11.glPushMatrix();
         //GL11.glScalef(1.001f,1.001f,1.001f);
-        if(playerIn instanceof EntityOtherPlayerMP &&!PlayerEvents.toREQSync.containsKey(playerIn.getEntityId()))
-            PlayerEvents.toREQSync.put(playerIn.getEntityId(),new PacketREQSyncParts((EntityOtherPlayerMP)playerIn));
+
         IItemHandler parts = CapHelper.getPlayerPartsCap(playerIn).getPartsInv();
         ItemStack stackCurrent = null;
         for(int i = 0;i<parts.getSlots();i++)
@@ -58,28 +57,6 @@ public class LayerAugments implements LayerRenderer<EntityPlayer>
                 stackCurrent = parts.getStackInSlot(i);
                 ((IBodyPart)stackCurrent.getItem()).renderOnPlayer(stackCurrent,playerIn,renderer);
                 //LayerArmorBase.renderEnchantedGlint(renderer,playerIn, renderer.getMainModel(),limbSwing,limbSwingAmount,partialTicks,ageInTicks,netHeadYaw,headPitch,scale);
-                /* DRAW ELYTRA
-                if(i==2)
-                {
-                    IItemHandler augments = CapHelper.getAugHolderCap(parts.getStackInSlot(2)).getAugments();
-                    for(int j = 0;j<augments.getSlots();j++)
-                    {
-                        if(augments.getStackInSlot(j)!=null && augments.getStackInSlot(j).getItem() == ModItems.augElytra)
-                        {
-                            //TODO: Move this into an item object
-                            GlStateManager.pushMatrix();
-                            renderer.bindTexture(TEXTURE_ELYTRA);
-                            GlStateManager.translate(0.0F, 0.0F, 0.125F);
-                            this.modelElytra.setRotationAngles(limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale, playerIn);
-                            this.modelElytra.render(playerIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
-                            //this.modelElytra.render(playerIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
-                            GlStateManager.popMatrix();
-
-
-                        }
-                    }
-                }
-                */
 
                 if(false)
                 {

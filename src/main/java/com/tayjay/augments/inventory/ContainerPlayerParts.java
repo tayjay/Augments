@@ -27,7 +27,6 @@ public class ContainerPlayerParts extends Container
 {
     public final EntityPlayer player;
     public final InventoryPlayerParts inventory;
-    public HashMap<Integer, InventoryAugments> augments = new HashMap<Integer, InventoryAugments>();
     //public HashMap<Integer,ArrayList<SlotToggleLocked>> bodySlotToAugmentSlots = new HashMap<Integer, ArrayList<SlotToggleLocked>>();
     public final int DEFAULT_AUGMENT_SLOTS = 5;
 
@@ -43,24 +42,27 @@ public class ContainerPlayerParts extends Container
 
     private void setupSlots(InventoryPlayer invPlayer, InventoryPlayerParts invBody)
     {
-        augments.clear();
-        for(int i=0;i<invBody.getSlots();i++)
-        {
-            ItemStack current = inventory.getStackInSlot(i);
-            if(current!=null && CapHelper.hasAugHolderCap(current))
-                augments.put(i,new InventoryAugments(CapHelper.getAugHolderCap(current),current));
-        }
-
         int i = 0;
+        for(PartType type : PartType.values())
+        {
+            if(type == PartType.POWER)
+            {
+                this.addSlotToContainer(new SlotBodyPart(inventory, i, 150, 5 + (i - 1) * 18, type));
+                continue;
+            }
+            this.addSlotToContainer(new SlotBodyPart(inventory,i,48,5+i++*18, type));
+        }
+        /*
+        this.addSlotToContainer(new SlotBodyPart(inventory,i,48,5+i++*18, PartType.BRAIN));
         this.addSlotToContainer(new SlotBodyPart(inventory,i,48,5+i++*18, PartType.HEAD));
-        //TODO: BRAINSSS!!!
         this.addSlotToContainer(new SlotBodyPart(inventory,i,48,5+i++*18,PartType.EYES));
         this.addSlotToContainer(new SlotBodyPart(inventory,i,48,5+i++*18,PartType.TORSO));
         this.addSlotToContainer(new SlotBodyPart(inventory,i,48,5+i++*18,PartType.ARM_LEFT));
         this.addSlotToContainer(new SlotBodyPart(inventory,i,48,5+i++*18,PartType.ARM_RIGHT));
         this.addSlotToContainer(new SlotBodyPart(inventory,i,48,5+i++*18,PartType.LEG_LEFT));
         this.addSlotToContainer(new SlotBodyPart(inventory,i,48,5+i++*18,PartType.LEG_RIGHT));
-        this.addSlotToContainer(new SlotBodyPart(inventory,i,48,5+i++*18,PartType.POWER));
+        this.addSlotToContainer(new SlotBodyPart(inventory,i,150,5+(i-1)*18,PartType.POWER));
+        */
 
 
         //Player Inventory

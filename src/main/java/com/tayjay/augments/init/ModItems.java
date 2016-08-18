@@ -19,13 +19,16 @@ public class ModItems
     public static ItemBase carbonMesh;
     public static ItemTablet tablet;
     public static ItemAugmentKit praxisKit;
+    public static ItemDrug antiRejectDrug;
 
     public static ItemBodyPart cyborgEyes;
+    public static ItemBodyPart eyeSingleL;
+    public static ItemBodyPart eyeSingleR;
+
     public static ItemAugment augmentTest;
     public static ItemAugment landingSystem;
     public static ItemAugment defibrillator;
     public static ItemAugment sonar;
-    public static ItemAugElytra augElytra;
     public static ItemAugment overShield;
     public static ItemAugment typhoon;
 
@@ -50,13 +53,16 @@ public class ModItems
         carbonMesh = register(new ItemBase("carbonMesh"));
         tablet = register(new ItemTablet("tablet"));
         praxisKit = register(new ItemAugmentKit("praxisKit"));
+        antiRejectDrug = register(new ItemDrug("antiRejectDrug",1000));
 
         cyborgEyes = register(new ItemCyborgEyes("cyborgEyes",2));
-        augmentTest = register(new ItemAugment("augmentTest"));
+        eyeSingleL = register(new ItemCyborgEyes("eyeSingleL",1));
+        eyeSingleR = register(new ItemCyborgEyes("eyeSingleR",1));
+        augmentTest = register(new ItemAugment("augmentTest",0));
         landingSystem = register(new ItemLandingSystem("landingSystem"));
         defibrillator = register(new ItemDefib("defibrillator"));
         sonar =  register(new ItemSonar("sonar"));
-        augElytra = register(new ItemAugElytra("augElytra"));
+
         overShield = register(new ItemOvershield("overshield"));
         typhoon = register(new ItemExplosiveSystem("typhoon"));
 

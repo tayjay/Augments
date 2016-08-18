@@ -1,6 +1,8 @@
 package com.tayjay.augments.item.augments;
 
 import com.tayjay.augments.api.capabilities.IPlayerDataProvider;
+import com.tayjay.augments.api.events.ILivingDeath;
+import com.tayjay.augments.api.events.ILivingHurt;
 import com.tayjay.augments.api.events.IPlayerTick;
 import com.tayjay.augments.api.item.IBodyPart;
 import com.tayjay.augments.api.item.PartType;
@@ -10,6 +12,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.items.IItemHandler;
@@ -19,12 +22,12 @@ import java.util.List;
 /**
  * Created by tayjay on 2016-06-29.
  */
-public class ItemLandingSystem extends ItemAugment implements IPlayerTick
+public class ItemLandingSystem extends ItemAugment implements IPlayerTick,ILivingHurt
 {
 
     public ItemLandingSystem(String name)
     {
-        super(name);
+        super(name,1);
         acceptedParts.add(PartType.LEG_LEFT);
         acceptedParts.add(PartType.LEG_RIGHT);
     }
@@ -36,12 +39,14 @@ public class ItemLandingSystem extends ItemAugment implements IPlayerTick
         IPlayerDataProvider playerData = CapHelper.getPlayerDataCap(player);
         if(playerData.getCurrentEnergy()<getEnergyUse(augment))
             return false;
+        if(!CapHelper.getPlayerDataCap(player).validate())
+            return false;
         if (bodyPart.getItem() instanceof IBodyPart)
         {
             IItemHandler augs;
-            if (playerParts.getStackInSlot(6) != null && ((IBodyPart) bodyPart.getItem()).getPartType(bodyPart) == PartType.LEG_LEFT)
+            if (playerParts.getStackInSlot(PartType.LEG_RIGHT.ordinal()) != null && ((IBodyPart) bodyPart.getItem()).getPartType(bodyPart) == PartType.LEG_LEFT)
             {
-                augs = CapHelper.getAugHolderCap(playerParts.getStackInSlot(6)).getAugments();//CHECK RIGHT_LEG TODO: Change magic number
+                augs = CapHelper.getAugHolderCap(playerParts.getStackInSlot(PartType.LEG_RIGHT.ordinal())).getAugments();
                 for (int i = 0; i < augs.getSlots(); i++)
                 {
                     if (augs.getStackInSlot(i) != null && augs.getStackInSlot(i).getItem() == augment.getItem())
@@ -49,17 +54,20 @@ public class ItemLandingSystem extends ItemAugment implements IPlayerTick
                         return true;
                     }
                 }
-            } else if (playerParts.getStackInSlot(5) != null && ((IBodyPart) bodyPart.getItem()).getPartType(bodyPart) == PartType.LEG_RIGHT)
+            }
+
+            else if (playerParts.getStackInSlot(PartType.LEG_LEFT.ordinal()) != null && ((IBodyPart) bodyPart.getItem()).getPartType(bodyPart) == PartType.LEG_RIGHT)
             {
-                augs = CapHelper.getAugHolderCap(playerParts.getStackInSlot(5)).getAugments();//CHECK RIGHT_LEG TODO: Change magic number
+                augs = CapHelper.getAugHolderCap(playerParts.getStackInSlot(PartType.LEG_LEFT.ordinal())).getAugments();
                 for (int i = 0; i < augs.getSlots(); i++)
                 {
-                    if (augs.getStackInSlot(i).getItem() == augment.getItem())
+                    if (augs.getStackInSlot(i) != null && augs.getStackInSlot(i).getItem() == augment.getItem())
                     {
                         return true;
                     }
                 }
             }
+
         }
         return false;
     }
@@ -68,22 +76,24 @@ public class ItemLandingSystem extends ItemAugment implements IPlayerTick
     @Override
     public void onPlayerTick(ItemStack augmentStack, ItemStack bodyPartStack, TickEvent.PlayerTickEvent event)
     {
-        if(!event.player.worldObj.isRemote && event.player.fallDistance >= 3f && event.player.worldObj.getBlockState(new BlockPos(event.player.posX,event.player.posY-1,event.player.posZ)).getBlock() != Blocks.AIR && validate(augmentStack,bodyPartStack,event.player))
-        {
-            if(validate(augmentStack,bodyPartStack,event.player))
-            {
-                CapHelper.getPlayerDataCap(event.player).removeEnergy(getEnergyUse(augmentStack));
-                event.player.fallDistance = 0;
-                ChatHelper.send(event.player, "Landing System engaged!");
-                event.player.motionY = 0;
-            }
 
-        }
     }
 
     @Override
-    public float getEnergyUse(ItemStack stack)
+    public void onHurt(ItemStack augment,ItemStack bodyPart, EntityPlayer player, LivingHurtEvent event)
     {
-        return 1;
+        if(!event.getEntityLiving().worldObj.isRemote && event.getSource().damageType.equals("fall"))
+        {
+            if(validate(augment,bodyPart,player) && ((IBodyPart)bodyPart.getItem()).getPartType(bodyPart)==PartType.LEG_LEFT)
+            {
+                CapHelper.getPlayerDataCap(player).removeEnergy(getEnergyUse(augment));
+                player.fallDistance = 0;
+                event.setAmount(0);
+                ChatHelper.send(player, "Landing System engaged!");
+                player.motionY = 0;
+                event.setCanceled(true);
+            }
+
+        }
     }
 }

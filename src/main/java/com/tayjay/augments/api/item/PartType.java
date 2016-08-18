@@ -5,5 +5,18 @@ package com.tayjay.augments.api.item;
  */
 public enum PartType
 {
-    HEAD,BRAIN,EYES,TORSO,ARM_LEFT,ARM_RIGHT,LEG_LEFT,LEG_RIGHT,POWER
+    BRAIN("Brain"),HEAD("Head"),EYES("Eyes"),TORSO("Torso"),ARM_LEFT("Left Arm"),ARM_RIGHT("Right Arm"),LEG_LEFT("Left Leg"),LEG_RIGHT("Right Leg"),POWER("Power");
+
+
+    String partName;
+    PartType(String name)
+    {
+        this.partName = name;
+    }
+
+    @Override
+    public String toString()
+    {
+        return this.partName;
+    }
 }

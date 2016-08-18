@@ -18,8 +18,6 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.common.gameevent.InputEvent;
 
 import java.util.Map;
 
@@ -55,43 +53,35 @@ public class ClientProxy extends CommonProxy
         manager.getSkinMap().put("default",new RenderPlayerWithEvents(manager));
         manager.getSkinMap().put("slim",new RenderPlayerWithEvents(manager,true));
         */
-
+        Map<String, RenderPlayer> skinMap = Minecraft.getMinecraft().getRenderManager().getSkinMap();
         if(Augments.renderType == 0)
         {
             //Don't handle any rendering of Augments
         }
-        else if(Augments.renderType == 1)
-        {
-            ReflectHelper.changeRenderPlayer("default", new RenderPlayerAugments(Minecraft.getMinecraft().getRenderManager()));
-            ReflectHelper.changeRenderPlayer("slim", new RenderPlayerAugments(Minecraft.getMinecraft().getRenderManager(),true));
-
-            Map<String, RenderPlayer> skinMap = Minecraft.getMinecraft().getRenderManager().getSkinMap();
-            RenderPlayer render;
-            //Get Steve Render
-
-            render = skinMap.get("default");
-            render.addLayer(new LayerAugments(render));
-
-            //Get Alex Render
-
-            render = skinMap.get("slim");
-            render.addLayer(new LayerAugments(render));
-        }
-        else if(Augments.renderType == 2)
+        if(Augments.renderType >= 1)
         {
             //Only render over skin. No overriding
-            Map<String, RenderPlayer> skinMap = Minecraft.getMinecraft().getRenderManager().getSkinMap();
-            RenderPlayer render;
-            //Get Steve Render
 
+            RenderPlayer render;
+
+            //Get Steve Render
             render = skinMap.get("default");
             render.addLayer(new LayerAugments(render));
 
             //Get Alex Render
-
             render = skinMap.get("slim");
             render.addLayer(new LayerAugments(render));
         }
+        if(Augments.renderType >=2)
+        {
+            //Change the player render objects
+            //As well as the layer
+            //WARNING: CAREFUL! As when changing the player renderer it resets all values.
+            ReflectHelper.changeRenderPlayer("default", new RenderPlayerAugments(skinMap.get("default"),Minecraft.getMinecraft().getRenderManager()));
+            ReflectHelper.changeRenderPlayer("slim", new RenderPlayerAugments(skinMap.get("slim"),Minecraft.getMinecraft().getRenderManager(),true));
+        }
+
+
 
 
     }

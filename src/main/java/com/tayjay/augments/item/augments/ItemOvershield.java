@@ -24,20 +24,18 @@ public class ItemOvershield extends ItemAugment implements IActivate
 {
     public ItemOvershield(String name)
     {
-        super(name);
+        super(name,2);
         acceptedParts.add(PartType.TORSO);
     }
 
     @Override
     public boolean validate(ItemStack augment, ItemStack bodyPart, EntityPlayer player)
     {
-        return CapHelper.getPlayerDataCap(player).getCurrentEnergy()>=getEnergyUse(augment);
-    }
-
-    @Override
-    public float getEnergyUse(ItemStack stack)
-    {
-        return 2;
+        if(CapHelper.getPlayerDataCap(player).getCurrentEnergy()<getEnergyUse(augment))
+            return false;
+        if(!CapHelper.getPlayerDataCap(player).validate())
+            return false;
+        return true;
     }
 
 
@@ -48,13 +46,13 @@ public class ItemOvershield extends ItemAugment implements IActivate
     }
 
     @Override
-    public void activate(ItemStack stack, EntityPlayer playerIn)
+    public void activate(ItemStack stack,ItemStack bodyPart, EntityPlayer playerIn)
     {
         if(validate(stack,null,playerIn))
         {
             CapHelper.getPlayerDataCap(playerIn).removeEnergy(getEnergyUse(stack));
 
-            EntityUtil.setFlag(playerIn,21,true);
+            //EntityUtil.setFlag(playerIn,21,true);
         }
         else
         {

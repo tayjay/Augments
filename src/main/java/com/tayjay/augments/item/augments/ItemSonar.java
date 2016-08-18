@@ -1,6 +1,7 @@
 package com.tayjay.augments.item.augments;
 
 import com.sun.scenario.DelayedRunnable;
+import com.tayjay.augments.api.capabilities.IPlayerDataProvider;
 import com.tayjay.augments.api.events.IActivate;
 import com.tayjay.augments.api.events.IHUDProvider;
 import com.tayjay.augments.api.item.PartType;
@@ -34,7 +35,7 @@ public class ItemSonar extends ItemAugment implements IActivate
 
     public ItemSonar(String name)
     {
-        super(name);
+        super(name,1);
         acceptedParts.add(PartType.EYES);
     }
 
@@ -45,12 +46,12 @@ public class ItemSonar extends ItemAugment implements IActivate
     }
 
     @Override
-    public void activate(ItemStack stack, EntityPlayer player)
+    public void activate(ItemStack stack,ItemStack bodyPart, EntityPlayer player)
     {
         if(validate(stack,null,player))
         {
             CapHelper.getPlayerDataCap(player).removeEnergy(getEnergyUse(stack));
-            NetworkHandler.INSTANCE.sendToServer(new PacketChangeEnergy(getEnergyUse(stack), PacketChangeEnergy.EnergyType.CURRENT));
+            NetworkHandler.sendToServer(new PacketChangeEnergy(getEnergyUse(stack), PacketChangeEnergy.EnergyType.CURRENT));
             double posX = player.posX;
             double posY = player.posY;
             double posZ = player.posZ;
@@ -70,16 +71,13 @@ public class ItemSonar extends ItemAugment implements IActivate
     @Override
     public boolean validate(ItemStack augment, ItemStack bodyPart, EntityPlayer player)
     {
-        if(CapHelper.getPlayerDataCap(player).getCurrentEnergy()>=getEnergyUse(augment))
+        IPlayerDataProvider playerData = CapHelper.getPlayerDataCap(player);
+        if(!playerData.validate())
+            return false;
+        if(playerData.getCurrentEnergy()>=getEnergyUse(augment))
         {
             return true;
         }
         return false;
-    }
-
-    @Override
-    public float getEnergyUse(ItemStack stack)
-    {
-        return 1F;
     }
 }

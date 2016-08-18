@@ -17,7 +17,7 @@ public class ItemExplosiveSystem extends ItemAugment implements IActivate
 {
     public ItemExplosiveSystem(String name)
     {
-        super(name);
+        super(name,3);
         acceptedParts.add(PartType.TORSO);
     }
 
@@ -28,7 +28,7 @@ public class ItemExplosiveSystem extends ItemAugment implements IActivate
     }
 
     @Override
-    public void activate(ItemStack stack, EntityPlayer player)
+    public void activate(ItemStack stack,ItemStack bodyPart, EntityPlayer player)
     {
         if(player.isSneaking()&&validate(stack,null,player))
         {
@@ -36,12 +36,12 @@ public class ItemExplosiveSystem extends ItemAugment implements IActivate
             if(!player.capabilities.disableDamage)
             {
                 player.capabilities.disableDamage = true;
-                NetworkHandler.INSTANCE.sendToServer(new PacketExplode(player, player.posX, player.posY, player.posZ, 10, false));
+                NetworkHandler.sendToServer(new PacketExplode(player, player.posX, player.posY, player.posZ, 10, false));
                 player.capabilities.disableDamage = false;
             }
             else
             {
-                NetworkHandler.INSTANCE.sendToServer(new PacketExplode(player, player.posX, player.posY, player.posZ, 10, false));
+                NetworkHandler.sendToServer(new PacketExplode(player, player.posX, player.posY, player.posZ, 10, false));
             }
         }
     }
@@ -50,16 +50,12 @@ public class ItemExplosiveSystem extends ItemAugment implements IActivate
     public boolean validate(ItemStack augment, ItemStack bodyPart, EntityPlayer player)
     {
         IPlayerDataProvider playerData = CapHelper.getPlayerDataCap(player);
+        if(!playerData.validate())
+            return false;
         if(playerData.getCurrentEnergy()>=getEnergyUse(augment))
         {
             return true;
         }
         return false;
-    }
-
-    @Override
-    public float getEnergyUse(ItemStack stack)
-    {
-        return 3;
     }
 }

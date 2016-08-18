@@ -18,9 +18,7 @@ public interface IBodyPart extends IAugmentHolder
 
     PartType getPartType(ItemStack stack);
 
-    void setPartType(ItemStack stack, PartType type);
-
-    int getArmour(ItemStack stack);
+    int getArmourValue(ItemStack stack);
 
     ResourceLocation getTexture(ItemStack stack,boolean hasSmallArms);
 

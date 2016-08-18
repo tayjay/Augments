@@ -7,11 +7,17 @@ import com.tayjay.augments.capability.PlayerPartsImpl;
 import com.tayjay.augments.network.NetworkHandler;
 import com.tayjay.augments.network.packets.PacketREQSyncParts;
 import com.tayjay.augments.util.CapHelper;
+import com.tayjay.augments.util.EntityUtil;
 import com.tayjay.augments.util.LogHelper;
 import com.tayjay.augments.util.RenderUtil;
+import net.minecraft.client.entity.EntityOtherPlayerMP;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.passive.EntityPig;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
@@ -19,6 +25,7 @@ import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
@@ -32,18 +39,18 @@ import java.util.HashMap;
  */
 public class PlayerEvents
 {
-    @SideOnly(Side.CLIENT)
-    public static HashMap<Integer,PacketREQSyncParts> toREQSync = new HashMap<Integer,PacketREQSyncParts>();
     public static final int SYNC_TICKS = 20;
 
     @SideOnly(Side.CLIENT)
     @SubscribeEvent
     public void playerSync(TickEvent.PlayerTickEvent event)
     {
-        if(event.player.worldObj.getTotalWorldTime() % SYNC_TICKS == 0 && toREQSync.containsKey(event.player.getEntityId()))
+        if(!event.player.worldObj.isRemote)
+            return;
+        long time = (event.player.ticksExisted);
+        if(time % SYNC_TICKS == 0)//Adding Entity ID reduces packets per tick sent
         {
-            NetworkHandler.INSTANCE.sendToServer(toREQSync.get(event.player.getEntityId()));
-            toREQSync.remove(event.player.getEntityId());
+            NetworkHandler.sendToServer(new PacketREQSyncParts(event.player));
         }
     }
 
@@ -105,4 +112,6 @@ public class PlayerEvents
             //Clear any offline data
         }
     }
+
+
 }

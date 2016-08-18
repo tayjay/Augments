@@ -1,5 +1,6 @@
 package com.tayjay.augments.capability;
 
+import com.tayjay.augments.Augments;
 import com.tayjay.augments.api.AugmentsAPI;
 import com.tayjay.augments.api.capabilities.IPlayerDataProvider;
 import com.tayjay.augments.api.item.IEnergySupply;
@@ -10,11 +11,13 @@ import com.tayjay.augments.util.CapHelper;
 import com.tayjay.augments.util.ChatHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.MobEffects;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagFloat;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.capabilities.Capability;
@@ -54,9 +57,20 @@ public class PlayerDataImpl
     private static class DefaultImpl implements IPlayerDataProvider
     {
         private EntityPlayer player;
+
         private float maxEnergy;
         private float currentEnergy;
         private float rechargeRate;
+        private long lastEnergyUseTick;
+        /**How many ticks after discharging until energy can charge up again*/
+        private final long RECHARGE_DELAY = 40;
+
+        /**
+         * Counter for how long until player experiences effects from body rejecting augmented parts!
+         * Ignored if Drug Dependancy is disabled in config.
+         */
+        private int drugTimer;
+
         private final String TAG_NAME = "player_aug_data";
 
         public DefaultImpl(){this(null);}
@@ -68,9 +82,17 @@ public class PlayerDataImpl
 
 
         @Override
+        public boolean validate()
+        {
+            if(Augments.drugDependant)
+                return drugTimer>0;
+            return true;
+        }
+
+        @Override
         public void sync(EntityPlayerMP player)
         {
-            NetworkHandler.INSTANCE.sendTo(new PacketSyncPlayerData(writeNBT(),player),player);
+            NetworkHandler.sendTo(new PacketSyncPlayerData(writeNBT(),this.player),player);
         }
 
         @Override
@@ -145,9 +167,10 @@ public class PlayerDataImpl
         {
             if(this.currentEnergy>=energyIn)
             {
+                lastEnergyUseTick = player.worldObj.getTotalWorldTime();
                 this.currentEnergy-=energyIn;
                 if(FMLCommonHandler.instance().getEffectiveSide()== Side.CLIENT)
-                    NetworkHandler.INSTANCE.sendToServer(new PacketChangeEnergy(energyIn, PacketChangeEnergy.EnergyType.CURRENT));
+                    NetworkHandler.sendToServer(new PacketChangeEnergy(energyIn, PacketChangeEnergy.EnergyType.CURRENT));
                 return true;
             }
             return false;
@@ -157,7 +180,8 @@ public class PlayerDataImpl
         @Override
         public void rechargeTick()
         {
-            addEnergy(getRechargeRate());
+            if(Math.abs(lastEnergyUseTick-player.worldObj.getTotalWorldTime())>RECHARGE_DELAY)
+                addEnergy(getRechargeRate());
         }
 
         @Override
@@ -167,12 +191,75 @@ public class PlayerDataImpl
             ChatHelper.send(player,"Rebooting...");
         }
 
+        @Override
+        public boolean needsDrug()
+        {
+            return checkPlayerAugmented(player);
+        }
+
+        private boolean checkPlayerAugmented(EntityPlayer player)
+        {
+            IItemHandler parts = player.getCapability(AugmentsAPI.PLAYER_PARTS_CAPABILITY,null).getPartsInv();
+            for(int i =0;i<parts.getSlots();i++)
+            {
+                if(parts.getStackInSlot(i)!=null)
+                    return true;
+            }
+            return false;
+        }
+
+        @Override
+        public void doDrugTick()
+        {
+            if(needsDrug())
+            {
+                if (drugTimer-1 < 0)
+                {
+                    this.doDrugEffect();
+                }
+                else
+                {
+                    drugTimer--;
+                }
+            }
+        }
+
+        @Override
+        public int getDrugTimer()
+        {
+            return this.drugTimer;
+        }
+
+        @Override
+        public void setDrugTimer(int amount)
+        {
+            this.drugTimer = amount;
+        }
+
+        @Override
+        public void addDrugTimer(int amount)
+        {
+            this.drugTimer+= amount;
+        }
+
+        @Override
+        public void doDrugEffect()
+        {
+            if(!player.isCreative())
+            {
+                player.addPotionEffect(new PotionEffect(MobEffects.HUNGER, 40));
+                player.addPotionEffect(new PotionEffect(MobEffects.NAUSEA, 40));
+                player.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 40));
+            }
+        }
+
         private NBTTagCompound writeNBT()
         {
             NBTTagCompound tag = new NBTTagCompound();
             tag.setFloat("maxE",this.maxEnergy);
             tag.setFloat("curE",this.currentEnergy);
             tag.setFloat("recharge",this.rechargeRate);
+            tag.setInteger("drugTimer",this.drugTimer);
             return tag;
         }
 
@@ -197,6 +284,8 @@ public class PlayerDataImpl
             {
                 this.rechargeRate = nbt.getFloat("recharge");
             }
+            if(nbt.hasKey("drugTimer"))
+                this.drugTimer = nbt.getInteger("drugTimer");
         }
     }
 

@@ -33,6 +33,7 @@ public interface IPlayerDataProvider extends INBTSerializable<NBTTagCompound>
     void sortAugments();
     */
 
+    boolean validate();
 
     void sync(EntityPlayerMP player);
 
@@ -55,6 +56,19 @@ public interface IPlayerDataProvider extends INBTSerializable<NBTTagCompound>
     void rechargeTick();
 
     void reboot();
+
+    //Anti-Rejection Drug Data
+    boolean needsDrug();
+
+    void doDrugTick();
+
+    int getDrugTimer();
+
+    void setDrugTimer(int amount);
+
+    void addDrugTimer(int amount);
+
+    void doDrugEffect();
 
     //ItemStack getAllAugments();
 

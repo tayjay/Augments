@@ -7,6 +7,7 @@ item.augments:sonar.name=Sonar
 item.augments:landingSystem.name=Landing System
 item.augments:defibrillator.name=Defibrillator
 item.augments:overshield.name=Overshield
+item.augments:typhoon.name=Typhoon Explosion System
 
 
 item.augments:carbonMesh.name=Carbon Mesh

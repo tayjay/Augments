@@ -9,6 +9,4 @@ import net.minecraft.item.ItemStack;
 public interface IEnergySupply //TODO: Change name to charge? Makes more sense I suppose.
 {
     int maxEnergy(ItemStack stack);
-
-    int currentEnergy(ItemStack stack);
 }
