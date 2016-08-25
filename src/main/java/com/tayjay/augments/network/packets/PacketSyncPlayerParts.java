@@ -48,28 +48,21 @@ public class PacketSyncPlayerParts extends PacketRunnable<PacketSyncPlayerParts>
     }
 
     @Override
-    public Runnable getServerRunnable(PacketSyncPlayerParts message, MessageContext ctx)
+    public void handleServer(PacketSyncPlayerParts message, MessageContext ctx)
     {
-        return null;
+
     }
 
     @Override
-    public Runnable getClientRunnable(final PacketSyncPlayerParts message,final MessageContext ctx)
+    public void handleClient(PacketSyncPlayerParts message, MessageContext ctx)
     {
-        return new Runnable()
+        if(message.playerId == Minecraft.getMinecraft().thePlayer.getEntityId())
+            Augments.proxy.getClientPlayerParts().deserializeNBT(message.nbt);
+        else
         {
-            @Override
-            public void run()
-            {
-                if(message.playerId == Minecraft.getMinecraft().thePlayer.getEntityId())
-                    Augments.proxy.getClientPlayerParts().deserializeNBT(message.nbt);
-                else
-                {
-                    //TODO: CONSIDER REVISION! This may not work! May need another packet to sync data from another player.
-                    EntityPlayer player = (EntityPlayer) Minecraft.getMinecraft().theWorld.getEntityByID(message.playerId);
-                    CapHelper.getPlayerPartsCap(player).deserializeNBT(message.nbt);
-                }
-            }
-        };
+            //TODO: CONSIDER REVISION! This may not work! May need another packet to sync data from another player.
+            EntityPlayer player = (EntityPlayer) Minecraft.getMinecraft().theWorld.getEntityByID(message.playerId);
+            CapHelper.getPlayerPartsCap(player).deserializeNBT(message.nbt);
+        }
     }
 }

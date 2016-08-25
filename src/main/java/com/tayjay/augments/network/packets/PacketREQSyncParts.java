@@ -37,22 +37,15 @@ public class PacketREQSyncParts extends PacketRunnable<PacketREQSyncParts>
     }
 
     @Override
-    public Runnable getServerRunnable(final PacketREQSyncParts message, final MessageContext ctx)
+    public void handleServer(PacketREQSyncParts message, MessageContext ctx)
     {
-        return new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                EntityPlayerMP playerOther = (EntityPlayerMP) ctx.getServerHandler().playerEntity.worldObj.getEntityByID(message.playerId);
-                NetworkHandler.sendTo(new PacketSyncPlayerParts(CapHelper.getPlayerPartsCap(playerOther).serializeNBT(),playerOther),ctx.getServerHandler().playerEntity);
-            }
-        };
+        EntityPlayerMP playerOther = (EntityPlayerMP) ctx.getServerHandler().playerEntity.worldObj.getEntityByID(message.playerId);
+        NetworkHandler.sendTo(new PacketSyncPlayerParts(CapHelper.getPlayerPartsCap(playerOther).serializeNBT(),playerOther),ctx.getServerHandler().playerEntity);
     }
 
     @Override
-    public Runnable getClientRunnable(PacketREQSyncParts message, MessageContext ctx)
+    public void handleClient(PacketREQSyncParts message, MessageContext ctx)
     {
-        return null;
+
     }
 }

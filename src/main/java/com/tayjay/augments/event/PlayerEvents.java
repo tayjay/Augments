@@ -2,6 +2,8 @@ package com.tayjay.augments.event;
 
 import com.tayjay.augments.api.capabilities.IPlayerDataProvider;
 import com.tayjay.augments.api.capabilities.IPlayerPartsProvider;
+import com.tayjay.augments.api.item.IBodyPart;
+import com.tayjay.augments.api.item.PartType;
 import com.tayjay.augments.capability.PlayerDataImpl;
 import com.tayjay.augments.capability.PlayerPartsImpl;
 import com.tayjay.augments.network.NetworkHandler;
@@ -10,14 +12,20 @@ import com.tayjay.augments.util.CapHelper;
 import com.tayjay.augments.util.EntityUtil;
 import com.tayjay.augments.util.LogHelper;
 import com.tayjay.augments.util.RenderUtil;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityOtherPlayerMP;
+import net.minecraft.client.particle.ParticleCrit;
+import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.passive.EntityPig;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraftforge.client.event.RenderHandEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
@@ -28,8 +36,10 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.lwjgl.opengl.GL11;
 
 import java.util.HashMap;
 
@@ -47,8 +57,8 @@ public class PlayerEvents
     {
         if(!event.player.worldObj.isRemote)
             return;
-        long time = (event.player.ticksExisted);
-        if(time % SYNC_TICKS == 0)//Adding Entity ID reduces packets per tick sent
+        long time = (event.player.ticksExisted);//Adding Entity ID reduces packets per tick sent
+        if(time % SYNC_TICKS == 0)
         {
             NetworkHandler.sendToServer(new PacketREQSyncParts(event.player));
         }
@@ -112,6 +122,26 @@ public class PlayerEvents
             //Clear any offline data
         }
     }
+
+
+    /*
+    @SubscribeEvent
+    public void renderHand(RenderHandEvent event)
+    {
+        EntityPlayer clientPlayer = Minecraft.getMinecraft().thePlayer;
+        ItemStack rightArm = CapHelper.getPlayerPartsCap(clientPlayer).getStackByPart(PartType.ARM_RIGHT);
+
+        if(rightArm!=null)
+        {
+            GL11.glColor4d(1,1,1,1);
+            if(clientPlayer.isSneaking())
+                GL11.glTranslated(0,-0.2,0);
+            RenderPlayer renderPlayer = ReflectionHelper.getPrivateValue(RenderManager.class,Minecraft.getMinecraft().getRenderManager(),"playerRenderer");
+            ((IBodyPart) rightArm.getItem()).renderOnPlayer(rightArm,clientPlayer, renderPlayer);
+        }
+    }
+    */
+
 
 
 }

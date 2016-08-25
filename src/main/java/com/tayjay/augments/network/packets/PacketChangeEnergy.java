@@ -39,30 +39,21 @@ public class PacketChangeEnergy extends PacketRunnable<PacketChangeEnergy>
     }
 
     @Override
-    public Runnable getServerRunnable(final PacketChangeEnergy message, final MessageContext ctx)
+    public void handleServer(final PacketChangeEnergy message, final MessageContext ctx)
     {
-        return new Runnable()
+        switch (message.type)
         {
-            @Override
-            public void run()
-            {
-                switch (message.type)
-                {
-                    case 1:
-                        CapHelper.getPlayerDataCap(ctx.getServerHandler().playerEntity).removeEnergy(message.amount);
-                        break;
-                    default:
-                        LogHelper.info("This PacketChangeEnergy has not been setup correctly with type "+message.type);
-                }
-
-            }
-        };
+            case 1:
+                CapHelper.getPlayerDataCap(ctx.getServerHandler().playerEntity).removeEnergy(message.amount);
+                break;
+            default:
+                LogHelper.info("This PacketChangeEnergy has not been setup correctly with type "+message.type);
+        }
     }
 
     @Override
-    public Runnable getClientRunnable(PacketChangeEnergy message, MessageContext ctx)
+    public void handleClient(PacketChangeEnergy message, MessageContext ctx)
     {
-        return null;
     }
 
     public enum EnergyType

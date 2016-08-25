@@ -26,7 +26,7 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 /**
  * Created by tayjay on 2016-06-23.
  */
-@Mod(modid = Augments.modId,name = Augments.name,version = Augments.version, acceptedMinecraftVersions = "[1.9.4]",guiFactory = Augments.guiFactory)
+@Mod(modid = Augments.modId,name = Augments.name,version = Augments.version,guiFactory = Augments.guiFactory)
 public class Augments
 {
     public static final String modId = "augments";

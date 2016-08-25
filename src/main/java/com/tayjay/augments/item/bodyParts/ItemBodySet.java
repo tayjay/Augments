@@ -22,6 +22,11 @@ public class ItemBodySet extends ItemBodyPart
         super(name, tier,armourValue,storageSize,textureName,type);
     }
 
+    public ItemBodySet(String name,int tier,int armourValue, int storageSize, String texture,String textureS, PartType type)
+    {
+        super(name,tier,armourValue,storageSize,texture,textureS,type);
+    }
+
     @Override
     public void renderOnPlayer(ItemStack stack, EntityPlayer playerIn, RenderPlayer renderPlayer)
     {
@@ -31,8 +36,8 @@ public class ItemBodySet extends ItemBodyPart
         switch (getPartType(stack))
         {
             case HEAD:
-                parent = renderPlayer.getMainModel().bipedHeadwear;
-                model = modelSteve.bipedHeadwear;
+                parent = renderPlayer.getMainModel().bipedHead;
+                model = modelSteve.bipedHead;
                 break;
             case EYES:
                 parent = renderPlayer.getMainModel().bipedHead;

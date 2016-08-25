@@ -2,20 +2,11 @@ package com.tayjay.augments.item.augments;
 
 import com.tayjay.augments.api.events.IActivate;
 import com.tayjay.augments.api.item.PartType;
-import com.tayjay.augments.network.NetworkHandler;
-import com.tayjay.augments.network.packets.PacketChangeEnergy;
 import com.tayjay.augments.util.CapHelper;
 import com.tayjay.augments.util.ChatHelper;
-import com.tayjay.augments.util.EntityUtil;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.AxisAlignedBB;
-
-import java.util.List;
 
 /**
  * Created by tayjay on 2016-07-03.

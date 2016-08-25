@@ -37,14 +37,14 @@ public class PacketSyncAugHolder extends PacketRunnable<PacketSyncAugHolder>
     }
 
     @Override
-    public Runnable getServerRunnable(PacketSyncAugHolder message, MessageContext ctx)
+    public void handleServer(PacketSyncAugHolder message, MessageContext ctx)
     {
-        return null;
+
     }
 
     @Override
-    public Runnable getClientRunnable(PacketSyncAugHolder message, MessageContext ctx)
+    public void handleClient(PacketSyncAugHolder message, MessageContext ctx)
     {
-        return null;
+
     }
 }

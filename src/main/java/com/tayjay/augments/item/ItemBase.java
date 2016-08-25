@@ -1,6 +1,7 @@
 package com.tayjay.augments.item;
 
 import com.tayjay.augments.Augments;
+import com.tayjay.augments.api.DynamicIcon;
 import com.tayjay.augments.init.IItemModelProvider;
 import com.tayjay.augments.network.NetworkHandler;
 import net.minecraft.entity.player.EntityPlayer;
@@ -43,6 +44,7 @@ public class ItemBase extends Item implements IItemModelProvider
 
     public void registerItemModel(Item item)
     {
+        DynamicIcon.createGenericIcon(Augments.modId,Augments.name,name);
         Augments.proxy.registerItemRenderer(this,0,name);
     }
 }

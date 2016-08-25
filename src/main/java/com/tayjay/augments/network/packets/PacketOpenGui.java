@@ -20,22 +20,15 @@ public class PacketOpenGui extends PacketRunnable<PacketOpenGui>
     }
 
     @Override
-    public Runnable getServerRunnable(final PacketOpenGui message,final MessageContext ctx)
+    public void handleServer(final PacketOpenGui message,final MessageContext ctx)
     {
-        return new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                ctx.getServerHandler().playerEntity.openGui(Augments.instance,message.guiId,ctx.getServerHandler().playerEntity.worldObj,0,0,0);
-            }
-        };
+        ctx.getServerHandler().playerEntity.openGui(Augments.instance,message.guiId,ctx.getServerHandler().playerEntity.worldObj,0,0,0);
     }
 
     @Override
-    public Runnable getClientRunnable(PacketOpenGui message, MessageContext ctx)
+    public void handleClient(PacketOpenGui message, MessageContext ctx)
     {
-        return null;
+
     }
 
     @Override

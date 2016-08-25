@@ -5,12 +5,10 @@ import com.tayjay.augments.api.item.PartType;
 import com.tayjay.augments.init.IItemModelProvider;
 import com.tayjay.augments.item.ItemBase;
 import com.tayjay.augments.util.CapHelper;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.TextComponentBase;
-import net.minecraft.util.text.TextComponentUtils;
 import net.minecraft.util.text.TextFormatting;
 
 import java.util.ArrayList;
@@ -65,7 +63,7 @@ public class ItemAugment extends ItemBase implements IAugment,IItemModelProvider
     @Override
     public boolean validate(ItemStack augment, ItemStack bodyPart, EntityPlayer player)
     {
-        return CapHelper.getPlayerDataCap(player).validate();
+        return CapHelper.getPlayerDataCap((EntityPlayer) player).validate();
     }
 
     @Override

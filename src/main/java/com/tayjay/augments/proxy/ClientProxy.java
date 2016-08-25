@@ -1,6 +1,7 @@
 package com.tayjay.augments.proxy;
 
 import com.tayjay.augments.Augments;
+import com.tayjay.augments.api.DynamicIcon;
 import com.tayjay.augments.api.capabilities.IPlayerDataProvider;
 import com.tayjay.augments.api.render.LayerAugments;
 import com.tayjay.augments.api.capabilities.IPlayerPartsProvider;

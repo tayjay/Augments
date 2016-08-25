@@ -73,13 +73,13 @@ public class ModItems
         legLeftTest = register(new ItemBodySet("legLeftTest",2,3,2,"template", PartType.LEG_LEFT));
         legRightTest = register(new ItemBodySet("legRightTest",2,3,2,"template", PartType.LEG_RIGHT));
 
-        //TODO: Make iron texture
-        headIron = register(new ItemBodySet("headIron",1,3,2,"iron",PartType.HEAD));
-        torsoIron = register(new ItemBodySet("torsoIron",1,4,3,"iron",PartType.TORSO));
-        armLeftIron = register(new ItemBodySet("armLeftIron",1,2,2,"iron",PartType.ARM_LEFT));
-        armRightIron = register(new ItemBodySet("armRightIron",1,2,2,"iron",PartType.ARM_RIGHT));
-        legLeftIron = register(new ItemBodySet("legLeftIron",1,2,2,"iron",PartType.LEG_LEFT));
-        legRightIron = register(new ItemBodySet("legRightIron",1,2,2,"iron",PartType.LEG_RIGHT));
+
+        headIron = register(new ItemBodySet("headIron",1,3,2,"iron_good","iron_good",PartType.HEAD));
+        torsoIron = register(new ItemBodySet("torsoIron",1,4,3,"iron_good","iron_good",PartType.TORSO));
+        armLeftIron = register(new ItemBodySet("armLeftIron",1,2,2,"iron_good","iron_good",PartType.ARM_LEFT));
+        armRightIron = register(new ItemBodySet("armRightIron",1,2,2,"iron_good","iron_good",PartType.ARM_RIGHT));
+        legLeftIron = register(new ItemBodySet("legLeftIron",1,2,2,"iron_good","iron_good",PartType.LEG_LEFT));
+        legRightIron = register(new ItemBodySet("legRightIron",1,2,2,"iron_good","iron_good",PartType.LEG_RIGHT));
 
         energyCellBasic = register(new ItemEnergyCell("energyCellBasic",1,1));
 

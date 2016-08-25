@@ -43,22 +43,15 @@ public class PacketSyncPlayerData extends PacketRunnable<PacketSyncPlayerData>
     }
 
     @Override
-    public Runnable getServerRunnable(final PacketSyncPlayerData message, final MessageContext ctx)
+    public void handleServer(PacketSyncPlayerData message, MessageContext ctx)
     {
-        return null;
+
     }
 
     @Override
-    public Runnable getClientRunnable(final PacketSyncPlayerData message, final MessageContext ctx)
+    public void handleClient(PacketSyncPlayerData message, MessageContext ctx)
     {
-        return new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                if(message.playerId == Minecraft.getMinecraft().thePlayer.getEntityId())
-                    Augments.proxy.getClientPlayerData().deserializeNBT(message.nbt);
-            }
-        };
+        if(message.playerId == Minecraft.getMinecraft().thePlayer.getEntityId())
+            Augments.proxy.getClientPlayerData().deserializeNBT(message.nbt);
     }
 }

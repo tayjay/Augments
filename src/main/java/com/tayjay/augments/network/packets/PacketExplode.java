@@ -52,22 +52,15 @@ public class PacketExplode extends PacketRunnable<PacketExplode>
     }
 
     @Override
-    public Runnable getServerRunnable(final PacketExplode message, final MessageContext ctx)
+    public void handleServer(PacketExplode message, MessageContext ctx)
     {
-        return new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                Entity entity = ctx.getServerHandler().playerEntity.worldObj.getEntityByID(message.entityId);
-                entity.worldObj.createExplosion(entity,message.x,message.y,message.z,message.strength,message.isSmoking);
-            }
-        };
+        Entity entity = ctx.getServerHandler().playerEntity.worldObj.getEntityByID(message.entityId);
+        entity.worldObj.createExplosion(entity,message.x,message.y,message.z,message.strength,message.isSmoking);
     }
 
     @Override
-    public Runnable getClientRunnable(PacketExplode message, MessageContext ctx)
+    public void handleClient(PacketExplode message, MessageContext ctx)
     {
-        return null;
+
     }
 }

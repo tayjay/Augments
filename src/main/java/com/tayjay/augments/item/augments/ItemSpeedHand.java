@@ -1,12 +1,10 @@
 package com.tayjay.augments.item.augments;
 
 import com.tayjay.augments.api.capabilities.IPlayerDataProvider;
-import com.tayjay.augments.api.events.ILivingAttack;
 import com.tayjay.augments.api.events.IPlayerTick;
 import com.tayjay.augments.api.item.IBodyPart;
 import com.tayjay.augments.api.item.PartType;
 import com.tayjay.augments.util.CapHelper;
-import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
@@ -14,7 +12,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumHandSide;
-import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 import java.util.UUID;
@@ -57,10 +54,12 @@ public class ItemSpeedHand extends ItemAugment implements IPlayerTick
     public boolean validate(ItemStack augment, ItemStack bodyPart, EntityPlayer player)
     {
         IPlayerDataProvider playerData = CapHelper.getPlayerDataCap(player);
+
         if (!playerData.validate())
         {
             return false;
         }
         return true;
+
     }
 }

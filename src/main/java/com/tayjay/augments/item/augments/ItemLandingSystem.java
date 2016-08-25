@@ -1,7 +1,6 @@
 package com.tayjay.augments.item.augments;
 
 import com.tayjay.augments.api.capabilities.IPlayerDataProvider;
-import com.tayjay.augments.api.events.ILivingDeath;
 import com.tayjay.augments.api.events.ILivingHurt;
 import com.tayjay.augments.api.events.IPlayerTick;
 import com.tayjay.augments.api.item.IBodyPart;
@@ -9,15 +8,10 @@ import com.tayjay.augments.api.item.PartType;
 import com.tayjay.augments.util.CapHelper;
 import com.tayjay.augments.util.ChatHelper;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
-import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.items.IItemHandler;
-
-import java.util.List;
 
 /**
  * Created by tayjay on 2016-06-29.
