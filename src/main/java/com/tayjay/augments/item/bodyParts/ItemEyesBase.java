@@ -39,15 +39,18 @@ public class ItemEyesBase extends ItemBodyPart implements IHUDProvider
     }
 
     ModelPlayer model = new ModelPlayer(0.1f,false);
+    //ModelRenderOBJ obj;
 
     @Override
     public void renderOnPlayer(ItemStack stack, EntityPlayer playerIn, RenderPlayer renderPlayer)
     {
+        //obj = new ModelRenderOBJ(renderPlayer.getMainModel(),new ResourceLocation(Augments.modId+":models/block/cube.obj"),new ResourceLocation(Augments.modId+":textures/block/modeltest.png"));
         GL11.glPushMatrix();
         Minecraft.getMinecraft().renderEngine.bindTexture(getTexture(stack,false));
 
         alignModels(renderPlayer.getMainModel().bipedHead,model.bipedHead,playerIn.isSneaking());
 
+        //obj.render(1f);
         model.bipedHead.render(0.0625f);
         GL11.glPopMatrix();
     }
@@ -68,7 +71,7 @@ public class ItemEyesBase extends ItemBodyPart implements IHUDProvider
             return;
         if(event.getType() == RenderGameOverlayEvent.ElementType.TEXT)
         {
-            IItemHandler parts = CapHelper.getPlayerPartsCap(mc.thePlayer).getPartsInv();
+            IItemHandler parts = CapHelper.getPlayerPartsCap(mc.thePlayer).getBodyParts();
 
             drawEnergyCells(stack,parts, event);
 

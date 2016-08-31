@@ -9,6 +9,7 @@ import net.minecraftforge.items.IItemHandler;
 
 /**
  * Created by tayjay on 2016-06-26.
+ * All data needed by the mod to preform functions.
  */
 public interface IPlayerDataProvider extends INBTSerializable<NBTTagCompound>
 {

@@ -1,8 +1,8 @@
 package com.tayjay.augments.item.augments;
 
 import com.tayjay.augments.api.capabilities.IPlayerDataProvider;
+import com.tayjay.augments.api.capabilities.IPlayerPartsProvider;
 import com.tayjay.augments.api.events.ILivingHurt;
-import com.tayjay.augments.api.events.IPlayerTick;
 import com.tayjay.augments.api.item.IBodyPart;
 import com.tayjay.augments.api.item.PartType;
 import com.tayjay.augments.util.CapHelper;
@@ -16,7 +16,7 @@ import net.minecraftforge.items.IItemHandler;
 /**
  * Created by tayjay on 2016-06-29.
  */
-public class ItemLandingSystem extends ItemAugment implements IPlayerTick,ILivingHurt
+public class ItemLandingSystem extends ItemAugment implements ILivingHurt
 {
 
     public ItemLandingSystem(String name)
@@ -29,18 +29,19 @@ public class ItemLandingSystem extends ItemAugment implements IPlayerTick,ILivin
     @Override
     public boolean validate(ItemStack augment, ItemStack bodyPart, EntityPlayer player)
     {
-        IItemHandler playerParts = CapHelper.getPlayerPartsCap(player).getPartsInv();
+        IPlayerPartsProvider playerParts = CapHelper.getPlayerPartsCap(player);
         IPlayerDataProvider playerData = CapHelper.getPlayerDataCap(player);
         if(playerData.getCurrentEnergy()<getEnergyUse(augment))
             return false;
         if(!CapHelper.getPlayerDataCap(player).validate())
             return false;
-        if (bodyPart.getItem() instanceof IBodyPart)
+        if (bodyPart.getItem() instanceof IBodyPart)//Just to stop code from bugging me about this
         {
             IItemHandler augs;
-            if (playerParts.getStackInSlot(PartType.LEG_RIGHT.ordinal()) != null && ((IBodyPart) bodyPart.getItem()).getPartType(bodyPart) == PartType.LEG_LEFT)
+            //If this augment is in the left leg, and the right leg has this augment too. Then valid
+            if (playerParts.getStackByPart(PartType.LEG_RIGHT) != null && ((IBodyPart) bodyPart.getItem()).getPartType(bodyPart) == PartType.LEG_LEFT)
             {
-                augs = CapHelper.getAugHolderCap(playerParts.getStackInSlot(PartType.LEG_RIGHT.ordinal())).getAugments();
+                augs = CapHelper.getAugHolderCap(playerParts.getStackByPart(PartType.LEG_RIGHT)).getAugments();
                 for (int i = 0; i < augs.getSlots(); i++)
                 {
                     if (augs.getStackInSlot(i) != null && augs.getStackInSlot(i).getItem() == augment.getItem())
@@ -50,9 +51,9 @@ public class ItemLandingSystem extends ItemAugment implements IPlayerTick,ILivin
                 }
             }
 
-            else if (playerParts.getStackInSlot(PartType.LEG_LEFT.ordinal()) != null && ((IBodyPart) bodyPart.getItem()).getPartType(bodyPart) == PartType.LEG_RIGHT)
+            else if (playerParts.getStackByPart(PartType.LEG_LEFT) != null && ((IBodyPart) bodyPart.getItem()).getPartType(bodyPart) == PartType.LEG_RIGHT)
             {
-                augs = CapHelper.getAugHolderCap(playerParts.getStackInSlot(PartType.LEG_LEFT.ordinal())).getAugments();
+                augs = CapHelper.getAugHolderCap(playerParts.getStackByPart(PartType.LEG_LEFT)).getAugments();
                 for (int i = 0; i < augs.getSlots(); i++)
                 {
                     if (augs.getStackInSlot(i) != null && augs.getStackInSlot(i).getItem() == augment.getItem())
@@ -64,13 +65,6 @@ public class ItemLandingSystem extends ItemAugment implements IPlayerTick,ILivin
 
         }
         return false;
-    }
-
-
-    @Override
-    public void onPlayerTick(ItemStack augmentStack, ItemStack bodyPartStack, TickEvent.PlayerTickEvent event)
-    {
-
     }
 
     @Override

@@ -16,6 +16,7 @@ import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.item.Item;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
@@ -97,6 +98,7 @@ public class ClientProxy extends CommonProxy
     public void preInit()
     {
         registerKeyBindings();
+        OBJLoader.INSTANCE.addDomain(Augments.modId);
     }
 
     public void registerKeyBindings()

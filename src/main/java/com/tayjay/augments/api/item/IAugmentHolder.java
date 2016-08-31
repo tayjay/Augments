@@ -10,7 +10,18 @@ import net.minecraft.item.ItemStack;
  */
 public interface IAugmentHolder
 {
+    /**
+     * Get how many augments this holder can carry
+     * @param stack Holder stack
+     * @return      Augment capacity
+     */
     int getHolderSize(ItemStack stack);
 
-    IAugHolderProvider getProvider(ItemStack stack);
+    /**
+     * Get the augment holder provider. This is an unused method as I use the CapHelper class to get augments instead.
+     * In an API implementation this may be more useful however.
+     * @param stack Holder stack
+     * @return      AugmentHolder Capability
+     */
+    IAugHolderProvider getAugmentHolder(ItemStack stack);
 }

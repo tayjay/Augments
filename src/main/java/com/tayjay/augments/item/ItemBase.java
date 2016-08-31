@@ -44,7 +44,7 @@ public class ItemBase extends Item implements IItemModelProvider
 
     public void registerItemModel(Item item)
     {
-        DynamicIcon.createGenericIcon(Augments.modId,Augments.name,name);
+        //DynamicIcon.createItemIconGeneric(item,Augments.modId,Augments.name);
         Augments.proxy.registerItemRenderer(this,0,name);
     }
 }

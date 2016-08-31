@@ -20,30 +20,30 @@ import java.nio.file.*;
 public class DynamicIcon
 {
 
+    /**
+     * If the specified Item does not have an image file or JSON corrisponding to it, 1 of each will be created for it.
+     * @param item      Item to make image and JSON for
+     * @param modid     MODID for your mod.
+     * @param modname
+     */
     public static void createItemIconGeneric(Item item, String modid, String modname)
     {
-        makePNGGeneric(modid,item.getUnlocalizedName(),item.getClass().getProtectionDomain().getCodeSource().getLocation().getPath());
+        makePNGGeneric(modid,modname,item.getUnlocalizedName(),item.getClass().getProtectionDomain().getCodeSource().getLocation().getPath());
     }
 
-    public static void createGenericIcon(String modid,String modName, String itemName)
-    {
-        makePNGGeneric(modid,modName,itemName);
-        makeJSONGeneric(modid,itemName);
-    }
     /**
      * Create a generic PNG file for the item.
      * @param itemName Name of icon for an item
      */
-    public static void makePNGGeneric(String modid,String itemName,String dir)
+    public static void makePNGGeneric(String modid,String modName,String itemName,String dir)
     {
         //System.out.println(DynamicIcon.class.getProtectionDomain().getCodeSource().getLocation().getPath());
         try
         {
-            String currentPath = DynamicIcon.class.getProtectionDomain().getCodeSource().getLocation().getPath();
-            int ind = currentPath.lastIndexOf("Augments");//todo: MAKE MORE GENERIC
+            int ind = dir.lastIndexOf(modName);//todo: MAKE MORE GENERIC
             if(ind >= 0)
-                currentPath = new StringBuilder(currentPath).substring(1, ind+"Augments".length());
-            File file = new File(currentPath+"/assets/"+modid+"/textures/items/" + itemName + ".png");
+                dir = new StringBuilder(dir).substring(1, ind+modName.length());
+            File file = new File(dir+"/assets/"+modid+"/textures/items/" + itemName + ".png");
             if(Files.exists(file.toPath(), LinkOption.NOFOLLOW_LINKS))
             {
 

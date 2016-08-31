@@ -52,7 +52,7 @@ public final class PlayerPartsImpl
         private final String TAG_NAME = "player_parts";
 
         @Override
-        public IItemHandler getPartsInv()
+        public IItemHandler getBodyParts()
         {
             return partInventory;
         }
@@ -99,6 +99,18 @@ public final class PlayerPartsImpl
         public void syncToOther(EntityPlayerMP player, EntityPlayerMP other)
         {
             NetworkHandler.sendTo(new PacketSyncPlayerParts(writeNBT(),player),other);
+        }
+
+        @Override
+        public int getHash()
+        {
+            int hash = 7;
+            for(int i = 0;i<SLOTS_COUNT;i++)
+            {
+                if(partInventory.getStackInSlot(i)!=null)
+                    hash = hash + partInventory.getStackInSlot(i).toString().hashCode();
+            }
+            return hash;
         }
 
 

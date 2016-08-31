@@ -6,10 +6,9 @@ import net.minecraft.item.ItemStack;
 
 /**
  * Created by tayjay on 2016-06-30.
+ * An augment that preforms an action when the activate key is pressed.
  */
 public interface IActivate
 {
-
-    KeyBinding getKey();
     void activate(ItemStack augment,ItemStack bodyPart, EntityPlayer player);
 }

@@ -2,7 +2,7 @@ package com.tayjay.augments.item.bodyParts;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
 import com.tayjay.augments.Augments;
-import com.tayjay.augments.api.capabilities.IAugHolderProvider;
+import com.tayjay.augments.api.capabilities.IAugHolderProvider;import com.tayjay.augments.api.item.IAugment;
 import com.tayjay.augments.api.item.IBodyPart;
 import com.tayjay.augments.api.item.PartType;
 import com.tayjay.augments.handler.GuiHandler;
@@ -23,6 +23,8 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.items.IItemHandler;
 
 import java.util.List;
 
@@ -60,6 +62,33 @@ public class ItemBodyPart extends ItemBase implements IBodyPart,IItemModelProvid
     public ResourceLocation getTexture(ItemStack stack,boolean hasSmallArms)
     {
         return hasSmallArms ? textureAlex : textureSteve;
+    }
+
+    @Override
+    public void tickAllAugments(ItemStack bodyPartStack, TickEvent.PlayerTickEvent event)
+    {
+        IItemHandler augments = CapHelper.getAugHolderCap(bodyPartStack).getAugments();
+        for (int j = 0; j < augments.getSlots(); j++)
+        {
+            if (augments.getStackInSlot(j) != null)
+            {
+                ((IAugment) augments.getStackInSlot(j).getItem()).tickAugment(augments.getStackInSlot(j), bodyPartStack, event);
+            }
+        }
+    }
+
+    @Override
+    public boolean hasAugment(ItemStack bodyPartStack, IAugment augment)
+    {
+        IItemHandler augments = CapHelper.getAugHolderCap(bodyPartStack).getAugments();
+        for (int j = 0; j < augments.getSlots(); j++)
+        {
+            if (augments.getStackInSlot(j) != null && augments.getStackInSlot(j).getItem() == augment)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void setTextureName(String name)
@@ -135,7 +164,7 @@ public class ItemBodyPart extends ItemBase implements IBodyPart,IItemModelProvid
     }
 
     @Override
-    public IAugHolderProvider getProvider(ItemStack stack)
+    public IAugHolderProvider getAugmentHolder(ItemStack stack)
     {
         return CapHelper.getAugHolderCap(stack);
     }

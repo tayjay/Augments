@@ -1,6 +1,7 @@
 package com.tayjay.augments.init;
 
 import com.tayjay.augments.block.BlockBase;
+import com.tayjay.augments.block.BlockModelTest;
 import com.tayjay.augments.block.BlockOre;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
@@ -13,11 +14,13 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 public class ModBlocks
 {
     public static BlockOre oreCarbon;
+    public static BlockModelTest modelTest;
 
 
     public static void init()
     {
         oreCarbon = register(new BlockOre("oreCarbon"));
+        modelTest = register(new BlockModelTest("modelTest"));
 
     }
 

@@ -3,20 +3,15 @@ package com.tayjay.augments.capability;
 import com.tayjay.augments.Augments;
 import com.tayjay.augments.api.AugmentsAPI;
 import com.tayjay.augments.api.capabilities.IPlayerDataProvider;
-import com.tayjay.augments.api.item.IEnergySupply;
 import com.tayjay.augments.network.NetworkHandler;
 import com.tayjay.augments.network.packets.PacketChangeEnergy;
 import com.tayjay.augments.network.packets.PacketSyncPlayerData;
-import com.tayjay.augments.util.CapHelper;
 import com.tayjay.augments.util.ChatHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.MobEffects;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagFloat;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
@@ -99,12 +94,12 @@ public class PlayerDataImpl
         public float getMaxEnergy()
         {
             /*
-            if(CapHelper.getPlayerPartsCap(this.player).getPartsInv().getStackInSlot(7).getItem() == null)
+            if(CapHelper.getPlayerPartsCap(this.player).getBodyParts().getStackInSlot(7).getItem() == null)
             {
-                if (CapHelper.getPlayerPartsCap(this.player).getPartsInv().getStackInSlot(7).getItem() instanceof IEnergySupply)
+                if (CapHelper.getPlayerPartsCap(this.player).getBodyParts().getStackInSlot(7).getItem() instanceof IEnergySupply)
                 {
-                    IEnergySupply supply = (IEnergySupply) CapHelper.getPlayerPartsCap(this.player).getPartsInv().getStackInSlot(7).getItem();
-                    maxEnergy = supply.maxEnergy(CapHelper.getPlayerPartsCap(this.player).getPartsInv().getStackInSlot(7));
+                    IEnergySupply supply = (IEnergySupply) CapHelper.getPlayerPartsCap(this.player).getBodyParts().getStackInSlot(7).getItem();
+                    maxEnergy = supply.maxEnergy(CapHelper.getPlayerPartsCap(this.player).getBodyParts().getStackInSlot(7));
                 }
                 maxEnergy = 0;
             }
@@ -199,7 +194,7 @@ public class PlayerDataImpl
 
         private boolean checkPlayerAugmented(EntityPlayer player)
         {
-            IItemHandler parts = player.getCapability(AugmentsAPI.PLAYER_PARTS_CAPABILITY,null).getPartsInv();
+            IItemHandler parts = player.getCapability(AugmentsAPI.PLAYER_PARTS_CAPABILITY,null).getBodyParts();
             for(int i =0;i<parts.getSlots();i++)
             {
                 if(parts.getStackInSlot(i)!=null)

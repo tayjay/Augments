@@ -1,16 +1,8 @@
 package com.tayjay.augments.inventory;
 
-import com.tayjay.augments.Augments;
 import com.tayjay.augments.api.capabilities.IPlayerPartsProvider;
-import com.tayjay.augments.api.item.IAugment;
 import com.tayjay.augments.api.item.IBodyPart;
-import com.tayjay.augments.api.item.IEnergySupply;
-import com.tayjay.augments.handler.GuiHandler;
-import com.tayjay.augments.network.NetworkHandler;
-import com.tayjay.augments.network.packets.PacketSyncPlayerParts;
-import com.tayjay.augments.util.CapHelper;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
@@ -27,7 +19,7 @@ public class InventoryPlayerParts implements IItemHandlerModifiable
     public InventoryPlayerParts(IPlayerPartsProvider provider, EntityPlayer player)
     {
         this.player = player;
-        this.compose = (IItemHandlerModifiable)provider.getPartsInv();
+        this.compose = (IItemHandlerModifiable)provider.getBodyParts();
         this.provider = provider;
     }
 

@@ -2,6 +2,9 @@ package com.tayjay.augments.api.item;
 
 /**
  * Created by tayjay on 2016-06-26.
+ * Determines what type a Body Part is.
+ * Used by container to know what slot to allow it in.
+ * Used by Augments to know what part they can be applied to.
  */
 public enum PartType
 {

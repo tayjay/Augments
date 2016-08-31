@@ -7,15 +7,11 @@ import com.tayjay.augments.network.NetworkHandler;
 import com.tayjay.augments.network.packets.PacketOpenGui;
 import com.tayjay.augments.util.CapHelper;
 import net.minecraft.client.Minecraft;
-import net.minecraftforge.fml.client.FMLClientHandler;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.IItemHandler;
-
-import static com.tayjay.augments.util.CapHelper.getPlayerPartsCap;
 
 /**
  * Created by tayjay on 2016-06-30.
@@ -41,7 +37,7 @@ public class KeyInputHandler
             switch (key)
             {
                 case ACTIVATE:
-                    IItemHandler playerParts = CapHelper.getPlayerPartsCap(Minecraft.getMinecraft().thePlayer).getPartsInv();
+                    IItemHandler playerParts = CapHelper.getPlayerPartsCap(Minecraft.getMinecraft().thePlayer).getBodyParts();
                     IItemHandler augments;
                     for(int i = 0; i<playerParts.getSlots();i++)
                     {

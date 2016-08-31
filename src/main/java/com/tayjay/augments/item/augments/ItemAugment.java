@@ -10,6 +10,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,5 +71,11 @@ public class ItemAugment extends ItemBase implements IAugment,IItemModelProvider
     public float getEnergyUse(ItemStack stack)
     {
         return energyUse;
+    }
+
+    @Override
+    public void tickAugment(ItemStack augmentStack, ItemStack bodyPartStack, TickEvent.PlayerTickEvent event)
+    {
+
     }
 }

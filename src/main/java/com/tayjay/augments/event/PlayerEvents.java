@@ -53,7 +53,7 @@ public class PlayerEvents
 
     @SideOnly(Side.CLIENT)
     @SubscribeEvent
-    public void playerSync(TickEvent.PlayerTickEvent event)
+    public void playerSyncClient(TickEvent.PlayerTickEvent event)
     {
         if(!event.player.worldObj.isRemote)
             return;

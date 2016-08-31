@@ -5,6 +5,7 @@ import com.tayjay.augments.api.render.LayerAugments;
 import com.tayjay.augments.util.RenderUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelRenderer;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.client.renderer.entity.layers.LayerArmorBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -68,7 +69,8 @@ public class ItemBodySet extends ItemBodyPart
                 model = modelSteve.bipedHeadwear;
                 break;
         }
-        GL11.glPushMatrix();
+        //GL11.glPushMatrix();
+        GlStateManager.pushMatrix();
 
         Minecraft.getMinecraft().renderEngine.bindTexture(getTexture(stack,smallArms));
 
@@ -77,7 +79,7 @@ public class ItemBodySet extends ItemBodyPart
         model.render(0.0625f);
         //LayerAugments.renderEnchantedGlint(renderPlayer,playerIn, model);
 
-
-        GL11.glPopMatrix();
+        GlStateManager.popMatrix();
+        //GL11.glPopMatrix();
     }
 }

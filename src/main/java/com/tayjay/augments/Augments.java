@@ -7,6 +7,7 @@ import com.tayjay.augments.client.AugmentsTab;
 import com.tayjay.augments.event.AugmentEvents;
 import com.tayjay.augments.event.DrugEvents;
 import com.tayjay.augments.event.PlayerEvents;
+import com.tayjay.augments.handler.ConfigHandler;
 import com.tayjay.augments.handler.GuiHandler;
 import com.tayjay.augments.init.ModBlocks;
 import com.tayjay.augments.init.ModItems;
@@ -44,19 +45,15 @@ public class Augments
 
     public static int renderType;
     public static boolean drugDependant;
+    public static int maxAllowedEnergy;
+    public static int maxAllowedAugmentCapacity;
 
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event)
     {
-        Configuration config = new Configuration(event.getSuggestedConfigurationFile());
-        config.load();
-        this.renderType = config.get(Configuration.CATEGORY_CLIENT,"renderType",2,"How should the augments be rendered on the player?\n" +
-                "0:Not rendered\n" +
-                "1:Layer over player model\n"+
-                "2:Override RenderPlayer(Recommended but may conflict with other mods)" ,0,2).getInt();
-        this.drugDependant = config.get(Configuration.CATEGORY_GENERAL,"drugDependant",true,"Is the player required to take anti-rejection drugs in order to use the augments?").getBoolean();
-        config.save();
+        initConfig(event);
+
         ModBlocks.init();
         ModItems.init();
 
@@ -66,6 +63,20 @@ public class Augments
         proxy.preInit();
 
 
+    }
+
+    private void initConfig(FMLPreInitializationEvent event)
+    {
+        Configuration config = new Configuration(event.getSuggestedConfigurationFile());
+        config.load();
+        renderType = config.get(Configuration.CATEGORY_CLIENT,"renderType",2,"How should the augments be rendered on the player?\n" +
+                "0:Not rendered\n" +
+                "1:Layer over player model\n"+
+                "2:Override RenderPlayer(Recommended but may conflict with other mods)" ,0,2).getInt();
+        drugDependant = config.get(Configuration.CATEGORY_GENERAL,"drugDependant",true,"Is the player required to take anti-rejection drugs in order to use the augments?").getBoolean();
+        maxAllowedEnergy = config.get(Configuration.CATEGORY_GENERAL,"maximumEnergy",5,"Maximum amount of energy charges a player is allowed to hold",0,6).getInt();
+        maxAllowedAugmentCapacity = config.get(Configuration.CATEGORY_GENERAL,"augmentCapacity",5,"Most Augments that can held in a Body Part",0,6).getInt();
+        config.save();
     }
 
     @Mod.EventHandler

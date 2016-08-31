@@ -52,17 +52,6 @@ public class ContainerPlayerParts extends Container
             }
             this.addSlotToContainer(new SlotBodyPart(inventory,i,48,5+i++*18, type));
         }
-        /*
-        this.addSlotToContainer(new SlotBodyPart(inventory,i,48,5+i++*18, PartType.BRAIN));
-        this.addSlotToContainer(new SlotBodyPart(inventory,i,48,5+i++*18, PartType.HEAD));
-        this.addSlotToContainer(new SlotBodyPart(inventory,i,48,5+i++*18,PartType.EYES));
-        this.addSlotToContainer(new SlotBodyPart(inventory,i,48,5+i++*18,PartType.TORSO));
-        this.addSlotToContainer(new SlotBodyPart(inventory,i,48,5+i++*18,PartType.ARM_LEFT));
-        this.addSlotToContainer(new SlotBodyPart(inventory,i,48,5+i++*18,PartType.ARM_RIGHT));
-        this.addSlotToContainer(new SlotBodyPart(inventory,i,48,5+i++*18,PartType.LEG_LEFT));
-        this.addSlotToContainer(new SlotBodyPart(inventory,i,48,5+i++*18,PartType.LEG_RIGHT));
-        this.addSlotToContainer(new SlotBodyPart(inventory,i,150,5+(i-1)*18,PartType.POWER));
-        */
 
 
         //Player Inventory
@@ -73,77 +62,7 @@ public class ContainerPlayerParts extends Container
         //Player Hotbar
         for (int k = 0; k < 9; k++)
             this.addSlotToContainer(new Slot(invPlayer, k, 48 + k * 18, 210));
-
-        //reloadAugmentSlots();
     }
-
-
-    /*
-    public void reloadAugmentSlots()
-    {
-        augments.clear();
-
-        for(int i=0;i<inventory.getSlots();i++)
-        {
-            ItemStack current = inventory.getStackInSlot(i);
-            if(current!=null && CapHelper.hasAugHolderCap(current))
-                augments.put(i,new InventoryAugments(CapHelper.getAugHolderCap(current),current));
-        }
-
-        for(ArrayList<SlotToggleLocked> list : bodySlotToAugmentSlots.values())
-        {
-            for(SlotToggleLocked slot : list)
-            {
-                slot.setVisible(false);
-                //slot.putStack(null);
-            }
-        }
-
-        for(int i = 0 ; i<inventory.getSlots();i++)//Go to each BodyPart Slot
-        {
-            if(inventory.getStackInSlot(i)!=null)//If there is a body part
-            {
-                for (int j = 0; j < augments.get(i).getSlots(); j++)//Go through its augments
-                {
-                    try
-                    {
-                        if(bodySlotToAugmentSlots.get(i)!=null && bodySlotToAugmentSlots.get(i).get(j)!=null)
-                        {
-                            SlotToggleLocked slot = bodySlotToAugmentSlots.get(i).get(j);//Find the slot
-                            if (augments.get(i).getStackInSlot(j) != null)//If there is an augment
-                            {
-                                slot.setVisible(true);
-                                //slot.putStack(augments.get(i).getStackInSlot(j));
-                            } else//If no augment
-                            {
-                                slot.setVisible(false);
-                                //slot.putStack((ItemStack) null);
-                            }
-                        }
-                    }catch(IndexOutOfBoundsException e){
-                        LogHelper.error("IndexOutOfBounds in ContainerPlayerParts!");}
-
-
-
-                }
-            }
-            else//No bodypart
-            {
-                if(augments.get(i)!=null)
-                {
-                    for (int j = 0; j < augments.get(i).getSlots(); j++)//Set all augments invisible
-                    {
-                        if (bodySlotToAugmentSlots.get(i) != null && bodySlotToAugmentSlots.get(i).get(j) != null)
-                        {
-                            bodySlotToAugmentSlots.get(i).get(j).setVisible(false);
-                            //bodySlotToAugmentSlots.get(i).get(j).putStack((ItemStack) null);
-                        }
-                    }
-                }
-            }
-        }
-    }
-    */
 
 
 

@@ -11,7 +11,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
@@ -47,23 +46,12 @@ public class AugmentEvents
     {
         if(event.player.worldObj.isRemote)//Only running server side
             return;
-        IItemHandler parts = CapHelper.getPlayerPartsCap(event.player).getPartsInv();
-        IItemHandler augments;
+        IItemHandler parts = CapHelper.getPlayerPartsCap(event.player).getBodyParts();
         for(int i = 0;i<parts.getSlots();i++)
         {
             if(parts.getStackInSlot(i)!=null)
             {
-                augments = CapHelper.getAugHolderCap(parts.getStackInSlot(i)).getAugments();
-                for (int j = 0; j < augments.getSlots(); j++)//TODO: Oh Dear God WTF is with all of these O(n^2) operations. FIX THIS SOON!
-                {
-                    if(augments.getStackInSlot(j)!=null)
-                    {
-                        if (augments.getStackInSlot(j).getItem() instanceof IPlayerTick)
-                        {
-                            ((IPlayerTick) augments.getStackInSlot(j).getItem()).onPlayerTick(augments.getStackInSlot(j), parts.getStackInSlot(i), event);
-                        }
-                    }
-                }
+                ((IBodyPart)parts.getStackInSlot(i).getItem()).tickAllAugments(parts.getStackInSlot(i),event);
                 if (parts.getStackInSlot(i).getItem() instanceof IEnergySupply)
                 {
                     CapHelper.getPlayerDataCap(event.player).setMaxEnergy(((IEnergySupply) parts.getStackInSlot(i).getItem()).maxEnergy(parts.getStackInSlot(i)));
@@ -89,11 +77,10 @@ public class AugmentEvents
     {
         GlStateManager.pushMatrix();
         GlStateManager.pushAttrib();
-        IItemHandler parts = CapHelper.getPlayerPartsCap(Minecraft.getMinecraft().thePlayer).getPartsInv();
+        IItemHandler parts = CapHelper.getPlayerPartsCap(Minecraft.getMinecraft().thePlayer).getBodyParts();
         if(parts.getStackInSlot(PartType.EYES.ordinal())!=null && parts.getStackInSlot(PartType.EYES.ordinal()).getItem() instanceof IHUDProvider)
         {
             ((IHUDProvider) parts.getStackInSlot(PartType.EYES.ordinal()).getItem()).drawWorldElements(parts.getStackInSlot(PartType.EYES.ordinal()), event);
-
         }
 
         GlStateManager.popMatrix();
@@ -103,7 +90,7 @@ public class AugmentEvents
     @SubscribeEvent
     public void renderOverlay(RenderGameOverlayEvent event)
     {
-        IItemHandler parts = CapHelper.getPlayerPartsCap(Minecraft.getMinecraft().thePlayer).getPartsInv();
+        IItemHandler parts = CapHelper.getPlayerPartsCap(Minecraft.getMinecraft().thePlayer).getBodyParts();
         if(parts.getStackInSlot(PartType.EYES.ordinal())!=null && parts.getStackInSlot(PartType.EYES.ordinal()).getItem() instanceof IHUDProvider)
         {
             ((IHUDProvider) parts.getStackInSlot(PartType.EYES.ordinal()).getItem()).drawHudElements(parts.getStackInSlot(PartType.EYES.ordinal()), event);
@@ -122,7 +109,7 @@ public class AugmentEvents
     {
         if(event.getEntityLiving() instanceof EntityPlayer && !(((EntityPlayer) event.getEntityLiving()).worldObj.isRemote))
         {
-            IItemHandler playerParts = CapHelper.getPlayerPartsCap((EntityPlayer)event.getEntityLiving()).getPartsInv();
+            IItemHandler playerParts = CapHelper.getPlayerPartsCap((EntityPlayer)event.getEntityLiving()).getBodyParts();
             float amountStart = event.getAmount();
             for(int i = 0;i<playerParts.getSlots();i++)
             {
@@ -142,7 +129,7 @@ public class AugmentEvents
             return;
         if(event.getEntityLiving() instanceof EntityPlayer && !(((EntityPlayer) event.getEntityLiving()).worldObj.isRemote))
         {
-            IItemHandler parts = CapHelper.getPlayerPartsCap((EntityPlayer) event.getEntityLiving()).getPartsInv();
+            IItemHandler parts = CapHelper.getPlayerPartsCap((EntityPlayer) event.getEntityLiving()).getBodyParts();
             if(parts.getStackInSlot(PartType.TORSO.ordinal())!=null)//ONLY LOOKING THROUGH TORSO
             {
                 IItemHandler augmentsInTorso = CapHelper.getAugHolderCap(parts.getStackInSlot(PartType.TORSO.ordinal())).getAugments();
@@ -162,7 +149,7 @@ public class AugmentEvents
     {
         if(event.getEntityLiving() instanceof EntityPlayer && !event.getEntityLiving().getEntityWorld().isRemote)
         {
-            IItemHandler parts = CapHelper.getPlayerPartsCap((EntityPlayer) event.getEntityLiving()).getPartsInv();
+            IItemHandler parts = CapHelper.getPlayerPartsCap((EntityPlayer) event.getEntityLiving()).getBodyParts();
             if(parts.getStackInSlot(PartType.TORSO.ordinal())!=null)//ONLY LOOKING THROUGH TORSO
             {
                 IItemHandler augmentsInTorso = CapHelper.getAugHolderCap(parts.getStackInSlot(PartType.TORSO.ordinal())).getAugments();
@@ -182,7 +169,7 @@ public class AugmentEvents
     {
         if(event.getEntityLiving() instanceof EntityPlayer && !event.getEntityLiving().getEntityWorld().isRemote)
         {
-            IItemHandler parts = CapHelper.getPlayerPartsCap((EntityPlayer) event.getEntityLiving()).getPartsInv();
+            IItemHandler parts = CapHelper.getPlayerPartsCap((EntityPlayer) event.getEntityLiving()).getBodyParts();
             for(int i = 0; i<parts.getSlots();i++)
             {
                 if (parts.getStackInSlot(i) != null)

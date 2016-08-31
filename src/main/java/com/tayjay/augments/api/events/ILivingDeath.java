@@ -6,6 +6,7 @@ import net.minecraftforge.event.entity.living.LivingDeathEvent;
 
 /**
  * Created by tayjay on 2016-06-25.
+ * Augment that activates when the player dies.(Can be used to cancel the event or do something after it occurs)
  */
 public interface ILivingDeath
 {
