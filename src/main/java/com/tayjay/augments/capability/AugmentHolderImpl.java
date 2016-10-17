@@ -19,6 +19,7 @@ import javax.annotation.Nullable;
 /**
  * Created by tayjay on 2016-06-25.
  */
+@Deprecated
 public class AugmentHolderImpl
 {
     public static void init()

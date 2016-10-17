@@ -4,8 +4,10 @@ import com.tayjay.augments.api.capabilities.IAugHolderProvider;
 import com.tayjay.augments.api.item.IAugment;
 import com.tayjay.augments.api.item.IBodyPart;
 import com.tayjay.augments.client.gui.GuiPlayerParts;
+import com.tayjay.augments.util.CapHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
@@ -15,19 +17,27 @@ import net.minecraftforge.items.SlotItemHandler;
  */
 public class SlotAugment extends SlotItemHandler
 {
-    InventoryAugments invAugments;
+    InventoryPlayerAugments invAugments;
     public SlotAugment(IItemHandler itemHandler, int index, int xPosition, int yPosition)
     {
         super(itemHandler, index, xPosition, yPosition);
-        invAugments = (InventoryAugments)itemHandler;
+        invAugments = (InventoryPlayerAugments)itemHandler;
     }
 
     @Override
     public boolean isItemValid(ItemStack stack)
     {
-        return stack.getItem() instanceof IAugment &&
-                ((IAugment) stack.getItem()).getParentTypes(stack).contains(((IBodyPart)invAugments.AUGMENT_HOLDER.getItem()).getPartType(invAugments.AUGMENT_HOLDER));
+        return stack.getItem() instanceof IAugment;//Also check for within max number of augments
     }
+
+    @Override
+    public boolean isHere(IInventory inv, int slotIn)
+    {
+        //Hide slots that aren't accessible at player's augment cap.
+        return slotIn<CapHelper.getPlayerBodyCap(Minecraft.getMinecraft().thePlayer).getAugmentCapacity();
+    }
+
+
 
     @Override
     public boolean canTakeStack(EntityPlayer playerIn)

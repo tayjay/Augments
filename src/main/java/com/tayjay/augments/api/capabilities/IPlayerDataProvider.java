@@ -7,32 +7,14 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.items.IItemHandler;
 
+import java.util.List;
+
 /**
  * Created by tayjay on 2016-06-26.
  * All data needed by the mod to preform functions.
  */
 public interface IPlayerDataProvider extends INBTSerializable<NBTTagCompound>
 {
-
-    /*TODO: Implement these correctly
-    IItemHandler getPlayerParts();
-
-    IItemHandler getPlayerAugments();
-
-    IItemHandler getAugTick();
-
-    IItemHandler getAugHUD();
-
-    IItemHandler getAugAttack();
-
-    IItemHandler getAugDeath();
-
-    IItemHandler getAugHurt();
-
-    IItemHandler getAugInteract();
-
-    void sortAugments();
-    */
 
     boolean validate();
 
@@ -58,7 +40,7 @@ public interface IPlayerDataProvider extends INBTSerializable<NBTTagCompound>
 
     void reboot();
 
-    //Anti-Rejection Drug Data
+    //Anti-Rejection Drug Data*********************
     boolean needsDrug();
 
     void doDrugTick();
@@ -71,7 +53,35 @@ public interface IPlayerDataProvider extends INBTSerializable<NBTTagCompound>
 
     void doDrugEffect();
 
-    //ItemStack getAllAugments();
+    //**********************************************
+    /**
+     * Get the current augment that implements IActivate to be used when the "use" key is pressed
+     * @return  Augment to activate
+     */
+    ItemStack getCurrentAugment();
 
+    /**
+     * Move to the next augment in the active list.
+     */
+    void cycleActiveAugment();
+
+    /**
+     * Get whether the current augment is active or not.
+     * The augment can use this to control a prolonged effect then shut itself down.
+     * @return
+     */
+    boolean isAugmentActive();
+
+    /**
+     * Change the state of the current augment whether it is active or not
+     * @param active    New active state of current augment
+     */
+    void setAugmentActive(boolean active);
+
+    /**
+     * Get the current tier of the player. This will help with progression.
+     * @return
+     */
+    byte getPlayerTier();
 
 }

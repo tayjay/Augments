@@ -8,7 +8,6 @@ import com.tayjay.augments.network.packets.PacketChangeEnergy;
 import com.tayjay.augments.util.CapHelper;
 import com.tayjay.augments.util.ChatHelper;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -24,22 +23,17 @@ public class ItemSonar extends ItemAugment implements IActivate
 
     public ItemSonar(String name)
     {
-        super(name,1);
-        acceptedParts.add(PartType.EYES);
+        super(name,1,PartType.EYES,1,"See mobs around you");
     }
 
-    @Override
-    public KeyBinding getKey()
-    {
-        return null;
-    }
+
 
     @Override
-    public void activate(ItemStack stack,ItemStack bodyPart, EntityPlayer player)
+    public void activate(ItemStack stack, EntityPlayer player)
     {
-        if(validate(stack,null,player))
+        if(validate(stack, player))
         {
-            CapHelper.getPlayerDataCap(player).removeEnergy(getEnergyUse(stack));
+            //CapHelper.getPlayerDataCap(player).removeEnergy(getEnergyUse(stack));
             NetworkHandler.sendToServer(new PacketChangeEnergy(getEnergyUse(stack), PacketChangeEnergy.EnergyType.CURRENT));
             double posX = player.posX;
             double posY = player.posY;
@@ -58,7 +52,14 @@ public class ItemSonar extends ItemAugment implements IActivate
     }
 
     @Override
-    public boolean validate(ItemStack augment, ItemStack bodyPart, EntityPlayer player)
+    public boolean isActive(ItemStack augment, ItemStack bodyPart, EntityPlayer player)
+    {
+        IPlayerDataProvider playerDataProvider = CapHelper.getPlayerDataCap(player);
+        return playerDataProvider.getCurrentAugment().getItem()==this && playerDataProvider.isAugmentActive();
+    }
+
+    @Override
+    public boolean validate(ItemStack augment, EntityPlayer player)
     {
         IPlayerDataProvider playerData = CapHelper.getPlayerDataCap(player);
         if(!playerData.validate())

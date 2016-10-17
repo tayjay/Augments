@@ -8,6 +8,7 @@ import net.minecraftforge.items.IItemHandler;
 /**
  * Created by tayjay on 2016-06-25.
  */
+@Deprecated
 public interface IAugHolderProvider extends INBTSerializable<NBTTagCompound>
 {
     /**

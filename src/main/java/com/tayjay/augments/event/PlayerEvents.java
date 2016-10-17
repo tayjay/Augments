@@ -1,47 +1,26 @@
 package com.tayjay.augments.event;
 
 import com.tayjay.augments.api.capabilities.IPlayerDataProvider;
-import com.tayjay.augments.api.capabilities.IPlayerPartsProvider;
-import com.tayjay.augments.api.item.IBodyPart;
-import com.tayjay.augments.api.item.PartType;
+import com.tayjay.augments.api.capabilities.IPlayerBodyProvider;
 import com.tayjay.augments.capability.PlayerDataImpl;
-import com.tayjay.augments.capability.PlayerPartsImpl;
+import com.tayjay.augments.capability.PlayerBodyImpl;
 import com.tayjay.augments.network.NetworkHandler;
 import com.tayjay.augments.network.packets.PacketREQSyncParts;
 import com.tayjay.augments.util.CapHelper;
-import com.tayjay.augments.util.EntityUtil;
 import com.tayjay.augments.util.LogHelper;
-import com.tayjay.augments.util.RenderUtil;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityOtherPlayerMP;
-import net.minecraft.client.particle.ParticleCrit;
-import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.client.renderer.entity.RenderPlayer;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.passive.EntityPig;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraftforge.client.event.RenderHandEvent;
-import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
-import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.opengl.GL11;
-
-import java.util.HashMap;
 
 /**
  * Created by tayjay on 2016-06-24.<br/>
@@ -57,7 +36,7 @@ public class PlayerEvents
     {
         if(!event.player.worldObj.isRemote)
             return;
-        long time = (event.player.ticksExisted);//Adding Entity ID reduces packets per tick sent
+        long time = (event.player.ticksExisted);
         if(time % SYNC_TICKS == 0)
         {
             NetworkHandler.sendToServer(new PacketREQSyncParts(event.player));
@@ -68,11 +47,12 @@ public class PlayerEvents
     @SubscribeEvent
     public void cloneEvent(PlayerEvent.Clone event)
     {
-        NBTTagCompound parts = CapHelper.getPlayerPartsCap(event.getOriginal()).serializeNBT();
+
         NBTTagCompound data = CapHelper.getPlayerDataCap(event.getOriginal()).serializeNBT();
-        CapHelper.getPlayerPartsCap(event.getEntityPlayer()).deserializeNBT(parts);
+        NBTTagCompound parts = CapHelper.getPlayerBodyCap(event.getOriginal()).serializeNBT();
         CapHelper.getPlayerDataCap(event.getEntityPlayer()).deserializeNBT(data);
         CapHelper.getPlayerDataCap(event.getEntityPlayer()).reboot();
+        CapHelper.getPlayerBodyCap(event.getEntityPlayer()).deserializeNBT(parts);
 
         LogHelper.debug("Cloned Body Parts for "+event.getEntityPlayer().getName());
     }
@@ -82,8 +62,8 @@ public class PlayerEvents
     {
         if(event.getEntity() instanceof EntityPlayer)
         {
-            event.addCapability(PlayerPartsImpl.Provider.NAME,new PlayerPartsImpl.Provider());
             event.addCapability(PlayerDataImpl.Provider.NAME,new PlayerDataImpl.Provider((EntityPlayer) event.getEntity()));
+            event.addCapability(PlayerBodyImpl.Provider.NAME,new PlayerBodyImpl.Provider((EntityPlayer)event.getEntity()));
             LogHelper.debug("Player Capabilities added to player");
         }
     }
@@ -94,13 +74,13 @@ public class PlayerEvents
         if(!event.getEntity().worldObj.isRemote && event.getEntity() instanceof EntityPlayerMP)
         {
             EntityPlayerMP player = ((EntityPlayerMP) event.getEntity());
-            IPlayerPartsProvider parts = CapHelper.getPlayerPartsCap(player);
+            IPlayerBodyProvider parts = CapHelper.getPlayerBodyCap(player);
             IPlayerDataProvider data = CapHelper.getPlayerDataCap(player);
             parts.sync((EntityPlayerMP)event.getEntity());
             data.sync((EntityPlayerMP)event.getEntity());
             LogHelper.info("Synced own Capabilities to client");
             //todo: Not including this yet. Hopefully "StartTracking" event will handle this.
-            //NetworkHandler.INSTANCE.sendToAllAround(new PacketSyncPlayerParts(parts.serializeNBT(),player),new NetworkRegistry.TargetPoint(player.dimension,player.posX,player.posY,player.posZ,40));
+            //NetworkHandler.INSTANCE.sendToAllAround(new PacketSyncPlayerBody(parts.serializeNBT(),player),new NetworkRegistry.TargetPoint(player.dimension,player.posX,player.posY,player.posZ,40));
         }
     }
 
@@ -109,7 +89,7 @@ public class PlayerEvents
     {
         if(!event.getEntityPlayer().worldObj.isRemote && event.getTarget() instanceof EntityPlayerMP && event.getEntityPlayer() instanceof EntityPlayerMP)
         {
-            CapHelper.getPlayerPartsCap(event.getEntityPlayer()).syncToOther((EntityPlayerMP) event.getTarget(), (EntityPlayerMP) event.getEntityPlayer());
+            CapHelper.getPlayerBodyCap(event.getEntityPlayer()).syncToOther((EntityPlayerMP) event.getTarget(), (EntityPlayerMP) event.getEntityPlayer());
             LogHelper.info("Synced Capabilities from "+event.getTarget().getName()+" to "+event.getEntityPlayer().getName());
         }
     }
@@ -129,7 +109,7 @@ public class PlayerEvents
     public void renderHand(RenderHandEvent event)
     {
         EntityPlayer clientPlayer = Minecraft.getMinecraft().thePlayer;
-        ItemStack rightArm = CapHelper.getPlayerPartsCap(clientPlayer).getStackByPart(PartType.ARM_RIGHT);
+        ItemStack rightArm = CapHelper.getPlayerBodyCap(clientPlayer).getStackByPart(PartType.ARM_RIGHT);
 
         if(rightArm!=null)
         {

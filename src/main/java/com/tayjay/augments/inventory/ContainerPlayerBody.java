@@ -13,35 +13,42 @@ import net.minecraft.item.ItemStack;
 import javax.annotation.Nullable;
 
 /**
- * Created by tayjay on 2016-06-24.
+ * Created by tayjay on 2016-10-16.
  */
-@Deprecated
-public class ContainerPlayerParts extends Container
+public class ContainerPlayerBody extends Container
 {
     public final EntityPlayer player;
     public final InventoryPlayerParts inventory;
-    //public HashMap<Integer,ArrayList<SlotToggleLocked>> bodySlotToAugmentSlots = new HashMap<Integer, ArrayList<SlotToggleLocked>>();
-    public final int DEFAULT_AUGMENT_SLOTS = 5;
+    public final InventoryPlayerAugments inventoryAugments;
 
-    public ContainerPlayerParts(InventoryPlayer invPlayer, InventoryPlayerParts invBody)
+    public ContainerPlayerBody(InventoryPlayer invPlayer, InventoryPlayerParts invBody, InventoryPlayerAugments invAugments)
     {
         this.inventory = invBody;
+        this.inventoryAugments = invAugments;
         this.player = invPlayer.player;
 
-        setupSlots(invPlayer,invBody);
-
-
+        setupSlots(invPlayer,invBody,invAugments);
     }
 
-    private void setupSlots(InventoryPlayer invPlayer, InventoryPlayerParts invBody)
+    private void setupSlots(InventoryPlayer invPlayer, InventoryPlayerParts invBody,InventoryPlayerAugments invAugments)
     {
-        int i = 0;
+        //Add bodypart slots**************************
+        /*int i = 0;
         for(PartType type : PartType.values())
         {
-
             this.addSlotToContainer(new SlotBodyPart(inventory,i,48,5+i++*18, type));
-        }
+        }*/
+        this.addSlotToContainer(new SlotBodyPart(inventory,0,48,5+1*18,PartType.HEAD));
+        this.addSlotToContainer(new SlotBodyPart(inventory,1,48,5+2*18,PartType.EYES));
+        this.addSlotToContainer(new SlotBodyPart(inventory,2,48,5+3*18,PartType.TORSO));
+        this.addSlotToContainer(new SlotBodyPart(inventory,3,48,5+4*18,PartType.ARM));
+        this.addSlotToContainer(new SlotBodyPart(inventory,4,48,5+5*18,PartType.ARM));
+        this.addSlotToContainer(new SlotBodyPart(inventory,5,48,5+6*18,PartType.LEG));
+        this.addSlotToContainer(new SlotBodyPart(inventory,6,48,5+7*18,PartType.LEG));
 
+        //Add augment slots**********************************
+        for(int j = 0;j<CapHelper.getPlayerBodyCap(player).getAugmentCapacity();j++)
+            this.addSlotToContainer(new SlotAugment(inventoryAugments,j,100,18*(j+1)));
 
         //Player Inventory
         for(int k = 0; k < 3; k++)
@@ -96,6 +103,7 @@ public class ContainerPlayerParts extends Container
     @Override
     public void detectAndSendChanges()
     {
+        //Syncing for current active augment, consider removing
         if(!player.worldObj.isRemote)
         {
             CapHelper.getPlayerBodyCap(player).sync((EntityPlayerMP) player);
@@ -108,13 +116,6 @@ public class ContainerPlayerParts extends Container
         }
         super.detectAndSendChanges();
 
-    }
-
-    @Nullable
-    @Override
-    public ItemStack slotClick(int slotId, int dragType, ClickType clickTypeIn, EntityPlayer player)
-    {
-        return super.slotClick(slotId, dragType, clickTypeIn, player);
     }
 
 

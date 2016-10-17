@@ -4,7 +4,6 @@ import com.tayjay.augments.network.NetworkHandler;
 import com.tayjay.augments.util.CapHelper;
 import com.tayjay.augments.util.LogHelper;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.client.entity.EntityOtherPlayerMP;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -24,7 +23,7 @@ public class PacketREQSyncParts extends PacketRunnable<PacketREQSyncParts>
     public PacketREQSyncParts(EntityPlayer other)
     {
         this.playerId = other.getEntityId();
-        this.partsHash = CapHelper.getPlayerPartsCap(other) != null ? CapHelper.getPlayerPartsCap(other).getHash() : 0;
+        this.partsHash = CapHelper.getPlayerBodyCap(other) != null ? CapHelper.getPlayerBodyCap(other).getHash() : 0;
     }
 
     @Override
@@ -45,11 +44,11 @@ public class PacketREQSyncParts extends PacketRunnable<PacketREQSyncParts>
     public void handleServer(PacketREQSyncParts message, MessageContext ctx)
     {
         EntityPlayerMP playerOther = (EntityPlayerMP) ctx.getServerHandler().playerEntity.worldObj.getEntityByID(message.playerId);
-        int otherHash = CapHelper.getPlayerPartsCap(playerOther).getHash();
+        int otherHash = CapHelper.getPlayerBodyCap(playerOther).getHash();
         if(otherHash!=message.partsHash)
         {
             LogHelper.info("Request for part sync confirmed for "+playerOther.getDisplayNameString());
-            NetworkHandler.sendTo(new PacketSyncPlayerParts(CapHelper.getPlayerPartsCap(playerOther).serializeNBT(), playerOther), ctx.getServerHandler().playerEntity);
+            NetworkHandler.sendTo(new PacketSyncPlayerBody(CapHelper.getPlayerBodyCap(playerOther).serializeNBT(), playerOther), ctx.getServerHandler().playerEntity);
         }
     }
 

@@ -24,14 +24,14 @@ public class ItemSpeedHand extends ItemAugment
 
     public ItemSpeedHand(String name)
     {
-        super(name,0.1f);
+        super(name,1,PartType.ARM,0.1f,"Make youre arms work faster");
     }
 
 
     @Override
-    public void tickAugment(ItemStack augmentStack, ItemStack bodyPartStack, TickEvent.PlayerTickEvent event)
+    public void tickAugment(ItemStack augmentStack, TickEvent.PlayerTickEvent event)
     {
-        if(((IBodyPart) bodyPartStack.getItem()).getPartType(bodyPartStack)== PartType.ARM_RIGHT)
+        /*if(((IBodyPart) bodyPartStack.getItem()).getPartType(bodyPartStack)== PartType.ARM_RIGHT)
         {
             if(event.player.getActiveHand() == EnumHand.MAIN_HAND && event.player.getPrimaryHand() == EnumHandSide.RIGHT)
             {
@@ -44,11 +44,11 @@ public class ItemSpeedHand extends ItemAugment
             {
                 event.player.getEntityAttribute(SharedMonsterAttributes.ATTACK_SPEED).applyModifier(ATTACK_SPEED_BOOST_MODIFIER);
             }
-        }
+        }*/
     }
 
     @Override
-    public boolean validate(ItemStack augment, ItemStack bodyPart, EntityPlayer player)
+    public boolean validate(ItemStack augment, EntityPlayer player)
     {
         IPlayerDataProvider playerData = CapHelper.getPlayerDataCap(player);
 

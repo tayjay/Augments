@@ -1,10 +1,10 @@
 package com.tayjay.augments.item.augments;
 
+import com.tayjay.augments.api.capabilities.IPlayerDataProvider;
 import com.tayjay.augments.api.events.IActivate;
 import com.tayjay.augments.api.item.PartType;
 import com.tayjay.augments.util.CapHelper;
 import com.tayjay.augments.util.ChatHelper;
-import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 
@@ -15,12 +15,12 @@ public class ItemOvershield extends ItemAugment implements IActivate
 {
     public ItemOvershield(String name)
     {
-        super(name,2);
-        acceptedParts.add(PartType.TORSO);
+        super(name,2,PartType.TORSO,2,"Create a shield around the player");
+
     }
 
     @Override
-    public boolean validate(ItemStack augment, ItemStack bodyPart, EntityPlayer player)
+    public boolean validate(ItemStack augment, EntityPlayer player)
     {
         if(CapHelper.getPlayerDataCap(player).getCurrentEnergy()<getEnergyUse(augment))
             return false;
@@ -30,16 +30,12 @@ public class ItemOvershield extends ItemAugment implements IActivate
     }
 
 
-    @Override
-    public KeyBinding getKey()
-    {
-        return null;
-    }
+
 
     @Override
-    public void activate(ItemStack stack,ItemStack bodyPart, EntityPlayer playerIn)
+    public void activate(ItemStack stack, EntityPlayer playerIn)
     {
-        if(validate(stack,null,playerIn))
+        if(validate(stack, playerIn))
         {
             CapHelper.getPlayerDataCap(playerIn).removeEnergy(getEnergyUse(stack));
 
@@ -49,5 +45,11 @@ public class ItemOvershield extends ItemAugment implements IActivate
         {
             ChatHelper.send(playerIn, "Not enough energy!");
         }
+    }
+    @Override
+    public boolean isActive(ItemStack augment, ItemStack bodyPart, EntityPlayer player)
+    {
+        IPlayerDataProvider playerDataProvider = CapHelper.getPlayerDataCap(player);
+        return playerDataProvider.getCurrentAugment().getItem()==this && playerDataProvider.isAugmentActive();
     }
 }

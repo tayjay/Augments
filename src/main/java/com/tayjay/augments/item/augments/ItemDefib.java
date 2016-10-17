@@ -16,23 +16,42 @@ public class ItemDefib extends ItemAugment implements ILivingDeath
 {
     public ItemDefib(String name)
     {
-        super(name,99);
-        acceptedParts.add(PartType.TORSO);
+        super(name,3, PartType.TORSO, 9001, "Saves player from death once.");
     }
 
     @Override
-    public boolean validate(ItemStack augment, ItemStack bodyPart, EntityPlayer player)
+    public boolean validate(ItemStack augment, EntityPlayer player)
     {
-        return super.validate(augment,bodyPart,player);
+        return super.validate(augment, player);
+    }
+
+
+    @Override
+    public void activate(ItemStack augment, EntityPlayer player)
+    {
+        if(isActive(augment,player))
+        {
+            ChatHelper.send(player,"Disabling Defibrillator!");
+            CapHelper.getPlayerDataCap(player).setAugmentActive(false);
+        }
+        else
+        {
+            ChatHelper.send(player,"Defibrillator Enabled!");
+            CapHelper.getPlayerDataCap(player).setAugmentActive(true);
+        }
     }
 
     @Override
     public void onDeath(ItemStack augment, EntityPlayer dieing, LivingDeathEvent event)
     {
-        IPlayerDataProvider data = CapHelper.getPlayerDataCap(dieing);
-        data.setCurrentEnergy(0);
-        dieing.setHealth(dieing.getMaxHealth());
-        ChatHelper.send(dieing,"User is dieing, activating augment!");
-        event.setCanceled(true);
+        if(CapHelper.getAugmentDataCap(augment).isActive())
+        {
+            IPlayerDataProvider data = CapHelper.getPlayerDataCap(dieing);
+            data.setCurrentEnergy(0);
+            dieing.setHealth(dieing.getMaxHealth());
+            ChatHelper.send(dieing, "User is dieing, activating augment!");
+            event.setCanceled(true);
+            CapHelper.getAugmentDataCap(augment).setActive(false);
+        }
     }
 }

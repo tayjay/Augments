@@ -18,9 +18,9 @@ import java.util.Locale;
  */
 public class CommandAugments extends CommandAugmentBase
 {
-    private static final List<String> commands = Lists.newArrayList("viewPlayerParts","setMaxEnergy","setCurrentEnergy","setRechargeEnergy");
+    private static final List<String> commands = Lists.newArrayList("viewPlayerParts","setMaxEnergy","setCurrentEnergy","setRechargeEnergy","setTier");
 
-    final CommandPlayerParts playerPartsCMD = new CommandPlayerParts();
+    final CommandPlayerBody playerPartsCMD = new CommandPlayerBody();
     final CommandEnergy energyMaxCMD = new CommandEnergy(CommandEnergy.CommandType.MAX);
     final CommandEnergy energyCurrentCMD = new CommandEnergy(CommandEnergy.CommandType.CURRENT);
     final CommandEnergy energyRechargeCMD = new CommandEnergy(CommandEnergy.CommandType.RECHARGE);

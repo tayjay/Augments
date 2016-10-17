@@ -22,11 +22,13 @@ public class NetworkHandler
         INSTANCE.registerMessage(PacketOpenGui.class,PacketOpenGui.class,desc++, Side.SERVER);
         INSTANCE.registerMessage(PacketREQSyncParts.class, PacketREQSyncParts.class,desc++,Side.SERVER);
         INSTANCE.registerMessage(PacketChangeEnergy.class,PacketChangeEnergy.class,desc++,Side.SERVER);
+        INSTANCE.registerMessage(PacketCycleAugment.class,PacketCycleAugment.class,desc++,Side.SERVER);
+        INSTANCE.registerMessage(PacketActivateAugment.class,PacketActivateAugment.class,desc++,Side.SERVER);
 
         INSTANCE.registerMessage(PacketExplode.class,PacketExplode.class,desc++,Side.SERVER);
 
         //Client Packets
-        INSTANCE.registerMessage(PacketSyncPlayerParts.class,PacketSyncPlayerParts.class,desc++,Side.CLIENT);
+        INSTANCE.registerMessage(PacketSyncPlayerBody.class,PacketSyncPlayerBody.class,desc++,Side.CLIENT);
         INSTANCE.registerMessage(PacketSyncPlayerData.class,PacketSyncPlayerData.class,desc++,Side.CLIENT);
     }
 

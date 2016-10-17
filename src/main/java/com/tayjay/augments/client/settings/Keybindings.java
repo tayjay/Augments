@@ -10,7 +10,8 @@ import org.lwjgl.input.Keyboard;
 public enum Keybindings
 {
     ACTIVATE("keys.augments.activate", Keyboard.KEY_G),
-    OPEN_PLAYER_PARTS_GUI("keys.augments.openpartgui", Keyboard.KEY_I);
+    CYCLE("keys.augments.cycle", Keyboard.KEY_C),
+    OPEN_PLAYER_BODY_GUI("keys.augments.openbodygui", Keyboard.KEY_I);
 
     private final KeyBinding keyBinding;
 

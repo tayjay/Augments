@@ -1,12 +1,14 @@
 package com.tayjay.augments.client.handler;
 
 import com.tayjay.augments.api.events.IActivate;
+import com.tayjay.augments.api.item.IAugment;
 import com.tayjay.augments.client.settings.Keybindings;
 import com.tayjay.augments.handler.GuiHandler;
 import com.tayjay.augments.network.NetworkHandler;
 import com.tayjay.augments.network.packets.PacketOpenGui;
 import com.tayjay.augments.util.CapHelper;
 import net.minecraft.client.Minecraft;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
 import net.minecraftforge.fml.relauncher.Side;
@@ -37,7 +39,8 @@ public class KeyInputHandler
             switch (key)
             {
                 case ACTIVATE:
-                    IItemHandler playerParts = CapHelper.getPlayerPartsCap(Minecraft.getMinecraft().thePlayer).getBodyParts();
+                    /*
+                    IItemHandler playerParts = CapHelper.getPlayerBodyCap(Minecraft.getMinecraft().thePlayer).getBodyParts();
                     IItemHandler augments;
                     for(int i = 0; i<playerParts.getSlots();i++)
                     {
@@ -53,9 +56,18 @@ public class KeyInputHandler
                             }
                         }
                     }
+                    */
+                    ItemStack currentAugment = CapHelper.getPlayerDataCap(Minecraft.getMinecraft().thePlayer).getCurrentAugment();
+                    if(currentAugment!=null)
+                    {
+                        ((IAugment)currentAugment.getItem()).activate(currentAugment,Minecraft.getMinecraft().thePlayer);
+                    }
                     break;
-                case OPEN_PLAYER_PARTS_GUI:
-                    NetworkHandler.sendToServer(new PacketOpenGui(GuiHandler.GuiIDs.PLAYER_PARTS.ordinal()));
+                case CYCLE:
+                    CapHelper.getPlayerDataCap(Minecraft.getMinecraft().thePlayer).cycleActiveAugment();
+                    break;
+                case OPEN_PLAYER_BODY_GUI:
+                    NetworkHandler.sendToServer(new PacketOpenGui(GuiHandler.GuiIDs.PLAYER_BODY.ordinal()));
                     break;
 
             }

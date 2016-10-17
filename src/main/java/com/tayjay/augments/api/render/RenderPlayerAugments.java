@@ -1,16 +1,12 @@
 package com.tayjay.augments.api.render;
 
-import com.tayjay.augments.api.capabilities.IPlayerPartsProvider;
 import com.tayjay.augments.api.item.IBodyPart;
 import com.tayjay.augments.api.item.PartType;
 import com.tayjay.augments.util.CapHelper;
-import com.tayjay.augments.util.RenderUtil;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.entity.RenderLivingBase;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.RenderPlayer;
@@ -18,10 +14,7 @@ import net.minecraft.entity.player.EnumPlayerModelParts;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHandSide;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
-import net.minecraftforge.items.IItemHandler;
 import org.lwjgl.opengl.GL11;
 
 /**
@@ -68,7 +61,7 @@ public class RenderPlayerAugments extends RenderPlayer
         modelplayer.bipedRightArmwear.rotateAngleX = 0.0F;
         modelplayer.bipedRightArmwear.render(0.0625F);
 
-        ItemStack rightArm = CapHelper.getPlayerPartsCap(clientPlayer).getStackByPart(PartType.ARM_RIGHT);
+        ItemStack rightArm = CapHelper.getPlayerBodyCap(clientPlayer).getStackByPartSided(PartType.ARM,1);
 
         if(rightArm!=null)
         {
@@ -100,7 +93,7 @@ public class RenderPlayerAugments extends RenderPlayer
         modelplayer.bipedLeftArmwear.rotateAngleX = 0.0F;
         modelplayer.bipedLeftArmwear.render(0.0625F);
 
-        ItemStack leftArm = CapHelper.getPlayerPartsCap(clientPlayer).getStackByPart(PartType.ARM_LEFT);
+        ItemStack leftArm = CapHelper.getPlayerBodyCap(clientPlayer).getStackByPartSided(PartType.ARM,0);
         if(leftArm!=null)
         {
             GL11.glColor4d(1,1,1,1);

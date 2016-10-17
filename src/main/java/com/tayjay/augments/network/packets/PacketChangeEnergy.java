@@ -39,7 +39,7 @@ public class PacketChangeEnergy extends PacketRunnable<PacketChangeEnergy>
     }
 
     @Override
-    public void handleServer(final PacketChangeEnergy message, final MessageContext ctx)
+    public void handleServer(PacketChangeEnergy message, MessageContext ctx)
     {
         switch (message.type)
         {

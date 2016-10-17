@@ -1,18 +1,17 @@
 package com.tayjay.augments;
 
+import com.tayjay.augments.capability.AugmentDataImpl;
 import com.tayjay.augments.capability.AugmentHolderImpl;
 import com.tayjay.augments.capability.PlayerDataImpl;
-import com.tayjay.augments.capability.PlayerPartsImpl;
+import com.tayjay.augments.capability.PlayerBodyImpl;
 import com.tayjay.augments.client.AugmentsTab;
 import com.tayjay.augments.event.AugmentEvents;
 import com.tayjay.augments.event.DrugEvents;
 import com.tayjay.augments.event.PlayerEvents;
-import com.tayjay.augments.handler.ConfigHandler;
 import com.tayjay.augments.handler.GuiHandler;
 import com.tayjay.augments.init.ModBlocks;
 import com.tayjay.augments.init.ModItems;
 import com.tayjay.augments.network.commands.CommandAugments;
-import com.tayjay.augments.network.commands.CommandPlayerParts;
 import com.tayjay.augments.proxy.CommonProxy;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
@@ -32,7 +31,7 @@ public class Augments
 {
     public static final String modId = "augments";
     public static final String name = "Augments";
-    public static final String version = "0.0.1.0";//MAJORMOD.MAJORAPI.MINOR.PATCH
+    public static final String version = "0.1.2.0";//MAJORMOD.MAJORAPI.MINOR.PATCH
     public static final String guiFactory = "com.tayjay.augments.client.GuiFactory";
 
     @Mod.Instance(modId)
@@ -57,9 +56,10 @@ public class Augments
         ModBlocks.init();
         ModItems.init();
 
-        PlayerPartsImpl.init();
+        PlayerBodyImpl.init();
         PlayerDataImpl.init();
-        AugmentHolderImpl.init();
+        //AugmentHolderImpl.init();
+        AugmentDataImpl.init();
         proxy.preInit();
 
 
@@ -75,7 +75,7 @@ public class Augments
                 "2:Override RenderPlayer(Recommended but may conflict with other mods)" ,0,2).getInt();
         drugDependant = config.get(Configuration.CATEGORY_GENERAL,"drugDependant",true,"Is the player required to take anti-rejection drugs in order to use the augments?").getBoolean();
         maxAllowedEnergy = config.get(Configuration.CATEGORY_GENERAL,"maximumEnergy",5,"Maximum amount of energy charges a player is allowed to hold",0,6).getInt();
-        maxAllowedAugmentCapacity = config.get(Configuration.CATEGORY_GENERAL,"augmentCapacity",5,"Most Augments that can held in a Body Part",0,6).getInt();
+        maxAllowedAugmentCapacity = config.get(Configuration.CATEGORY_GENERAL,"augmentCapacity",5,"Most Augments that a player can hold",0,6).getInt();
         config.save();
     }
 

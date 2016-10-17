@@ -1,10 +1,9 @@
 package com.tayjay.augments.proxy;
 
 import com.tayjay.augments.Augments;
-import com.tayjay.augments.api.DynamicIcon;
 import com.tayjay.augments.api.capabilities.IPlayerDataProvider;
 import com.tayjay.augments.api.render.LayerAugments;
-import com.tayjay.augments.api.capabilities.IPlayerPartsProvider;
+import com.tayjay.augments.api.capabilities.IPlayerBodyProvider;
 import com.tayjay.augments.api.render.RenderPlayerAugments;
 import com.tayjay.augments.client.handler.KeyInputHandler;
 import com.tayjay.augments.client.settings.Keybindings;
@@ -35,9 +34,9 @@ public class ClientProxy extends CommonProxy
     }
 
     @Override
-    public IPlayerPartsProvider getClientPlayerParts()
+    public IPlayerBodyProvider getClientPlayerParts()
     {
-        return CapHelper.getPlayerPartsCap(FMLClientHandler.instance().getClientPlayerEntity());
+        return CapHelper.getPlayerBodyCap(FMLClientHandler.instance().getClientPlayerEntity());
     }
 
     @Override

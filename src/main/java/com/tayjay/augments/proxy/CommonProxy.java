@@ -1,10 +1,7 @@
 package com.tayjay.augments.proxy;
 
-import com.tayjay.augments.api.AugmentsAPI;
 import com.tayjay.augments.api.capabilities.IPlayerDataProvider;
-import com.tayjay.augments.api.capabilities.IPlayerPartsProvider;
-import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.entity.player.EntityPlayerMP;
+import com.tayjay.augments.api.capabilities.IPlayerBodyProvider;
 import net.minecraft.item.Item;
 
 /**
@@ -17,7 +14,7 @@ public class CommonProxy
         //NOOP
     }
 
-    public IPlayerPartsProvider getClientPlayerParts(){return null;}
+    public IPlayerBodyProvider getClientPlayerParts(){return null;}
 
     public IPlayerDataProvider getClientPlayerData(){return null;}
 

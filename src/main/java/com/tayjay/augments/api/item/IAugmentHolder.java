@@ -8,6 +8,7 @@ import net.minecraft.item.ItemStack;
  * Created by tayjay on 2016-06-25.
  * Items implementing this will be assigned a IAugHolderProvider Capability to store augments.
  */
+@Deprecated
 public interface IAugmentHolder
 {
     /**

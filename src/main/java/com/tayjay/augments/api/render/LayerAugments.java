@@ -34,9 +34,13 @@ public class LayerAugments implements LayerRenderer<EntityPlayer>
         if(playerIn.getActivePotionEffect(MobEffects.INVISIBILITY)!=null)
             return;
         GL11.glPushMatrix();
+        GlStateManager.alphaFunc(516, 0.1F);
+        GlStateManager.enableBlend();
+        GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+
         GlStateManager.depthMask(true);
         //RenderHelper.disableStandardItemLighting();
-        IItemHandler parts = CapHelper.getPlayerPartsCap(playerIn).getBodyParts();
+        IItemHandler parts = CapHelper.getPlayerBodyCap(playerIn).getBodyParts();
         ItemStack stackCurrent;
         for(int i = 0;i<parts.getSlots();i++)
         {

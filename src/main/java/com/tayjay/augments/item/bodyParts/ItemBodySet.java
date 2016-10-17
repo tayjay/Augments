@@ -2,6 +2,7 @@ package com.tayjay.augments.item.bodyParts;
 
 import com.tayjay.augments.api.item.PartType;
 import com.tayjay.augments.api.render.LayerAugments;
+import com.tayjay.augments.util.CapHelper;
 import com.tayjay.augments.util.RenderUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelRenderer;
@@ -48,21 +49,33 @@ public class ItemBodySet extends ItemBodyPart
                 parent = renderPlayer.getMainModel().bipedBody;
                 model = modelSteve.bipedBody;
                 break;
-            case ARM_RIGHT:
-                parent = renderPlayer.getMainModel().bipedRightArm;
-                model = smallArms ? modelAlex.bipedRightArm : modelSteve.bipedRightArm;
+            //Without any major changes I found this method to determine which side the arm and leg stacks are on.
+            //Since I removed the ARM_LEFT,ARM_RIGHT system
+            case ARM:
+                ItemStack leftArm = CapHelper.getPlayerBodyCap(playerIn).getStackByPartSided(PartType.ARM,0);
+                if(leftArm!=null && leftArm.equals(stack))//If this stack is the one in the left arm slot
+                {
+                    parent = renderPlayer.getMainModel().bipedLeftArm;
+                    model = smallArms ? modelAlex.bipedLeftArm : modelSteve.bipedLeftArm;
+                }
+                else//This stack is in the right arm slot by elimination
+                {
+                    parent = renderPlayer.getMainModel().bipedRightArm;
+                    model = smallArms ? modelAlex.bipedRightArm : modelSteve.bipedRightArm;
+                }
                 break;
-            case ARM_LEFT:
-                parent = renderPlayer.getMainModel().bipedLeftArm;
-                model = smallArms ? modelAlex.bipedLeftArm : modelSteve.bipedLeftArm;
-                break;
-            case LEG_RIGHT:
-                parent = renderPlayer.getMainModel().bipedRightLeg;
-                model = modelSteve.bipedRightLeg;
-                break;
-            case LEG_LEFT:
-                parent = renderPlayer.getMainModel().bipedLeftLeg;
-                model = modelSteve.bipedLeftLeg;
+            case LEG:
+                ItemStack leftLeg = CapHelper.getPlayerBodyCap(playerIn).getStackByPartSided(PartType.LEG,0);
+                if(leftLeg !=null && leftLeg.equals(stack))
+                {
+                    parent = renderPlayer.getMainModel().bipedLeftLeg;
+                    model = modelSteve.bipedLeftLeg;
+                }
+                else
+                {
+                    parent = renderPlayer.getMainModel().bipedRightLeg;
+                    model = modelSteve.bipedRightLeg;
+                }
                 break;
             default:
                 parent = renderPlayer.getMainModel().bipedHeadwear;

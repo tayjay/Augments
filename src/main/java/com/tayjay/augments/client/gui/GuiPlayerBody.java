@@ -3,7 +3,9 @@ package com.tayjay.augments.client.gui;
 import com.mojang.realmsclient.gui.ChatFormatting;
 import com.tayjay.augments.Augments;
 import com.tayjay.augments.api.item.IAugment;
+import com.tayjay.augments.inventory.ContainerPlayerBody;
 import com.tayjay.augments.inventory.ContainerPlayerParts;
+import com.tayjay.augments.inventory.InventoryPlayerAugments;
 import com.tayjay.augments.inventory.InventoryPlayerParts;
 import com.tayjay.augments.util.CapHelper;
 import net.minecraft.client.Minecraft;
@@ -20,16 +22,15 @@ import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
 
-
 /**
- * Created by tayjay on 2016-06-24.
+ * Created by tayjay on 2016-10-16.
  */
-public class GuiPlayerParts extends GuiContainer
+public class GuiPlayerBody extends GuiContainer
 {
     private static final ResourceLocation texture = new ResourceLocation(Augments.modId.toLowerCase(),"textures/gui/playerBodyParts.png");
-    public GuiPlayerParts(InventoryPlayer invPlayer, InventoryPlayerParts invParts)
+    public GuiPlayerBody(InventoryPlayer invPlayer, InventoryPlayerParts invParts, InventoryPlayerAugments invAugs)
     {
-        super(new ContainerPlayerParts(invPlayer,invParts));
+        super(new ContainerPlayerBody(invPlayer,invParts,invAugs));
         //TODO: Change these to correct values of size
         this.xSize = 255;
         this.ySize = 230;
@@ -43,6 +44,7 @@ public class GuiPlayerParts extends GuiContainer
         this.drawTexturedModalRect((width-xSize)/2,(height-ySize)/2,0,0,xSize,ySize);
 
         drawEntityOnScreen(guiLeft + 210, guiTop + 120, 40, (float)(guiLeft + 210) - mouseX, (float)(guiTop + 120 - 50) - mouseY, this.mc.thePlayer);
+
         /*ContainerPlayerParts container = (ContainerPlayerParts)inventorySlots;
         RenderHelper.enableGUIStandardItemLighting();
         int shift = 0;//Left align all augments in gui to make cleaner.
@@ -58,7 +60,7 @@ public class GuiPlayerParts extends GuiContainer
                         int posX =guiLeft + 69 + shift++ * 18;
                         int posY =guiTop + 5 + i * 18;
 
-                        if(!((IAugment)items.getStackInSlot(j).getItem()).validate(items.getStackInSlot(j), this.mc.thePlayer))
+                        if(!((IAugment)items.getStackInSlot(j).getItem()).validate(items.getStackInSlot(j),container.inventory.getStackInSlot(i),this.mc.thePlayer))
                             this.drawGradientRect(posX-2,posY-2,posX+18,posY+18, Color.RED.getRGB(),Color.RED.getRGB());
                         else
                             this.drawGradientRect(posX-2,posY-2,posX+18,posY+18, Color.GREEN.getRGB(),Color.GREEN.getRGB());
@@ -85,7 +87,7 @@ public class GuiPlayerParts extends GuiContainer
                         if(mouseX > posX && mouseX <=posX+16 && mouseY > posY && mouseY <=posY+16)
                         {
                             tooltip = items.getStackInSlot(j).getTooltip(Minecraft.getMinecraft().thePlayer,false);
-                            if(!((IAugment)items.getStackInSlot(j).getItem()).validate(items.getStackInSlot(j), this.mc.thePlayer))
+                            if(!((IAugment)items.getStackInSlot(j).getItem()).validate(items.getStackInSlot(j),container.inventory.getStackInSlot(i),this.mc.thePlayer))
                                 tooltip.add(ChatFormatting.RED+"INVALID SETUP");
                             else
                                 tooltip.add(ChatFormatting.GREEN+"READY TO USE");

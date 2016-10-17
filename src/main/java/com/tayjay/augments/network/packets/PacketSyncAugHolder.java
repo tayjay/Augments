@@ -9,7 +9,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
  * Created by tayjay on 2016-06-25.
  * Will Find a use for this eventually.
  * All data for itemstacks are supposedly synced on their own.
- * //TODO: Fix this to sync the itemstack correctly if not automatic in forge.
+ * //TODO: Change this to sync augments on player
  */
 public class PacketSyncAugHolder extends PacketRunnable<PacketSyncAugHolder>
 {

@@ -1,5 +1,6 @@
 package com.tayjay.augments.api.item;
 
+import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -11,7 +12,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
  * Created by tayjay on 2016-06-23.
  * Item that can be added to the player to replace parts of their body.
  */
-public interface IBodyPart extends IAugmentHolder
+public interface IBodyPart
 {
     /**
      * Rarity/complexity of this part
@@ -51,18 +52,13 @@ public interface IBodyPart extends IAugmentHolder
     ResourceLocation getTexture(ItemStack stack,boolean hasSmallArms);
 
     /**
-     * Go through all augments and tick them on the PlayerTickEvent
-     * @param bodyPartStack This stack
-     * @param event         Event to tick on
+     * Get the model that will be rendered on the player.
+     * Currently this is just from a ModelPlayer to account for arm size.
+     * This is for future implementations where different models may be used.
+     * @param stack         This stack
+     * @param hasSmallArms  Whether player has small arms, ie. has the alex model
+     * @return              Model to render
      */
-    void tickAllAugments(ItemStack bodyPartStack, TickEvent.PlayerTickEvent event);
-
-    /**
-     * Check augments in this whether it has the passed augment
-     * @param bodyPartStack This body part's stack
-     * @param augment   Augment to check for
-     * @return          Whether this has the augment
-     */
-    boolean hasAugment(ItemStack bodyPartStack, IAugment augment);
+    ModelRenderer getModel(ItemStack stack, boolean hasSmallArms);
 
 }

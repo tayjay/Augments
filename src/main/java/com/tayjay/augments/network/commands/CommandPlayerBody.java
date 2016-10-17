@@ -15,12 +15,12 @@ import net.minecraftforge.items.IItemHandler;
 /**
  * Created by tayjay on 2016-06-24.
  */
-public class CommandPlayerParts extends CommandAugmentBase
+public class CommandPlayerBody extends CommandAugmentBase
 {
     @Override
     public String getCommandName()
     {
-        return "aug_viewPlayerParts";
+        return "aug_viewPlayerBody";
     }
 
     @Override
@@ -32,13 +32,13 @@ public class CommandPlayerParts extends CommandAugmentBase
     @Override
     public String getCommandUsage(ICommandSender sender)
     {
-        return "/aug playerParts";
+        return "/aug playerBody";
     }
 
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
     {
         EntityPlayerMP player = (EntityPlayerMP) sender;
-        player.openGui(Augments.instance, GuiHandler.GuiIDs.PLAYER_PARTS.ordinal(),player.worldObj,(int)player.posX,(int)player.posY,(int)player.posZ);
+        player.openGui(Augments.instance, GuiHandler.GuiIDs.PLAYER_BODY.ordinal(),player.worldObj,(int)player.posX,(int)player.posY,(int)player.posZ);
     }
 }

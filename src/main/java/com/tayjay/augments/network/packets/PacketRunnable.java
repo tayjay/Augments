@@ -56,7 +56,7 @@ public abstract class PacketRunnable<REQ extends IMessage> implements IMessage, 
      * @param message   Message being handled
      * @param ctx       Server context
      */
-    public abstract void handleServer(REQ message,MessageContext ctx);
+    public abstract void handleServer(final REQ message,final MessageContext ctx);
 
     /**
      * Make the runnable to be used in the client ScheduledTask list.

@@ -1,7 +1,6 @@
 package com.tayjay.augments.network.packets;
 
 import com.tayjay.augments.Augments;
-import com.tayjay.augments.api.AugmentsAPI;
 import com.tayjay.augments.util.CapHelper;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
@@ -16,18 +15,18 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
  * Sync all parts on a player to the client.,br/>
  * This could be for Client player themselves or for another player to update what to render.
  */
-public class PacketSyncPlayerParts extends PacketRunnable<PacketSyncPlayerParts>
+public class PacketSyncPlayerBody extends PacketRunnable<PacketSyncPlayerBody>
 {
     private int playerId;
     private NBTTagCompound nbt;
 
-    public PacketSyncPlayerParts(){}
+    public PacketSyncPlayerBody(){}
 
     /**
      * @param nbt       Tag of the parts on the server side player
      * @param player    Holder of the parts in the NBT
      */
-    public PacketSyncPlayerParts(NBTTagCompound nbt, EntityPlayerMP player)
+    public PacketSyncPlayerBody(NBTTagCompound nbt, EntityPlayerMP player)
     {
         this.playerId = player.getEntityId();
         this.nbt = nbt;
@@ -48,13 +47,13 @@ public class PacketSyncPlayerParts extends PacketRunnable<PacketSyncPlayerParts>
     }
 
     @Override
-    public void handleServer(PacketSyncPlayerParts message, MessageContext ctx)
+    public void handleServer(PacketSyncPlayerBody message, MessageContext ctx)
     {
 
     }
 
     @Override
-    public void handleClient(PacketSyncPlayerParts message, MessageContext ctx)
+    public void handleClient(PacketSyncPlayerBody message, MessageContext ctx)
     {
         if(message.playerId == Minecraft.getMinecraft().thePlayer.getEntityId())
             Augments.proxy.getClientPlayerParts().deserializeNBT(message.nbt);
@@ -62,7 +61,7 @@ public class PacketSyncPlayerParts extends PacketRunnable<PacketSyncPlayerParts>
         {
             //TODO: CONSIDER REVISION! This may not work! May need another packet to sync data from another player.
             EntityPlayer player = (EntityPlayer) Minecraft.getMinecraft().theWorld.getEntityByID(message.playerId);
-            CapHelper.getPlayerPartsCap(player).deserializeNBT(message.nbt);
+            CapHelper.getPlayerBodyCap(player).deserializeNBT(message.nbt);
         }
     }
 }

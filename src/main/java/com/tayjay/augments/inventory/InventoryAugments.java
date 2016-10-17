@@ -11,6 +11,8 @@ import net.minecraftforge.items.IItemHandlerModifiable;
 /**
  * Created by tayjay on 2016-06-25.
  */
+//todo: Change implementation so it is on player instead
+@Deprecated
 public class InventoryAugments implements IItemHandlerModifiable
 {
     public final ItemStack AUGMENT_HOLDER;

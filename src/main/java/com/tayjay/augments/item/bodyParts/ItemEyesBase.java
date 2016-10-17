@@ -1,7 +1,7 @@
 package com.tayjay.augments.item.bodyParts;
 
 import com.tayjay.augments.Augments;
-import com.tayjay.augments.api.events.IActivate;
+import com.tayjay.augments.api.capabilities.IPlayerDataProvider;
 import com.tayjay.augments.api.events.IHUDProvider;
 import com.tayjay.augments.api.item.IAugment;
 import com.tayjay.augments.api.item.PartType;
@@ -71,10 +71,13 @@ public class ItemEyesBase extends ItemBodyPart implements IHUDProvider
             return;
         if(event.getType() == RenderGameOverlayEvent.ElementType.TEXT)
         {
-            IItemHandler parts = CapHelper.getPlayerPartsCap(mc.thePlayer).getBodyParts();
+            IItemHandler parts = CapHelper.getPlayerBodyCap(mc.thePlayer).getBodyParts();
 
             drawEnergyCells(stack,parts, event);
 
+            drawActiveAugment();
+
+            /*
             for(int i = 0;i<parts.getSlots();i++)
             {
                 if(parts.getStackInSlot(i)!=null)
@@ -104,6 +107,7 @@ public class ItemEyesBase extends ItemBodyPart implements IHUDProvider
                     }
                 }
             }
+            */
             if(Augments.drugDependant)
             {
                 int drugTimer = CapHelper.getPlayerDataCap(Minecraft.getMinecraft().thePlayer).getDrugTimer();
@@ -151,6 +155,33 @@ public class ItemEyesBase extends ItemBodyPart implements IHUDProvider
         Minecraft.getMinecraft().fontRendererObj.drawString(String.format("%.2f", cur) + "/" + String.format("%.0f", max), posX, 20, 0);
         GL11.glPopMatrix();
 
+    }
+
+    private void drawActiveAugment()
+    {
+        Minecraft mc = Minecraft.getMinecraft();
+        IPlayerDataProvider playerDataProvider = CapHelper.getPlayerDataCap(Minecraft.getMinecraft().thePlayer);
+        ItemStack activeAugment = playerDataProvider.getCurrentAugment();
+
+        if(activeAugment!=null)
+        {
+
+            if(((IAugment)activeAugment.getItem()).validate(activeAugment, mc.thePlayer))
+            {
+                mc.fontRendererObj.drawString(activeAugment.getDisplayName(),16,0, Color.GREEN.getRGB());
+            }
+            else
+            {
+                mc.fontRendererObj.drawString(activeAugment.getDisplayName(),16,0,Color.RED.getRGB());
+            }
+
+
+            GL11.glPushMatrix();
+            GL11.glScaled(0.6,0.6,0.6);
+            RenderHelper.enableGUIStandardItemLighting();
+            Minecraft.getMinecraft().getRenderItem().renderItemIntoGUI(activeAugment, 0, 0);
+            GL11.glPopMatrix();
+        }
     }
 
 }

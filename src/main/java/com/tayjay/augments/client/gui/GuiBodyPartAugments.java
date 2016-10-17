@@ -18,6 +18,7 @@ import org.lwjgl.opengl.GL11;
 /**
  * Created by tayjay on 2016-06-25.
  */
+@Deprecated
 public class GuiBodyPartAugments extends GuiContainer
 {
     private static final ResourceLocation texture = new ResourceLocation(Augments.modId.toLowerCase(),"textures/gui/bodyPartAugments.png");

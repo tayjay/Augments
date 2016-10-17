@@ -8,6 +8,7 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.server.FMLServerHandler;
 
 /**
@@ -38,6 +39,12 @@ public class ChatHelper
             player.addChatMessage(new TextComponentString(msg));
             //player.addChatComponentMessage(new ChatComponentText(msg));
         }
+    }
+
+    public static void clientMsg(String msg)
+    {
+        if(FMLCommonHandler.instance().getEffectiveSide()== Side.CLIENT)
+            Minecraft.getMinecraft().thePlayer.addChatMessage(new TextComponentString(msg));
     }
 
     /**

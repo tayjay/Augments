@@ -1,15 +1,20 @@
 package com.tayjay.augments.capability;
 
+import com.google.common.collect.Lists;
 import com.tayjay.augments.Augments;
 import com.tayjay.augments.api.AugmentsAPI;
 import com.tayjay.augments.api.capabilities.IPlayerDataProvider;
+import com.tayjay.augments.api.events.IActivate;
 import com.tayjay.augments.network.NetworkHandler;
 import com.tayjay.augments.network.packets.PacketChangeEnergy;
+import com.tayjay.augments.network.packets.PacketCycleAugment;
 import com.tayjay.augments.network.packets.PacketSyncPlayerData;
+import com.tayjay.augments.util.CapHelper;
 import com.tayjay.augments.util.ChatHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.MobEffects;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
@@ -23,6 +28,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nullable;
+import java.util.List;
 
 /**
  * Created by tayjay on 2016-06-26.
@@ -57,6 +63,8 @@ public class PlayerDataImpl
         private float currentEnergy;
         private float rechargeRate;
         private long lastEnergyUseTick;
+        private int currentActiveIndex;
+        private byte playerTier;
         /**How many ticks after discharging until energy can charge up again*/
         private final long RECHARGE_DELAY = 40;
 
@@ -73,6 +81,9 @@ public class PlayerDataImpl
         public DefaultImpl(EntityPlayer player)
         {
             this.player = player;
+            this.playerTier = 0;
+            //this.currentActiveIndex = -1;
+            //this.cycleActiveAugment();
         }
 
 
@@ -94,12 +105,12 @@ public class PlayerDataImpl
         public float getMaxEnergy()
         {
             /*
-            if(CapHelper.getPlayerPartsCap(this.player).getBodyParts().getStackInSlot(7).getItem() == null)
+            if(CapHelper.getPlayerBodyCap(this.player).getBodyParts().getStackInSlot(7).getItem() == null)
             {
-                if (CapHelper.getPlayerPartsCap(this.player).getBodyParts().getStackInSlot(7).getItem() instanceof IEnergySupply)
+                if (CapHelper.getPlayerBodyCap(this.player).getBodyParts().getStackInSlot(7).getItem() instanceof IEnergySupply)
                 {
-                    IEnergySupply supply = (IEnergySupply) CapHelper.getPlayerPartsCap(this.player).getBodyParts().getStackInSlot(7).getItem();
-                    maxEnergy = supply.maxEnergy(CapHelper.getPlayerPartsCap(this.player).getBodyParts().getStackInSlot(7));
+                    IEnergySupply supply = (IEnergySupply) CapHelper.getPlayerBodyCap(this.player).getBodyParts().getStackInSlot(7).getItem();
+                    maxEnergy = supply.maxEnergy(CapHelper.getPlayerBodyCap(this.player).getBodyParts().getStackInSlot(7));
                 }
                 maxEnergy = 0;
             }
@@ -116,8 +127,8 @@ public class PlayerDataImpl
         @Override
         public float getCurrentEnergy()
         {
-            currentEnergy = (currentEnergy/10)*10;
-            if(currentEnergy>=maxEnergy-0.05)
+            currentEnergy = (currentEnergy/10)*10;//Round value
+            if(currentEnergy>=maxEnergy-0.05)//Fix error margin with float values
                 currentEnergy = maxEnergy;
             return this.currentEnergy;
         }
@@ -184,6 +195,7 @@ public class PlayerDataImpl
         {
             setCurrentEnergy(0);
             ChatHelper.send(player,"Rebooting...");
+            player.addPotionEffect(new PotionEffect(MobEffects.NAUSEA,5));
         }
 
         @Override
@@ -194,7 +206,7 @@ public class PlayerDataImpl
 
         private boolean checkPlayerAugmented(EntityPlayer player)
         {
-            IItemHandler parts = player.getCapability(AugmentsAPI.PLAYER_PARTS_CAPABILITY,null).getBodyParts();
+            IItemHandler parts = player.getCapability(AugmentsAPI.PLAYER_BODY_CAPABILITY,null).getBodyParts();
             for(int i =0;i<parts.getSlots();i++)
             {
                 if(parts.getStackInSlot(i)!=null)
@@ -248,6 +260,53 @@ public class PlayerDataImpl
             }
         }
 
+        @Override
+        public ItemStack getCurrentAugment()
+        {
+            return CapHelper.getPlayerBodyCap(player).getAugments().getStackInSlot(currentActiveIndex);
+        }
+
+        @Override
+        public void cycleActiveAugment()
+        {
+            currentActiveIndex = (currentActiveIndex+1)%CapHelper.getPlayerBodyCap(player).getAugmentCapacity();
+            if(getCurrentAugment()==null)//Next slot is empty
+            {
+                int checkingIndex = (currentActiveIndex+1)%CapHelper.getPlayerBodyCap(player).getAugmentCapacity();
+                while(checkingIndex!=currentActiveIndex)//Step though rest of augments until you come back to starting point
+                {
+                    if(CapHelper.getPlayerBodyCap(player).getAugments().getStackInSlot(checkingIndex)!=null)
+                    {
+                        currentActiveIndex = checkingIndex;
+                        break;
+                    }
+                    checkingIndex = (checkingIndex+1)%CapHelper.getPlayerBodyCap(player).getAugmentCapacity();
+                }
+                //If found an augment, will change index to it. If not, assume there are no augments.
+            }
+
+            if(FMLCommonHandler.instance().getEffectiveSide()==Side.CLIENT)
+                NetworkHandler.sendToServer(new PacketCycleAugment(player));
+        }
+
+        @Override
+        public boolean isAugmentActive()
+        {
+            return CapHelper.getAugmentDataCap(getCurrentAugment()).isActive();
+        }
+
+        @Override
+        public void setAugmentActive(boolean active)
+        {
+            CapHelper.getAugmentDataCap(getCurrentAugment()).setActive(active);
+        }
+
+        @Override
+        public byte getPlayerTier()
+        {
+            return this.playerTier;
+        }
+
         private NBTTagCompound writeNBT()
         {
             NBTTagCompound tag = new NBTTagCompound();
@@ -255,6 +314,8 @@ public class PlayerDataImpl
             tag.setFloat("curE",this.currentEnergy);
             tag.setFloat("recharge",this.rechargeRate);
             tag.setInteger("drugTimer",this.drugTimer);
+            tag.setInteger("activeAugmentIndex",this.currentActiveIndex);
+            tag.setByte("playerTier",this.playerTier);
             return tag;
         }
 
@@ -281,6 +342,10 @@ public class PlayerDataImpl
             }
             if(nbt.hasKey("drugTimer"))
                 this.drugTimer = nbt.getInteger("drugTimer");
+            if(nbt.hasKey("activeAugmentIndex"))
+                this.currentActiveIndex = nbt.getInteger("activeAugmentIndex");
+            if(nbt.hasKey("playerTier"))
+                this.playerTier = nbt.getByte("playerTier");
         }
     }
 

@@ -20,7 +20,7 @@ public class PacketOpenGui extends PacketRunnable<PacketOpenGui>
     }
 
     @Override
-    public void handleServer(final PacketOpenGui message,final MessageContext ctx)
+    public void handleServer(PacketOpenGui message,MessageContext ctx)
     {
         ctx.getServerHandler().playerEntity.openGui(Augments.instance,message.guiId,ctx.getServerHandler().playerEntity.worldObj,0,0,0);
     }

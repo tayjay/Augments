@@ -10,5 +10,5 @@ import net.minecraftforge.event.entity.living.LivingHurtEvent;
  */
 public interface ILivingHurt
 {
-    void onHurt(ItemStack augment, ItemStack bodyPart, EntityPlayer player, LivingHurtEvent event);
+    void onHurt(ItemStack augment, EntityPlayer player, LivingHurtEvent event);
 }

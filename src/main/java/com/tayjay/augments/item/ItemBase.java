@@ -1,15 +1,9 @@
 package com.tayjay.augments.item;
 
 import com.tayjay.augments.Augments;
-import com.tayjay.augments.api.DynamicIcon;
 import com.tayjay.augments.init.IItemModelProvider;
-import com.tayjay.augments.network.NetworkHandler;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.EnumHand;
-import net.minecraft.world.World;
 
 /**
  * Created by tayjay on 2016-06-23.

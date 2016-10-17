@@ -1,9 +1,11 @@
 package com.tayjay.augments.util;
 
 import com.tayjay.augments.api.AugmentsAPI;
+import com.tayjay.augments.api.capabilities.IAugDataProvider;
 import com.tayjay.augments.api.capabilities.IAugHolderProvider;
 import com.tayjay.augments.api.capabilities.IPlayerDataProvider;
-import com.tayjay.augments.api.capabilities.IPlayerPartsProvider;
+import com.tayjay.augments.api.capabilities.IPlayerBodyProvider;
+import com.tayjay.augments.api.item.IAugment;
 import com.tayjay.augments.api.item.IAugmentHolder;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -14,21 +16,22 @@ import net.minecraft.item.ItemStack;
  */
 public class CapHelper
 {
-    public static IPlayerPartsProvider getPlayerPartsCap(EntityPlayer player)
+    public static IPlayerBodyProvider getPlayerBodyCap(EntityPlayer player)
     {
-        if(hasPlayerPartsCap(player))
+        if(hasPlayerBodyCap(player))
         {
-            return player.getCapability(AugmentsAPI.PLAYER_PARTS_CAPABILITY,null);
+            return player.getCapability(AugmentsAPI.PLAYER_BODY_CAPABILITY,null);
         }
         return null;
     }
 
-    public static boolean hasPlayerPartsCap(EntityPlayer player)
+    public static boolean hasPlayerBodyCap(EntityPlayer player)
     {
-        return player.hasCapability(AugmentsAPI.PLAYER_PARTS_CAPABILITY,null);
+        return player.hasCapability(AugmentsAPI.PLAYER_BODY_CAPABILITY,null);
     }
 
-
+    /*//Removed in favor of central augment storage.
+    @Deprecated
     public static IAugHolderProvider getAugHolderCap(ItemStack stack)
     {
         if(stack !=null && stack.getItem() instanceof IAugmentHolder && hasAugHolderCap(stack))
@@ -38,10 +41,11 @@ public class CapHelper
         return null;
     }
 
+    @Deprecated
     public static boolean hasAugHolderCap(ItemStack stack)
     {
         return stack!=null && stack.hasCapability(AugmentsAPI.AUGMENT_HOLDER_CAPABILITY,null);
-    }
+    }*/
 
     public static IPlayerDataProvider getPlayerDataCap(EntityPlayer player)
     {
@@ -55,6 +59,20 @@ public class CapHelper
     public static boolean hasPlayerDataCap(EntityPlayer player)
     {
         return player.hasCapability(AugmentsAPI.PLAYER_DATA_CAPABILITY, null);
+    }
+
+    public static IAugDataProvider getAugmentDataCap(ItemStack stack)
+    {
+        if(stack!=null && stack.getItem() instanceof IAugment&& hasAugmentDataCap(stack))
+        {
+            return stack.getCapability(AugmentsAPI.AUGMENT_DATA_CAPABILITY,null);
+        }
+        return null;
+    }
+
+    public static boolean hasAugmentDataCap(ItemStack stack)
+    {
+        return stack != null && stack.hasCapability(AugmentsAPI.AUGMENT_DATA_CAPABILITY, null);
     }
 
 }
