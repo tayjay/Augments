@@ -1,6 +1,7 @@
 package com.tayjay.augments.client;
 
 import com.tayjay.augments.Augments;
+import com.tayjay.augments.init.ModItems;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -18,6 +19,6 @@ public class AugmentsTab extends CreativeTabs
     @Override
     public Item getTabIconItem()
     {
-        return Items.NETHER_STAR;
+        return ModItems.cyborgEyes;
     }
 }

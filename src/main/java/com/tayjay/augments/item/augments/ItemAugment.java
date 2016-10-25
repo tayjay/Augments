@@ -83,15 +83,27 @@ public class ItemAugment extends ItemBase implements IAugment,IItemModelProvider
         if(isActive(augment,player))
         {
             CapHelper.getAugmentDataCap(augment).setActive(false);
+            onDeactivate(augment, player);
             ChatHelper.clientMsg("Augment Disabled");
         }
         else
         {
             CapHelper.getAugmentDataCap(augment).setActive(true);
+            onActivate(augment, player);
             ChatHelper.clientMsg("Augment Enabled");
         }
         if(FMLCommonHandler.instance().getEffectiveSide()== Side.CLIENT)
             NetworkHandler.sendToServer(new PacketActivateAugment());
+    }
+
+    public void onActivate(ItemStack augment,EntityPlayer player)
+    {
+
+    }
+
+    public void onDeactivate(ItemStack augment,EntityPlayer player)
+    {
+
     }
 
     @Override
@@ -99,4 +111,12 @@ public class ItemAugment extends ItemBase implements IAugment,IItemModelProvider
     {
         return CapHelper.getAugmentDataCap(augment).isActive();
     }
+
+    @Override
+    public boolean activeWhenCreated(ItemStack stack)
+    {
+        return true;
+    }
+
+
 }

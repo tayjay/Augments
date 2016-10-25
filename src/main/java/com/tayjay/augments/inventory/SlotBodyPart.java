@@ -36,4 +36,17 @@ public class SlotBodyPart extends SlotItemHandler
     {
         return 1;
     }
+
+    public PartType getValidType()
+    {
+        return validType;
+    }
+
+    /*public boolean isFirstOfType()
+    {
+        if(validType!=PartType.ARM && validType!=PartType.LEG)
+            return true;
+        InventoryPlayerParts inv = (InventoryPlayerParts) inventory;
+        inv.
+    }*/
 }

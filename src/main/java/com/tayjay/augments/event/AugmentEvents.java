@@ -46,7 +46,7 @@ public class AugmentEvents
     {
         if (event.getItem() instanceof IAugment)
         {
-            event.addCapability(AugmentDataImpl.Provider.NAME,new AugmentDataImpl.Provider());
+            event.addCapability(AugmentDataImpl.Provider.NAME,new AugmentDataImpl.Provider(((IAugment)event.getItem()).activeWhenCreated(event.getItemStack())));
         }
     }
 
@@ -73,6 +73,17 @@ public class AugmentEvents
         if(event.player.worldObj.getTotalWorldTime()%10==0)
         {
             CapHelper.getPlayerDataCap(event.player).rechargeTick();
+            //CapHelper.getPlayerDataCap(event.player).sync((EntityPlayerMP) event.player);
+        }
+    }
+
+    @SubscribeEvent
+    public void syncEnergy(TickEvent.PlayerTickEvent event)
+    {
+        if(event.player.worldObj.isRemote)
+            return;
+        if(event.player.worldObj.getTotalWorldTime()%5==0)
+        {
             CapHelper.getPlayerDataCap(event.player).sync((EntityPlayerMP) event.player);
         }
     }

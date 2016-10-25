@@ -8,7 +8,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 /**
  * Created by tayjay on 2016-10-16.
  */
-public class PacketActivateAugment extends PacketRunnable<PacketActivateAugment>
+public class PacketActivateAugment extends PacketRunnable<PacketActivateAugment>//todo: CHANGE TO NOT GET AUGMENT FROM PLAYER CAP
 {
     @Override
     public void handleServer(PacketActivateAugment message, MessageContext ctx)

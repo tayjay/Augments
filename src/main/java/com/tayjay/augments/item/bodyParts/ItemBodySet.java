@@ -6,6 +6,7 @@ import com.tayjay.augments.util.CapHelper;
 import com.tayjay.augments.util.RenderUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelRenderer;
+import net.minecraft.client.model.ModelSkeleton;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.client.renderer.entity.layers.LayerArmorBase;
@@ -19,7 +20,7 @@ import org.lwjgl.opengl.GL11;
  */
 public class ItemBodySet extends ItemBodyPart
 {
-    public ItemBodySet(String name, int tier,int armourValue, int storageSize, String textureName, PartType type)
+    public ItemBodySet(String name, int tier,int armourValue, int storageSize, String textureName, PartType type)//todo: Set name?
     {
         super(name, tier,armourValue,storageSize,textureName,type);
     }
@@ -35,6 +36,7 @@ public class ItemBodySet extends ItemBodyPart
         ModelRenderer parent;
         ModelRenderer model;
         boolean smallArms = RenderUtil.hasSmallArms(renderPlayer.getMainModel());
+        //renderPlayer.getMainModel().bipedRightArm.isHidden = false;
         switch (getPartType(stack))
         {
             case HEAD:
@@ -82,6 +84,11 @@ public class ItemBodySet extends ItemBodyPart
                 model = modelSteve.bipedHeadwear;
                 break;
         }
+
+        /*if(CapHelper.getPlayerBodyCap(playerIn).getStackByPart(PartType.HEAD)!=null)
+            renderPlayer.getMainModel().bipedRightArm = new ModelSkeleton().bipedRightArm;*/
+
+
         //GL11.glPushMatrix();
         GlStateManager.pushMatrix();
 

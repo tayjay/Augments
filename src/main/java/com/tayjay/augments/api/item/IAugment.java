@@ -54,5 +54,12 @@ public interface IAugment
      */
     boolean isActive(ItemStack augment,EntityPlayer player);
 
+    /**
+     * What active state the augment should be in when it is created. Used by IAugDataProvider
+     * @param stack
+     * @return
+     */
+    boolean activeWhenCreated(ItemStack stack);
+
 
 }

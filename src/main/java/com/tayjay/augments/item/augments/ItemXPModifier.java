@@ -16,7 +16,7 @@ public class ItemXPModifier extends ItemAugment implements IPickupXP
     public ItemXPModifier(String name)
     {
         super(name, 1, PartType.HEAD, 0.02f, "Applies a multiplier to xp pickups");
-        multiplier = -100;
+        multiplier = 100;
     }
 
     @Override

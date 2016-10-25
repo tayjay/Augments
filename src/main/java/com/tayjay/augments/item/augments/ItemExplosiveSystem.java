@@ -46,8 +46,8 @@ public class ItemExplosiveSystem extends ItemAugment
     public void tickAugment(ItemStack augmentStack, TickEvent.PlayerTickEvent event)
     {
         super.tickAugment(augmentStack, event);
-        if(CapHelper.getPlayerDataCap(event.player).getCurrentAugment()!=null && CapHelper.getPlayerDataCap(event.player).getCurrentAugment().getItem()==this&&CapHelper.getPlayerDataCap(event.player).isAugmentActive())
-            CapHelper.getPlayerDataCap(event.player).setAugmentActive(false);
+        /*if(CapHelper.getPlayerDataCap(event.player).getCurrentAugment()!=null && CapHelper.getPlayerDataCap(event.player).getCurrentAugment().getItem()==this&&CapHelper.getPlayerDataCap(event.player).isAugmentActive())
+            CapHelper.getPlayerDataCap(event.player).setAugmentActive(false);*/
     }
 
     @Override

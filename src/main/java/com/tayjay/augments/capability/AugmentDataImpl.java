@@ -45,7 +45,12 @@ public class AugmentDataImpl
 
         public DefaultImpl()
         {
-            this.active = true;
+            this(true);
+        }
+
+        public DefaultImpl(boolean active)
+        {
+            this.active = active;
         }
 
         @Override
@@ -89,6 +94,8 @@ public class AugmentDataImpl
         {
             cap = new DefaultImpl();
         }
+
+        public Provider(boolean active){cap = new DefaultImpl(active);}
         @Override
         public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing)
         {

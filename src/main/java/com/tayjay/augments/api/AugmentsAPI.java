@@ -16,6 +16,7 @@ public class AugmentsAPI
 
     @CapabilityInject(IAugDataProvider.class)
     public static final Capability<IAugDataProvider> AUGMENT_DATA_CAPABILITY = null;
+
     @CapabilityInject(IPlayerBodyProvider.class)
     public static final Capability<IPlayerBodyProvider> PLAYER_BODY_CAPABILITY = null;
 

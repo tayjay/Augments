@@ -5,9 +5,12 @@ import com.tayjay.augments.api.events.ILivingDeath;
 import com.tayjay.augments.api.item.PartType;
 import com.tayjay.augments.util.CapHelper;
 import com.tayjay.augments.util.ChatHelper;
+import com.tayjay.augments.util.ItemNBTHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
+
+import java.util.List;
 
 /**
  * Created by tayjay on 2016-06-29.
@@ -22,9 +25,19 @@ public class ItemDefib extends ItemAugment implements ILivingDeath
     @Override
     public boolean validate(ItemStack augment, EntityPlayer player)
     {
+        if(ItemNBTHelper.getBoolean(augment,"augmentDead",false))
+            return false;
         return super.validate(augment, player);
     }
 
+    @Override
+    public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced)
+    {
+        super.addInformation(stack, playerIn, tooltip, advanced);
+        if(ItemNBTHelper.getCompound(stack,"augmentDead",true)==null)
+            ItemNBTHelper.setBoolean(stack,"augmentDead",false);
+        tooltip.add("Augment Dead:"+ItemNBTHelper.getBoolean(stack,"augmentDead",false));
+    }
 
     @Override
     public void activate(ItemStack augment, EntityPlayer player)
@@ -44,7 +57,7 @@ public class ItemDefib extends ItemAugment implements ILivingDeath
     @Override
     public void onDeath(ItemStack augment, EntityPlayer dieing, LivingDeathEvent event)
     {
-        if(CapHelper.getAugmentDataCap(augment).isActive())
+        if(validate(augment,dieing))
         {
             IPlayerDataProvider data = CapHelper.getPlayerDataCap(dieing);
             data.setCurrentEnergy(0);
@@ -52,6 +65,7 @@ public class ItemDefib extends ItemAugment implements ILivingDeath
             ChatHelper.send(dieing, "User is dieing, activating augment!");
             event.setCanceled(true);
             CapHelper.getAugmentDataCap(augment).setActive(false);
+            ItemNBTHelper.setBoolean(augment,"augmentDead",true);
         }
     }
 }

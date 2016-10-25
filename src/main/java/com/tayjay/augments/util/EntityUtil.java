@@ -1,6 +1,7 @@
 package com.tayjay.augments.util;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
@@ -59,5 +60,10 @@ public class EntityUtil
         }
 
         return null;
+    }
+
+    public static int getTicksSinceLastSwing(EntityLivingBase entity)
+    {
+        return ReflectionHelper.getPrivateValue(EntityLivingBase.class,entity,"ticksSinceLastSwing");
     }
 }

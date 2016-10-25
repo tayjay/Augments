@@ -128,7 +128,7 @@ public class PlayerDataImpl
         public float getCurrentEnergy()
         {
             currentEnergy = (currentEnergy/10)*10;//Round value
-            if(currentEnergy>=maxEnergy-0.05)//Fix error margin with float values
+            if(currentEnergy>=maxEnergy-0.01)//Fix error margin with float values
                 currentEnergy = maxEnergy;
             return this.currentEnergy;
         }

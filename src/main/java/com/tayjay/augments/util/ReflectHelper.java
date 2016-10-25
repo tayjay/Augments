@@ -22,4 +22,10 @@ public class ReflectHelper
         skinMapReflect.put(id,renderPlayer);
         //ReflectionHelper.setPrivateValue(RenderManager.class,Minecraft.getMinecraft().getRenderManager(),skinMapReflect,"skinMap","field_178636_l");
     }
+
+    public static void getRenderPlayer()
+    {
+        Map<String, RenderPlayer> skinMapReflect = ReflectionHelper.getPrivateValue(RenderManager.class, Minecraft.getMinecraft().getRenderManager(),"skinMap","field_178636_l","l");
+
+    }
 }

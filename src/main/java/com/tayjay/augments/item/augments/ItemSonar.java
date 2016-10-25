@@ -7,8 +7,10 @@ import com.tayjay.augments.network.NetworkHandler;
 import com.tayjay.augments.network.packets.PacketChangeEnergy;
 import com.tayjay.augments.util.CapHelper;
 import com.tayjay.augments.util.ChatHelper;
+import com.tayjay.augments.util.EntityUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -18,7 +20,7 @@ import java.util.List;
 /**
  * Created by tayjay on 2016-06-30.
  */
-public class ItemSonar extends ItemAugment implements IActivate
+public class ItemSonar extends ItemAugment
 {
 
     public ItemSonar(String name)
@@ -41,6 +43,16 @@ public class ItemSonar extends ItemAugment implements IActivate
             int range = 20;
             AxisAlignedBB box = new AxisAlignedBB(posX - range, posY - range, posZ - range, posX + range, posY + range, posZ + range);
             List<Entity> entities = player.worldObj.getEntitiesWithinAABBExcludingEntity(Minecraft.getMinecraft().thePlayer, box);
+            if(player.worldObj.isRemote)
+            {
+                for (Entity e : entities)
+                {
+                    if(e instanceof EntityLivingBase)
+                    {
+                        EntityUtil.setFlag(e,6,true);
+                    }
+                }
+            }
 
             ChatHelper.send(player,"Pinging "+entities.size()+" mobs!");
 
@@ -49,13 +61,6 @@ public class ItemSonar extends ItemAugment implements IActivate
         {
             ChatHelper.send(player, "Not enough energy!");
         }
-    }
-
-    @Override
-    public boolean isActive(ItemStack augment, ItemStack bodyPart, EntityPlayer player)
-    {
-        IPlayerDataProvider playerDataProvider = CapHelper.getPlayerDataCap(player);
-        return playerDataProvider.getCurrentAugment().getItem()==this && playerDataProvider.isAugmentActive();
     }
 
     @Override

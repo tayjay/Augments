@@ -31,6 +31,11 @@ public class ModItems
     public static ItemAugment overShield;
     public static ItemAugment typhoon;
     public static ItemAugment xpModifier;
+    public static ItemAugment auraGen;
+    public static ItemAugment speedHands;
+    public static ItemAugment flight;
+    public static ItemAugment mindControl;
+    public static ItemAugment feeder;
 
     public static ItemBodySet armTest;
     //public static ItemBodySet armRightTest;
@@ -53,6 +58,11 @@ public class ModItems
     public static ItemBodySet legExo1;
     //public static ItemBodySet legRightExo1;
 
+    public static ItemBodySet headDiamond;
+    public static ItemBodySet torsoDiamond;
+    public static ItemBodySet armDiamond;
+    public static ItemBodySet legDiamond;
+
     //public static ItemEnergyCell energyCellBasic;
 
     public static void init()
@@ -70,6 +80,11 @@ public class ModItems
         defibrillator = register(new ItemDefib("defibrillator"));
         sonar =  register(new ItemSonar("sonar"));
         xpModifier = register(new ItemXPModifier("xpModifier"));
+        auraGen = register(new ItemAuraGen("auraGen"));
+        speedHands = register(new ItemSpeedHand("speedHands"));
+        flight = register(new ItemFlight("flight",0.05f));
+        mindControl = register(new ItemMindControl("mindControl"));
+        feeder = register(new ItemFeeder("feeder"));
 
         overShield = register(new ItemOvershield("overshield"));
         typhoon = register(new ItemExplosiveSystem("typhoon"));
@@ -95,6 +110,11 @@ public class ModItems
         //armRightExo1 = register(new ItemBodySet("armRightExo1",1,2,2,"exo1",PartType.ARM_RIGHT));
         legExo1 = register(new ItemBodySet("legExo1",1,2,2,"exo1",PartType.LEG));
         //legRightExo1 = register(new ItemBodySet("legRightExo1",1,2,2,"exo1",PartType.LEG_RIGHT));
+
+        headDiamond =  register(new ItemBodySet("headDiamond",3,3,2,"diamond_body",PartType.HEAD));
+        torsoDiamond =  register(new ItemBodySet("torsoDiamond",3,4,2,"diamond_body",PartType.TORSO));
+        armDiamond =  register(new ItemBodySet("armDiamond",3,2,2,"diamond_body",PartType.ARM));
+        legDiamond =  register(new ItemBodySet("legDiamond",3,2,2,"diamond_body",PartType.LEG));
 
 
         //energyCellBasic = register(new ItemEnergyCell("energyCellBasic",1,1));

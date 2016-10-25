@@ -42,7 +42,7 @@ public class ItemLandingSystem extends ItemAugment implements ILivingHurt
         {
             return true;
         }
-        return false;
+        return false;//Doesn't use super because it is checking for 2 sides of player, super ignores that case
     }
 
     @Override
