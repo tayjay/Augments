@@ -17,4 +17,8 @@ public interface IAugDataProvider extends INBTSerializable<NBTTagCompound>
     boolean isActive();
 
     void setActive(boolean active);
+
+    /*Upgrades
+    * Durability? Limited use?
+    * */
 }

@@ -9,6 +9,7 @@ import net.minecraft.inventory.ClickType;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nullable;
 
@@ -118,5 +119,18 @@ public class ContainerPlayerBody extends Container
 
     }
 
-
+    @Override
+    public void onContainerClosed(EntityPlayer playerIn)
+    {
+        IItemHandler augments = CapHelper.getPlayerBodyCap(playerIn).getAugments();
+        int augmentCap = CapHelper.getPlayerBodyCap(playerIn).getAugmentCapacity();
+        for(int i = augmentCap; i<CapHelper.getPlayerBodyCap(playerIn).getAugments().getSlots();i++)
+        {
+            if(augments.getStackInSlot(i)!=null)
+            {
+                playerIn.dropItem(augments.getStackInSlot(i), false).setPickupDelay(0);
+                augments.extractItem(i,1,false);
+            }
+        }
+    }
 }

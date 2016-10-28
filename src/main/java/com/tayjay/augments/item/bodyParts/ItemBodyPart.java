@@ -2,6 +2,7 @@ package com.tayjay.augments.item.bodyParts;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
 import com.tayjay.augments.Augments;
+import com.tayjay.augments.api.DynamicIcon;
 import com.tayjay.augments.api.capabilities.IAugHolderProvider;import com.tayjay.augments.api.item.IAugment;
 import com.tayjay.augments.api.item.IBodyPart;
 import com.tayjay.augments.api.item.PartType;
@@ -34,6 +35,7 @@ public class ItemBodyPart extends ItemBase implements IBodyPart,IItemModelProvid
     protected PartType type;
     protected int armourValue;
     protected int storageSize;
+    String textureSteveName;
     public ResourceLocation textureSteve = new ResourceLocation("augments", "textures/models/steve.png");
     public ResourceLocation textureAlex = new ResourceLocation("augments", "textures/models/alex.png");
     ModelPlayer modelSteve = new ModelPlayer(0f,false);
@@ -45,11 +47,14 @@ public class ItemBodyPart extends ItemBase implements IBodyPart,IItemModelProvid
 
     public ItemBodyPart(String name,int tier,int armourValue, int storageSize, String texture,String textureS, PartType type)
     {
+        //todo: Get item image from texture for rendering??? Just a certain position depending on part type
+        //todo: Also, items is3D, could it be used for 3d model of part?
         super(name);
         this.tier = tier;
         this.type = type;
         this.armourValue = armourValue;
         this.storageSize = storageSize;
+        textureSteveName = texture;
         textureSteve = new ResourceLocation("augments","textures/models/"+texture+".png");
         textureAlex = new ResourceLocation("augments","textures/models/"+textureS+".png");
         setMaxStackSize(1);
@@ -129,6 +134,7 @@ public class ItemBodyPart extends ItemBase implements IBodyPart,IItemModelProvid
     @Override
     public void registerItemModel(Item item)
     {
+        DynamicIcon.makeBodyPartItemPNG(this,this.type,this.textureSteveName);
         super.registerItemModel(item);
     }
 }

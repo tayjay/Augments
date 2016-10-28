@@ -1,10 +1,13 @@
 package com.tayjay.augments.api;
 
+import com.tayjay.augments.api.item.IBodyPart;
+import com.tayjay.augments.api.item.PartType;
 import net.minecraft.item.Item;
 import net.minecraftforge.common.MinecraftForge;
 import org.lwjgl.Sys;
 
 import javax.imageio.ImageIO;
+import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -19,6 +22,109 @@ import java.nio.file.*;
  */
 public class DynamicIcon
 {
+    private static final GraphicsConfiguration config =
+            GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration();
+
+
+    public static void makeBodyPartItemPNG(Item item, PartType type,String textureName)
+    {
+
+        try
+        {
+            String name = item.getUnlocalizedName().substring(item.getUnlocalizedName().indexOf(':')+1);
+            makeJSONGeneric("augments",name);
+            String dir = item.getClass().getProtectionDomain().getCodeSource().getLocation().getPath();
+            int ind = dir.lastIndexOf("Augments");//todo: MAKE MORE GENERIC
+            if(ind >= 0)
+                dir = new StringBuilder(dir).substring(1, ind+"Augments".length());
+            if(dir==null)
+                return;
+            File sourceFile = new File(dir+"/assets/augments/textures/models/" + textureName + ".png");
+            if(sourceFile==null || !Files.exists(sourceFile.toPath(),LinkOption.NOFOLLOW_LINKS))
+                return;
+            File destFile = new File(dir+"/assets/augments/textures/items/" + name + ".png");
+            if(destFile==null || Files.exists(destFile.toPath(), LinkOption.NOFOLLOW_LINKS))
+            {
+                System.out.println(name+" already has image, skipping.");
+                return;
+            }
+
+            BufferedImage src = ImageIO.read(sourceFile);
+            BufferedImage dest;
+            int x,y,w,h,scale;
+
+            switch (type)
+            {
+                case HEAD:
+                    x=8;
+                    y=8;
+                    w=8;
+                    h=8;
+                    break;
+                case EYES:
+                    x=8;
+                    y=8;
+                    w=8;
+                    h=8;
+                    break;
+                case TORSO:
+                    x=20;
+                    y=20;
+                    w=8;
+                    h=12;
+                    break;
+                case ARM:
+                    x=40;
+                    y=20;
+                    w=4;
+                    h=12;
+                    break;
+                case LEG:
+                    x=4;
+                    y=20;
+                    w=4;
+                    h=12;
+                    break;
+                default:
+                    x=0;
+                    y=0;
+                    w=0;
+                    h=0;
+            }
+            scale = src.getWidth()/64;
+            x*=scale;
+            y*=scale;
+            w*=scale;
+            h*=scale;
+            dest = src.getSubimage(x,y,w,h);
+            if(dest.getWidth()!=dest.getHeight())
+            {
+                int newImageWidth = Math.max(dest.getWidth(),dest.getHeight()) ;
+                int newImageHeight = Math.max(dest.getWidth(),dest.getHeight()) ;
+                int posX = (newImageHeight-dest.getWidth())/2;
+                BufferedImage resizedImage = config.createCompatibleImage(newImageWidth,newImageHeight);
+                Graphics2D g = resizedImage.createGraphics();
+                //g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+                g.setColor(Color.white);
+                g.fillRect(0,0,newImageWidth,newImageHeight);
+                g.drawImage(dest, posX, 0, dest.getWidth() , dest.getHeight() , null);
+                g.dispose();
+
+                //resizedImage = (BufferedImage) resizedImage.getScaledInstance(newImageWidth,newImageHeight,Image.SCALE_SMOOTH);
+
+                ImageIO.write(resizedImage, "PNG", destFile);
+            }
+            else
+            {
+                ImageIO.write(dest, "PNG", destFile);
+            }
+            System.out.println("Created new image for item "+name);
+        } catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+
+    }
 
     /**
      * If the specified Item does not have an image file or JSON corrisponding to it, 1 of each will be created for it.

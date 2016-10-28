@@ -3,14 +3,18 @@ package com.tayjay.augments.client.gui;
 import com.mojang.realmsclient.gui.ChatFormatting;
 import com.tayjay.augments.Augments;
 import com.tayjay.augments.api.item.IAugment;
+import com.tayjay.augments.api.item.IBodyPart;
 import com.tayjay.augments.api.item.PartType;
 import com.tayjay.augments.inventory.*;
 import com.tayjay.augments.util.CapHelper;
+import com.tayjay.augments.util.RenderUtil;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.model.ModelPlayer;
+import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
@@ -19,7 +23,9 @@ import net.minecraft.client.renderer.entity.RenderLivingBase;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.items.IItemHandler;
 import org.lwjgl.opengl.GL11;
@@ -33,6 +39,7 @@ import java.util.List;
  */
 public class GuiPlayerBody extends GuiContainer
 {
+    private EntityPlayer player;
     private static final ResourceLocation texture = new ResourceLocation(Augments.modId.toLowerCase(),"textures/gui/playerBodyParts.png");
     public GuiPlayerBody(InventoryPlayer invPlayer, InventoryPlayerParts invParts, InventoryPlayerAugments invAugs)
     {
@@ -40,6 +47,7 @@ public class GuiPlayerBody extends GuiContainer
         //TODO: Change these to correct values of size
         this.xSize = 255;
         this.ySize = 230;
+        player = Minecraft.getMinecraft().thePlayer;
     }
 
 
@@ -54,7 +62,8 @@ public class GuiPlayerBody extends GuiContainer
         if(getSlotUnderMouse() != null && getSlotUnderMouse() instanceof SlotBodyPart && GuiScreen.isShiftKeyDown())
         {
             //rotation=0;
-            drawBodyPart(guiLeft + 210, guiTop + 190, 80, (float)(guiLeft + 210) - mouseX, (float)(guiTop + 120 - 50) - mouseY, this.mc.thePlayer, (SlotBodyPart) getSlotUnderMouse(),((SlotBodyPart) getSlotUnderMouse()).getValidType());
+            //drawBodyPart(guiLeft + 210, guiTop + 80, 60, (float)(guiLeft + 210) - mouseX, (float)(guiTop + 120 - 50) - mouseY, this.mc.thePlayer, (SlotBodyPart) getSlotUnderMouse(),((SlotBodyPart) getSlotUnderMouse()).getValidType());
+            renderBodyPart(guiLeft + 210, guiTop + 80, 60,getSlotUnderMouse().getStack(),((SlotBodyPart) getSlotUnderMouse()).getValidType(),new RenderPlayer(Minecraft.getMinecraft().getRenderManager()));
         }
         else
         {
@@ -157,7 +166,7 @@ public class GuiPlayerBody extends GuiContainer
         GlStateManager.pushMatrix();
         GlStateManager.translate((float)posX, (float)posY, 50.0F);
         GlStateManager.scale((float)(-scale), (float)scale, (float)scale);
-        GlStateManager.rotate(180.0F, 0.0F, 0.0F, 1.0F);
+        //GlStateManager.rotate(180.0F, 0.0F, 0.0F, 1.0F);
         float f = ent.renderYawOffset;
         float f1 = ent.rotationYaw;
         float f2 = ent.rotationPitch;
@@ -166,12 +175,12 @@ public class GuiPlayerBody extends GuiContainer
         GlStateManager.rotate(135.0F, 0.0F, 1.0F, 0.0F);
         RenderHelper.enableStandardItemLighting();
         GlStateManager.rotate(-135.0F, 0.0F, 1.0F, 0.0F);
-        /*GlStateManager.rotate(-((float)Math.atan((double)(mouseY / 40.0F))) * 20.0F, 1.0F, 0.0F, 0.0F);
-        ent.renderYawOffset = (float)Math.atan((double)(mouseX / 40.0F)) * 20.0F;
-        ent.rotationYaw = (float)Math.atan((double)(mouseX / 40.0F)) * 40.0F;
-        ent.rotationPitch = -((float)Math.atan((double)(mouseY / 40.0F))) * 20.0F;
-        ent.rotationYawHead = ent.rotationYaw;
-        ent.prevRotationYawHead = ent.rotationYaw;*/
+        //GlStateManager.rotate(-((float)Math.atan((double)(mouseY / 40.0F))) * 20.0F, 1.0F, 0.0F, 0.0F);
+        ent.renderYawOffset = 0;
+        ent.rotationYaw = 0;
+        ent.rotationPitch = 0;
+        ent.rotationYawHead = 0;
+        ent.prevRotationYawHead = 0;
         GlStateManager.translate(0.0F, 0.0F, 0.0F);
         RenderManager rendermanager = Minecraft.getMinecraft().getRenderManager();
         rendermanager.setPlayerViewY(180.0F);
@@ -187,7 +196,7 @@ public class GuiPlayerBody extends GuiContainer
         model.bipedRightLeg.isHidden=true;
 
 
-        switch (type)
+        /*switch (type)
         {
             case HEAD:
                 GlStateManager.translate(0, -0.3f, 0);
@@ -215,34 +224,34 @@ public class GuiPlayerBody extends GuiContainer
                 }
                 break;
             case LEG:
-                try
-                {
-                    SlotBodyPart slotLeg = (SlotBodyPart) inventorySlots.getSlot(slot.slotNumber + 1);
-                    if (slotLeg != null && slot.getValidType() == type)
-                    {
-                        GlStateManager.translate(0, 0.7f, 0);
-                        model.bipedLeftLeg.isHidden = false;
-                    } else
+
+                    SlotBodyPart slotLeft = (SlotBodyPart) inventorySlots.getSlot(slot.slotNumber - 1);
+                    if (slotLeft != null && slotLeft.getValidType() == type)
                     {
                         GlStateManager.translate(0, 0.7f, 0);
                         model.bipedRightLeg.isHidden = false;
+                    } else
+                    {
+                        GlStateManager.translate(0, 0.7f, 0);
+                        model.bipedLeftLeg.isHidden = false;
                     }
-                }catch (Exception e)//TODO: FIX, VERY LAZY
-                {
-                    GlStateManager.translate(0, 0.7f, 0);
-                    model.bipedRightLeg.isHidden = false;
-                }
+
                 break;
-        }
+        }*/
         GlStateManager.rotate(rotation++,0,1,0);
         //render.doRender(ent,0,0,0,0,Minecraft.getMinecraft().getRenderPartialTicks());
-        rendermanager.renderEntityStatic(ent,Minecraft.getMinecraft().getRenderPartialTicks(), true);
+        //rendermanager.renderEntityStatic(ent,Minecraft.getMinecraft().getRenderPartialTicks(), true);
+        if(slot.getStack()!=null)
+        {
+            ((IBodyPart) slot.getStack().getItem()).renderOnPlayer(slot.getStack(), Minecraft.getMinecraft().thePlayer, new RenderPlayer(Minecraft.getMinecraft().getRenderManager()));
+
+        }
         rendermanager.setRenderShadow(true);
-        ent.renderYawOffset = f;
+        /*ent.renderYawOffset = f;
         ent.rotationYaw = f1;
         ent.rotationPitch = f2;
         ent.prevRotationYawHead = f3;
-        ent.rotationYawHead = f4;
+        ent.rotationYawHead = f4;*/
         model.bipedHead.isHidden=false;
         model.bipedBody.isHidden=false;
         model.bipedLeftArm.isHidden=false;
@@ -255,5 +264,102 @@ public class GuiPlayerBody extends GuiContainer
         GlStateManager.setActiveTexture(OpenGlHelper.lightmapTexUnit);
         GlStateManager.disableTexture2D();
         GlStateManager.setActiveTexture(OpenGlHelper.defaultTexUnit);
+    }
+
+    //todo: Make this a static method somewhere else. It's used alot
+    public void renderBodyPart(int posX,int posY,int scale,ItemStack stack, PartType type, RenderPlayer renderPlayer)
+    {
+        ModelRenderer model;
+        ModelPlayer modelSteve = renderPlayer.getMainModel();
+        boolean smallArms = RenderUtil.hasSmallArms(modelSteve);
+        if(stack==null)
+            return;
+        GlStateManager.enableColorMaterial();
+        GlStateManager.pushMatrix();
+        GlStateManager.translate((float)posX, (float)posY, 500.0F);
+        GlStateManager.scale((float)(-scale), (float)scale, (float)scale);
+        GlStateManager.rotate(rotation++,0,1,0);
+        switch (type)
+        {
+            case HEAD:
+
+                model = modelSteve.bipedHead;
+                break;
+            case EYES:
+
+                model = modelSteve.bipedHead;
+                break;
+            case TORSO:
+
+                model = modelSteve.bipedBody;
+                break;
+            //Without any major changes I found this method to determine which side the arm and leg stacks are on.
+            //Since I removed the ARM_LEFT,ARM_RIGHT system
+            case ARM:
+                ItemStack leftArm = CapHelper.getPlayerBodyCap(Minecraft.getMinecraft().thePlayer).getStackByPartSided(PartType.ARM,0);
+                if(leftArm!=null && leftArm.equals(stack))//If this stack is the one in the left arm slot
+                {
+
+                    model = modelSteve.bipedLeftArm;
+                }
+                else//This stack is in the right arm slot by elimination
+                {
+
+                    model = modelSteve.bipedRightArm;
+                }
+                break;
+            case LEG:
+                ItemStack leftLeg = CapHelper.getPlayerBodyCap(Minecraft.getMinecraft().thePlayer).getStackByPartSided(PartType.LEG,0);
+                if(leftLeg !=null && leftLeg.equals(stack))
+                {
+
+                    model = modelSteve.bipedLeftLeg;
+                }
+                else
+                {
+
+                    model = modelSteve.bipedRightLeg;
+                }
+                break;
+            default:
+
+                model = modelSteve.bipedHeadwear;
+                break;
+        }
+
+        /*if(CapHelper.getPlayerBodyCap(playerIn).getStackByPart(PartType.HEAD)!=null)
+            renderPlayer.getMainModel().bipedRightArm = new ModelSkeleton().bipedRightArm;*/
+
+
+        //GL11.glPushMatrix();
+
+
+        Minecraft.getMinecraft().renderEngine.bindTexture(((IBodyPart)stack.getItem()).getTexture(stack,false));
+
+        alignModels(renderPlayer.getMainModel().bipedBody,model,false);
+        model.render(0.0625f);
+        //LayerAugments.renderEnchantedGlint(renderPlayer,playerIn, model);
+
+        GlStateManager.popMatrix();
+        RenderHelper.disableStandardItemLighting();
+        GlStateManager.disableRescaleNormal();
+        GlStateManager.setActiveTexture(OpenGlHelper.lightmapTexUnit);
+        GlStateManager.disableTexture2D();
+        GlStateManager.setActiveTexture(OpenGlHelper.defaultTexUnit);
+    }
+
+    protected static void alignModels(ModelRenderer original, ModelRenderer moving, boolean isSneaking)
+    {
+        moving.rotateAngleX =   original.rotateAngleX;
+        moving.rotateAngleY =   original.rotateAngleY;
+        moving.rotateAngleZ =   original.rotateAngleZ;
+        moving.offsetX =        original.offsetX;
+        moving.offsetY =        isSneaking? original.offsetY+0.2f : original.offsetY;
+        moving.offsetZ =        original.offsetZ;
+        moving.rotationPointX = original.rotationPointX;
+        moving.rotationPointY = original.rotationPointY;
+        moving.rotationPointZ = original.rotationPointZ;
+        moving.isHidden = original.isHidden;
+        moving.mirror = original.mirror;
     }
 }

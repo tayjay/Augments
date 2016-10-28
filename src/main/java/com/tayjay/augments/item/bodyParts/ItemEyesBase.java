@@ -170,6 +170,10 @@ public class ItemEyesBase extends ItemBodyPart implements IHUDProvider
             {
                 mc.fontRendererObj.drawString(activeAugment.getDisplayName(),16,0, Color.BLUE.getRGB());
             }
+            else if(!((IAugment)activeAugment.getItem()).validate(activeAugment, mc.thePlayer) && ((IAugment)activeAugment.getItem()).isActive(activeAugment, mc.thePlayer))
+            {
+                mc.fontRendererObj.drawString(activeAugment.getDisplayName(),16,0, Color.YELLOW.getRGB());
+            }
             else if(((IAugment)activeAugment.getItem()).validate(activeAugment, mc.thePlayer))
             {
                 mc.fontRendererObj.drawString(activeAugment.getDisplayName(),16,0, Color.GREEN.getRGB());

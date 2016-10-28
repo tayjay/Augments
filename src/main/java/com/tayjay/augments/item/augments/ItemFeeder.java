@@ -28,10 +28,10 @@ public class ItemFeeder extends ItemAugment
     @Override
     public void tickAugment(ItemStack augmentStack, TickEvent.PlayerTickEvent event)
     {
-        if(validate(augmentStack,event.player))
+        EntityPlayer p = event.player;
+        if(validate(augmentStack,event.player) && p.getFoodStats().getFoodLevel()<18)
         {
-            EntityPlayer p = event.player;
-            p.getFoodStats().addStats(1, 1);
+            p.getFoodStats().addStats(10, 10);
             CapHelper.getPlayerDataCap(p).removeEnergy(getEnergyUse(augmentStack));
         }
     }
