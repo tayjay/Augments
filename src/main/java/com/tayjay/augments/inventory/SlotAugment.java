@@ -1,8 +1,7 @@
 package com.tayjay.augments.inventory;
 
-import com.tayjay.augments.api.capabilities.IAugHolderProvider;
+import com.tayjay.augments.Augments;
 import com.tayjay.augments.api.item.IAugment;
-import com.tayjay.augments.api.item.IBodyPart;
 import com.tayjay.augments.client.gui.GuiPlayerParts;
 import com.tayjay.augments.util.CapHelper;
 import net.minecraft.client.Minecraft;
@@ -27,6 +26,8 @@ public class SlotAugment extends SlotItemHandler
     @Override
     public boolean isItemValid(ItemStack stack)
     {
+        if(getSlotIndex()>= Augments.proxy.getClientPlayerParts().getAugmentCapacity())
+            return false;
         return stack.getItem() instanceof IAugment;//Also check for within max number of augments
     }
 
@@ -36,6 +37,14 @@ public class SlotAugment extends SlotItemHandler
         //Hide slots that aren't accessible at player's augment cap.
         return slotIn<CapHelper.getPlayerBodyCap(Minecraft.getMinecraft().thePlayer).getAugmentCapacity();
     }
+
+    @Override
+    public boolean canBeHovered()
+    {
+        return getSlotIndex()<CapHelper.getPlayerBodyCap(Minecraft.getMinecraft().thePlayer).getAugmentCapacity();
+    }
+
+
 
 
 

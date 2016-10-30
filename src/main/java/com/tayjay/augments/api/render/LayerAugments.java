@@ -14,6 +14,7 @@ import org.lwjgl.opengl.GL11;
 
 /**
  * Created by tayjay on 2016-06-25.
+ * Layer used by RenderPlayer to render new body parts on the player.
  */
 public class LayerAugments implements LayerRenderer<EntityPlayer>
 {

@@ -9,6 +9,8 @@ import net.minecraftforge.common.capabilities.CapabilityInject;
 
 /**
  * Created by tayjay on 2016-06-24.
+ * Gives access to components of the API.
+ * Such as capabilities
  */
 public class AugmentsAPI
 {

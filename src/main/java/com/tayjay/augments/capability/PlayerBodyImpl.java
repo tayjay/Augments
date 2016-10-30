@@ -104,7 +104,7 @@ public final class PlayerBodyImpl
             }
             else
             {
-                LogHelper.error("Tried to get non-sided bodypart with side, ignoring side.");
+                LogHelper.debug("Tried to get non-sided bodypart with side, ignoring side.");
                 return getStackByPart(type);
             }
         }
@@ -119,9 +119,9 @@ public final class PlayerBodyImpl
         public int getAugmentCapacity()
         {
             if(getStackByPart(PartType.TORSO)!=null)
-                return Math.min(CapHelper.getPlayerDataCap(this.player).getPlayerTier()+((IBodyPart)getStackByPart(PartType.TORSO).getItem()).getTier(getStackByPart(PartType.TORSO)),augmentInventory.getSlots());
+                return Math.min(CapHelper.getPlayerDataCap(this.player).getPlayerTier()+3+((IBodyPart)getStackByPart(PartType.TORSO).getItem()).getTier(getStackByPart(PartType.TORSO)),augmentInventory.getSlots());
             else
-                return Math.min(CapHelper.getPlayerDataCap(this.player).getPlayerTier()+1,augmentInventory.getSlots());
+                return Math.min(CapHelper.getPlayerDataCap(this.player).getPlayerTier()+3,augmentInventory.getSlots());
         }
 
         private NBTTagCompound writeNBT()

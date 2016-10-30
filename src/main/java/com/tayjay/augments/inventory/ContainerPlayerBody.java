@@ -47,8 +47,11 @@ public class ContainerPlayerBody extends Container
         this.addSlotToContainer(new SlotBodyPart(inventory,5,48,5+6*18,PartType.LEG));
         this.addSlotToContainer(new SlotBodyPart(inventory,6,48,5+7*18,PartType.LEG));
 
-        //Add augment slots**********************************
+        /*//Add augment slots**********************************
         for(int j = 0;j<CapHelper.getPlayerBodyCap(player).getAugmentCapacity();j++)
+            this.addSlotToContainer(new SlotAugment(inventoryAugments,j,100,18*(j+1)));*/
+
+        for(int j = 0;j<inventoryAugments.getSlots();j++)
             this.addSlotToContainer(new SlotAugment(inventoryAugments,j,100,18*(j+1)));
 
         //Player Inventory
@@ -110,6 +113,8 @@ public class ContainerPlayerBody extends Container
             CapHelper.getPlayerBodyCap(player).sync((EntityPlayerMP) player);
             //CapHelper.getPlayerDataCap(player).updateCurrentAugment();
             CapHelper.getPlayerDataCap(player).sync((EntityPlayerMP) player);
+
+
         }
         else
         {
@@ -118,6 +123,8 @@ public class ContainerPlayerBody extends Container
         super.detectAndSendChanges();
 
     }
+
+
 
     @Override
     public void onContainerClosed(EntityPlayer playerIn)

@@ -6,6 +6,7 @@ import net.minecraftforge.event.entity.player.PlayerPickupXpEvent;
 
 /**
  * Created by tayjay on 2016-10-16.
+ * Augment that triggers when the player picks up experience. The event can be manipulated and such from there.
  */
 public interface IPickupXP
 {

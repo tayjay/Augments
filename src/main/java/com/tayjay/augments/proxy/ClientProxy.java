@@ -2,23 +2,28 @@ package com.tayjay.augments.proxy;
 
 import com.tayjay.augments.Augments;
 import com.tayjay.augments.api.capabilities.IPlayerDataProvider;
+import com.tayjay.augments.api.render.ItemRendererOverride;
 import com.tayjay.augments.api.render.LayerAugments;
 import com.tayjay.augments.api.capabilities.IPlayerBodyProvider;
+import com.tayjay.augments.api.render.RenderItemOverride;
 import com.tayjay.augments.api.render.RenderPlayerAugments;
 import com.tayjay.augments.client.handler.KeyInputHandler;
 import com.tayjay.augments.client.settings.Keybindings;
 import com.tayjay.augments.util.CapHelper;
 import com.tayjay.augments.util.ReflectHelper;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.item.Item;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
 import java.util.Map;
 
@@ -82,8 +87,9 @@ public class ClientProxy extends CommonProxy
             ReflectHelper.changeRenderPlayer("slim", new RenderPlayerAugments(skinMap.get("slim"),Minecraft.getMinecraft().getRenderManager(),true));
         }
 
-
-
+        //RenderItemOverride.override(Minecraft.getMinecraft().getRenderItem());
+        //ReflectionHelper.setPrivateValue(Minecraft.class,Minecraft.getMinecraft(),new ItemRenderer(Minecraft.getMinecraft()),"itemRenderer");
+        //ReflectionHelper.setPrivateValue(Minecraft.class,Minecraft.getMinecraft(),new ItemRendererOverride(Minecraft.getMinecraft()),"itemRenderer");
 
     }
 

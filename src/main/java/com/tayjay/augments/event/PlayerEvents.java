@@ -1,5 +1,6 @@
 package com.tayjay.augments.event;
 
+import com.tayjay.augments.Augments;
 import com.tayjay.augments.api.capabilities.IPlayerDataProvider;
 import com.tayjay.augments.api.capabilities.IPlayerBodyProvider;
 import com.tayjay.augments.api.item.IBodyPart;
@@ -9,10 +10,9 @@ import com.tayjay.augments.capability.PlayerBodyImpl;
 import com.tayjay.augments.inventory.SlotBodyPart;
 import com.tayjay.augments.network.NetworkHandler;
 import com.tayjay.augments.network.packets.PacketREQSyncParts;
-import com.tayjay.augments.util.CapHelper;
-import com.tayjay.augments.util.LogHelper;
-import com.tayjay.augments.util.RenderUtil;
+import com.tayjay.augments.util.*;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -32,6 +32,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.event.EntityViewRenderEvent;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.common.util.FakePlayer;
@@ -40,8 +42,7 @@ import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.common.eventhandler.EventPriority;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.eventhandler.*;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
@@ -49,6 +50,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
+import java.util.ArrayList;
 
 /**
  * Created by tayjay on 2016-06-24.<br/>
@@ -68,6 +70,26 @@ public class PlayerEvents
         if(time % SYNC_TICKS == 0)
         {
             NetworkHandler.sendToServer(new PacketREQSyncParts(event.player));
+            /*if(CapHelper.getPlayerBodyCap(event.player).getStackByPart(PartType.TORSO)!=null)
+                ReflectHelper.setCapeLocation((AbstractClientPlayer) event.player,new ResourceLocation("items/diamond.png"));
+            else
+            {
+                //ReflectHelper.setCapeLocation((AbstractClientPlayer) event.player, null);
+                ReflectHelper.resetTextures((AbstractClientPlayer) event.player);
+            }*/
+        }
+    }
+
+    ArrayList<String> hasCape = new ArrayList<String>();
+    @SideOnly(Side.CLIENT)
+    @SubscribeEvent
+    public void supporterCheck(TickEvent.PlayerTickEvent event)
+    {
+        //Augments.supporterList.add("Player689");
+        if(event.player.worldObj.isRemote && event.player !=null /*&& !hasCape.contains(event.player.getDisplayNameString())*/ /*&& Augments.supporterList.contains(event.player.getDisplayNameString())*/)
+        {
+            hasCape.add(event.player.getDisplayNameString());
+            ReflectHelper.setCapeLocation((AbstractClientPlayer) event.player,new ResourceLocation("augments","textures/models/capeAugmentsTest.png"));
         }
     }
 
@@ -110,6 +132,7 @@ public class PlayerEvents
             //todo: Not including this yet. Hopefully "StartTracking" event will handle this.
             //NetworkHandler.INSTANCE.sendToAllAround(new PacketSyncPlayerBody(parts.serializeNBT(),player),new NetworkRegistry.TargetPoint(player.dimension,player.posX,player.posY,player.posZ,40));
         }
+
     }
 
     @SubscribeEvent
@@ -137,11 +160,11 @@ public class PlayerEvents
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void drawInv(GuiScreenEvent.DrawScreenEvent.Post event)
     {
-        GuiScreen guiScreen = Minecraft.getMinecraft().currentScreen;
+        GuiScreen guiScreen = event.getGui();
         if(guiScreen instanceof GuiContainer)
         {
             GuiContainer guiinv = ((GuiContainer) guiScreen);
-            if(guiinv.getSlotUnderMouse() !=null && guiinv.getSlotUnderMouse().getStack()!=null)
+            if(guiinv.getSlotUnderMouse() !=null && guiinv.getSlotUnderMouse().getHasStack())
             {
                 ItemStack stack = guiinv.getSlotUnderMouse().getStack();
                 if(stack.getItem() instanceof IBodyPart)
@@ -151,12 +174,9 @@ public class PlayerEvents
                     GlStateManager.translate((float)event.getMouseX(), (float)event.getMouseY(), 500.0F);
                     GlStateManager.scale((float)(-30), (float)30, (float)30);
                     GlStateManager.rotate(rotate++, 0.0F, 1.0F, 0.0F);
+                    //GlStateManager.rotate(20,1,0,1);
                     GlStateManager.enableAlpha();
                     GL11.glColor4d(1,1,1,0.4);
-                    //RenderHelper.enableGUIStandardItemLighting();
-
-                    //drawEntityOnScreen(event.getMouseX(),event.getMouseY(),0,0,0,Minecraft.getMinecraft().thePlayer);
-                    //((IBodyPart) stack.getItem()).renderOnPlayer(stack, Minecraft.getMinecraft().thePlayer, new RenderPlayer(Minecraft.getMinecraft().getRenderManager()));
                     renderBodyPart(stack,((IBodyPart) stack.getItem()).getPartType(stack),new RenderPlayer(Minecraft.getMinecraft().getRenderManager()));
                     GlStateManager.popMatrix();
                     RenderHelper.disableStandardItemLighting();
@@ -165,15 +185,7 @@ public class PlayerEvents
                     GlStateManager.disableTexture2D();
                     GlStateManager.setActiveTexture(OpenGlHelper.defaultTexUnit);
                 }
-                else
-                {
-                    /*ItemStack newStack = stack.copy();
-                    newStack.stackSize = 1;
-                    if(entityItem==null || (entityItem.getEntityItem().getItem()!=newStack.getItem()&&entityItem.getEntityItem().getMetadata()==newStack.getMetadata()))
-                        entityItem = new EntityItem(Minecraft.getMinecraft().theWorld,0,0,0,newStack);
-                    drawEntityOnScreen(event.getMouseX(),event.getMouseY(),70,event.getMouseX(),event.getMouseY(),entityItem);*/
-                }
-                //drawBodyPart(event.getMouseX(),event.getMouseY(),30,event.getMouseX(),event.getMouseY(),Minecraft.getMinecraft().thePlayer,PartType.HEAD);
+
             }
         }
     }
@@ -218,59 +230,32 @@ public class PlayerEvents
     }
 
     static int rotation = 0;
-    /**
-     * Draws an entity on the screen looking toward the cursor.
-     * From GuiInventory draw player
-     */
-    public static void drawEntityOnScreen(int posX, int posY, int scale, float mouseX, float mouseY, Entity ent)
-    {
-        GlStateManager.enableColorMaterial();
-        GlStateManager.pushMatrix();
-        GlStateManager.translate((float)posX, (float)posY+20, 500.0F);
-        GlStateManager.scale((float)(-scale), (float)scale, (float)scale);
-        GlStateManager.rotate(180.0F, 0.0F, 0.0F, 1.0F);
-        GlStateManager.rotate(rotation++,0,1,0);
 
-        //GlStateManager.rotate(135.0F, 0.0F, 1.0F, 0.0F);
-        RenderHelper.enableStandardItemLighting();
-        //GlStateManager.rotate(-135.0F, 0.0F, 1.0F, 0.0F);
-        //GlStateManager.rotate(-((float)Math.atan((double)(mouseY / 40.0F))) * 20.0F, 1.0F, 0.0F, 0.0F);
 
-        //GlStateManager.translate(0.0F, 0.0F, 0.0F);
-        RenderManager rendermanager = Minecraft.getMinecraft().getRenderManager();
-        rendermanager.setPlayerViewY(180.0F);
-        rendermanager.setRenderShadow(false);
-        rendermanager.doRenderEntity(ent, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, false);
-        rendermanager.setRenderShadow(true);
-        GlStateManager.popMatrix();
-        RenderHelper.disableStandardItemLighting();
-        GlStateManager.disableRescaleNormal();
-        GlStateManager.setActiveTexture(OpenGlHelper.lightmapTexUnit);
-        GlStateManager.disableTexture2D();
-        GlStateManager.setActiveTexture(OpenGlHelper.defaultTexUnit);
-    }
-
-    public static void renderBodyPart(ItemStack stack,PartType type,RenderPlayer renderPlayer)
+    public void renderBodyPart(ItemStack stack,PartType type,RenderPlayer renderPlayer)
     {
         ModelRenderer model;
         ModelPlayer modelSteve = renderPlayer.getMainModel();
         boolean smallArms = RenderUtil.hasSmallArms(modelSteve);
+        Minecraft.getMinecraft().renderEngine.bindTexture(new ResourceLocation("augments", "textures/models/blankBiped.png"));
+        GlStateManager.pushMatrix();
+        GL11.glPushMatrix();
         switch (type)
         {
             case HEAD:
-
+                GlStateManager.translate(0,0.5,0);
                 model = modelSteve.bipedHead;
                 break;
             case EYES:
-
+                Minecraft.getMinecraft().renderEngine.bindTexture(Minecraft.getMinecraft().thePlayer.getLocationSkin());
+                GlStateManager.translate(0,0.5,0);
+                rotate = 180;
                 model = modelSteve.bipedHead;
                 break;
             case TORSO:
 
                 model = modelSteve.bipedBody;
                 break;
-            //Without any major changes I found this method to determine which side the arm and leg stacks are on.
-            //Since I removed the ARM_LEFT,ARM_RIGHT system
             case ARM:
                 ItemStack leftArm = CapHelper.getPlayerBodyCap(Minecraft.getMinecraft().thePlayer).getStackByPartSided(PartType.ARM,0);
                 if(leftArm!=null && leftArm.equals(stack))//If this stack is the one in the left arm slot
@@ -308,15 +293,21 @@ public class PlayerEvents
 
 
         //GL11.glPushMatrix();
-        GlStateManager.pushMatrix();
 
-        GlStateManager.scale(2,2,2);
-        Minecraft.getMinecraft().renderEngine.bindTexture(((IBodyPart)stack.getItem()).getTexture(stack,false));
 
+        GlStateManager.scale(1.1,1.1,1.1);
+        //GlStateManager.enableAlpha();
+        //GlStateManager.color(0,0,0,0.2f);
+
+        //Minecraft.getMinecraft().renderEngine.bindTexture(Minecraft.getMinecraft().thePlayer.getLocationSkin());
         alignModels(renderPlayer.getMainModel().bipedBody,model,false);
         model.render(0.0625f);
+        //GlStateManager.disableAlpha();
+        //GlStateManager.color(1,1,1,0.2f);
+        Minecraft.getMinecraft().renderEngine.bindTexture(((IBodyPart)stack.getItem()).getTexture(stack,false));
+        model.render(0.0625f);
         //LayerAugments.renderEnchantedGlint(renderPlayer,playerIn, model);
-
+        GL11.glPopMatrix();
         GlStateManager.popMatrix();
         //GL11.glPopMatrix();
     }

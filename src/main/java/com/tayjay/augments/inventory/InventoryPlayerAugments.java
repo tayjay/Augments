@@ -4,6 +4,8 @@ import com.tayjay.augments.api.capabilities.IPlayerBodyProvider;
 import com.tayjay.augments.api.events.IActivate;
 import com.tayjay.augments.api.item.IAugment;
 import com.tayjay.augments.api.item.IBodyPart;
+import com.tayjay.augments.util.CapHelper;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandlerModifiable;
@@ -50,6 +52,8 @@ public class InventoryPlayerAugments implements IItemHandlerModifiable
     {
         if (!(stack.getItem() instanceof IAugment))
             return stack;
+        else if(slot>CapHelper.getPlayerBodyCap(Minecraft.getMinecraft().thePlayer).getAugmentCapacity())
+            return null;
         else
         {
             return compose.insertItem(slot, stack, simulate);
@@ -60,6 +64,8 @@ public class InventoryPlayerAugments implements IItemHandlerModifiable
     public ItemStack extractItem(int slot, int amount, boolean simulate)
     {
         //TODO: Make inventory only accessable if player is in Creative mode.
+        if(!(slot<CapHelper.getPlayerBodyCap(Minecraft.getMinecraft().thePlayer).getAugmentCapacity()))
+            return null;
         return compose.extractItem(slot, amount, simulate);
     }
 }

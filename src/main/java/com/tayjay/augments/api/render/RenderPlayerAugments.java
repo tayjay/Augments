@@ -19,6 +19,9 @@ import org.lwjgl.opengl.GL11;
 
 /**
  * Created by tayjay on 2016-06-26.
+ * Replacement of the RenderPlayer that allows for more control over the rendering of the player.
+ * This includes rendering of the player's arm to show the new body part.
+ * This replacement can be ignored through config options but reduces features of the mod.
  */
 public class RenderPlayerAugments extends RenderPlayer
 {

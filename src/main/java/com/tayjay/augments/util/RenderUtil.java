@@ -1,6 +1,7 @@
 package com.tayjay.augments.util;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.entity.RenderPlayer;
@@ -49,6 +50,11 @@ public class RenderUtil
     {
         boolean smallArms = ReflectionHelper.getPrivateValue(ModelPlayer.class,playerModel,"smallArms","field_178735_y","x");
         return smallArms;
+    }
+
+    public static boolean hasSmallArms(AbstractClientPlayer player)
+    {
+        return player.getSkinType().equals("slim");
     }
 
 

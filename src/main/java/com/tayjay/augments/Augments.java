@@ -23,6 +23,9 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by tayjay on 2016-06-23.
  */
@@ -46,6 +49,8 @@ public class Augments
     public static boolean drugDependant;
     public static int maxAllowedEnergy;
     public static int maxAllowedAugmentCapacity;
+
+    public static List<String> supporterList = new ArrayList<String>();
 
 
     @Mod.EventHandler

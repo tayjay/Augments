@@ -6,6 +6,7 @@ import com.tayjay.augments.item.augments.*;
 import com.tayjay.augments.item.bodyParts.ItemBodyPart;
 import com.tayjay.augments.item.bodyParts.ItemBodySet;
 import com.tayjay.augments.item.bodyParts.ItemCyborgEyes;
+import com.tayjay.augments.item.bodyParts.ItemEyesBase;
 import net.minecraft.item.Item;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
@@ -23,6 +24,7 @@ public class ModItems
     public static ItemBodyPart cyborgEyes;
     public static ItemBodyPart eyeSingleL;
     public static ItemBodyPart eyeSingleR;
+    public static ItemBodyPart eyeHidden;
 
     public static ItemAugment augmentTest;
     public static ItemAugment landingSystem;
@@ -75,6 +77,7 @@ public class ModItems
         cyborgEyes = register(new ItemCyborgEyes("cyborgEyes",2));
         eyeSingleL = register(new ItemCyborgEyes("eyeSingleL",1));
         eyeSingleR = register(new ItemCyborgEyes("eyeSingleR",1));
+        eyeHidden = register(new ItemCyborgEyes("eyeHidden",1));
         //augmentTest = register(new ItemAugment("augmentTest",0));
         landingSystem = register(new ItemLandingSystem("landingSystem"));
         defibrillator = register(new ItemDefib("defibrillator"));

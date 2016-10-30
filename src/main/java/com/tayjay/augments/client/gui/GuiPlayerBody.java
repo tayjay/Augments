@@ -59,17 +59,30 @@ public class GuiPlayerBody extends GuiContainer
         Minecraft.getMinecraft().renderEngine.bindTexture(texture);
         this.drawTexturedModalRect((width-xSize)/2,(height-ySize)/2,0,0,xSize,ySize);
 
-        if(getSlotUnderMouse() != null && getSlotUnderMouse() instanceof SlotBodyPart && GuiScreen.isShiftKeyDown())
+        if(getSlotUnderMouse() != null && getSlotUnderMouse() instanceof SlotBodyPart && GuiScreen.isShiftKeyDown()&&getSlotUnderMouse().getHasStack())
         {
             //rotation=0;
             //drawBodyPart(guiLeft + 210, guiTop + 80, 60, (float)(guiLeft + 210) - mouseX, (float)(guiTop + 120 - 50) - mouseY, this.mc.thePlayer, (SlotBodyPart) getSlotUnderMouse(),((SlotBodyPart) getSlotUnderMouse()).getValidType());
-            renderBodyPart(guiLeft + 210, guiTop + 80, 60,getSlotUnderMouse().getStack(),((SlotBodyPart) getSlotUnderMouse()).getValidType(),new RenderPlayer(Minecraft.getMinecraft().getRenderManager()));
+            renderBodyPart(guiLeft + 210, guiTop + 80, 60,getSlotUnderMouse().getStack(),((SlotBodyPart) getSlotUnderMouse()).getValidType(),new RenderPlayer(Minecraft.getMinecraft().getRenderManager(),RenderUtil.hasSmallArms(Minecraft.getMinecraft().thePlayer)));
         }
         else
         {
             rotation=0;
             drawEntityOnScreen(guiLeft + 210, guiTop + 120, 40, (float) (guiLeft + 210) - mouseX, (float) (guiTop + 120 - 50) - mouseY, this.mc.thePlayer);
         }
+
+        GlStateManager.pushMatrix();
+        //double scale = 0.07;
+        //GlStateManager.scale(scale,scale,scale);
+        //GlStateManager.translate(100,100,0);
+
+        GlStateManager.color(1,1,1,1);
+        Minecraft.getMinecraft().renderEngine.bindTexture(new ResourceLocation("augments", "textures/gui/slotEmpty.png"));
+        for(int i =0;i<CapHelper.getPlayerBodyCap(player).getAugmentCapacity();i++)
+        {
+            drawModalRectWithCustomSizedTexture(guiLeft+99,i*18+17+guiTop,0,0,18,18,18,18);
+        }
+        GlStateManager.popMatrix();
 
     }
 
@@ -91,10 +104,12 @@ public class GuiPlayerBody extends GuiContainer
 
         fontRendererObj.drawString(Minecraft.getMinecraft().thePlayer.getDisplayNameString(),190,15,0);
 
-        if(getSlotUnderMouse() != null && getSlotUnderMouse() instanceof SlotBodyPart && GuiScreen.isShiftKeyDown())
+        if(getSlotUnderMouse() != null && getSlotUnderMouse() instanceof SlotBodyPart && GuiScreen.isShiftKeyDown()&&((SlotBodyPart) getSlotUnderMouse()).getHasStack())
         {
             fontRendererObj.drawString(((SlotBodyPart) getSlotUnderMouse()).getValidType().toString(),190,35,Color.WHITE.getRGB());
         }
+
+        fontRendererObj.drawString("Augments",99,8,Color.RED.getRGB(),false);
 
 
 
@@ -334,9 +349,14 @@ public class GuiPlayerBody extends GuiContainer
         //GL11.glPushMatrix();
 
 
-        Minecraft.getMinecraft().renderEngine.bindTexture(((IBodyPart)stack.getItem()).getTexture(stack,false));
-
+        //GlStateManager.scale(2,2,2);
+        //GlStateManager.enableAlpha();
+        GlStateManager.color(1,1,1,0.2f);
+        Minecraft.getMinecraft().renderEngine.bindTexture(Minecraft.getMinecraft().thePlayer.getLocationSkin());
         alignModels(renderPlayer.getMainModel().bipedBody,model,false);
+        model.render(0.0625f);
+        //GlStateManager.disableAlpha();
+        Minecraft.getMinecraft().renderEngine.bindTexture(((IBodyPart)stack.getItem()).getTexture(stack,false));
         model.render(0.0625f);
         //LayerAugments.renderEnchantedGlint(renderPlayer,playerIn, model);
 
@@ -361,5 +381,13 @@ public class GuiPlayerBody extends GuiContainer
         moving.rotationPointZ = original.rotationPointZ;
         moving.isHidden = original.isHidden;
         moving.mirror = original.mirror;
+    }
+
+    @Override
+    public void drawScreen(int mouseX, int mouseY, float partialTicks)
+    {
+
+        super.drawScreen(mouseX, mouseY, partialTicks);
+
     }
 }

@@ -47,7 +47,6 @@ public class ItemBodyPart extends ItemBase implements IBodyPart,IItemModelProvid
 
     public ItemBodyPart(String name,int tier,int armourValue, int storageSize, String texture,String textureS, PartType type)
     {
-        //todo: Get item image from texture for rendering??? Just a certain position depending on part type
         //todo: Also, items is3D, could it be used for 3d model of part?
         super(name);
         this.tier = tier;
