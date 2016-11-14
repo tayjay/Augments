@@ -49,6 +49,7 @@ public class Augments
     public static boolean drugDependant;
     public static int maxAllowedEnergy;
     public static int maxAllowedAugmentCapacity;
+    public static boolean renderBodyPartInGUI;
 
     public static List<String> supporterList = new ArrayList<String>();
 
@@ -58,8 +59,9 @@ public class Augments
     {
         initConfig(event);
 
-        ModBlocks.init();
+
         ModItems.init();
+        ModBlocks.init();
 
         PlayerBodyImpl.init();
         PlayerDataImpl.init();
@@ -81,6 +83,7 @@ public class Augments
         drugDependant = config.get(Configuration.CATEGORY_GENERAL,"drugDependant",true,"Is the player required to take anti-rejection drugs in order to use the augments?").getBoolean();
         maxAllowedEnergy = config.get(Configuration.CATEGORY_GENERAL,"maximumEnergy",5,"Maximum amount of energy charges a player is allowed to hold",0,6).getInt();
         maxAllowedAugmentCapacity = config.get(Configuration.CATEGORY_GENERAL,"augmentCapacity",5,"Most Augments that a player can hold",0,6).getInt();
+        renderBodyPartInGUI = config.get(Configuration.CATEGORY_CLIENT,"renderBodyPartInGUI",true,"When hovering over a body part item in the GUI, should it render a 3d model of itself?").getBoolean();
         config.save();
     }
 

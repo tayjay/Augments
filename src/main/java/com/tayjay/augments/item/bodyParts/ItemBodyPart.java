@@ -17,6 +17,7 @@ import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.launchwrapper.Launch;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
@@ -42,12 +43,11 @@ public class ItemBodyPart extends ItemBase implements IBodyPart,IItemModelProvid
     ModelPlayer modelAlex = new ModelPlayer(0f,true);
     public ItemBodyPart(String name,int tier,int armourValue, int storageSize,String textureSteve, PartType type)
     {
-        this(name,tier,armourValue,storageSize,textureSteve,textureSteve+"_slim",type);
+        this(name,tier,armourValue,textureSteve,textureSteve+"_slim",type);
     }
 
-    public ItemBodyPart(String name,int tier,int armourValue, int storageSize, String texture,String textureS, PartType type)
+    public ItemBodyPart(String name,int tier,int armourValue, String texture,String textureS, PartType type)
     {
-        //todo: Also, items is3D, could it be used for 3d model of part?
         super(name);
         this.tier = tier;
         this.type = type;
@@ -122,6 +122,7 @@ public class ItemBodyPart extends ItemBase implements IBodyPart,IItemModelProvid
         super.addInformation(stack, playerIn, tooltip, advanced);
         tooltip.add("Tier: "+this.tier);
         tooltip.add("PartType: "+this.getPartType(stack));
+        tooltip.add("Hold Shift to see Model!");
     }
 
     @Override
@@ -133,7 +134,8 @@ public class ItemBodyPart extends ItemBase implements IBodyPart,IItemModelProvid
     @Override
     public void registerItemModel(Item item)
     {
-        DynamicIcon.makeBodyPartItemPNG(this,this.type,this.textureSteveName);
+        //if((Boolean)Launch.blackboard.get("fml.deobfuscatedEnvironment"));
+            //DynamicIcon.makeBodyPartItemPNG(this,this.type,this.textureSteveName);
         super.registerItemModel(item);
     }
 }

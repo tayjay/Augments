@@ -38,7 +38,7 @@ public class ItemCyborgEyes extends ItemEyesBase
 {
     public ItemCyborgEyes(String name,int tier)
     {
-        super(name,tier,3,name);
+        super(name,tier,name,true);
     }
 
 }

@@ -5,31 +5,61 @@ import com.tayjay.augments.api.capabilities.IPlayerDataProvider;
 import com.tayjay.augments.api.events.IHUDProvider;
 import com.tayjay.augments.api.item.IAugment;
 import com.tayjay.augments.api.item.PartType;
+import com.tayjay.augments.client.model.ModelRenderOBJ;
 import com.tayjay.augments.util.CapHelper;
+import com.tayjay.augments.util.ItemNBTHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.model.ModelBase;
+import net.minecraft.client.model.ModelBox;
 import net.minecraft.client.model.ModelPlayer;
+import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.items.IItemHandler;
 import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
+import java.util.*;
+import java.util.List;
+
+import static org.lwjgl.opengl.GL11.*;
 
 /**
  * Created by tayjay on 2016-07-16.
  */
 public class ItemEyesBase extends ItemBodyPart implements IHUDProvider
 {
-    public ItemEyesBase(String name, int tier, int storageSize, String texture)
+    public ItemEyesBase(String name, int tier, String texture,boolean attachedToBody)
     {
-        super(name, tier, 0, storageSize, texture,texture, PartType.EYES);
+        super(name, tier, 0, texture,texture, PartType.EYES);
+        this.isAttached = attachedToBody;
+    }
+
+    @Override
+    public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced)
+    {
+        super.addInformation(stack, playerIn, tooltip, advanced);
+        if(ItemNBTHelper.getCompound(stack,"offsetX",true)==null)
+            ItemNBTHelper.setFloat(stack,"offsetX",0);
+        if(ItemNBTHelper.getCompound(stack,"offsetY",true)==null)
+        {
+            ItemNBTHelper.setFloat(stack, "offsetY", 0);
+
+        }
+        tooltip.add("OffsetY: "+ItemNBTHelper.getFloat(stack,"offsetY",0));
+
     }
 
     @Override
@@ -39,21 +69,72 @@ public class ItemEyesBase extends ItemBodyPart implements IHUDProvider
     }
 
     ModelPlayer model = new ModelPlayer(0.1f,false);
+    boolean isAttached;
     //ModelRenderOBJ obj;
 
     @Override
     public void renderOnPlayer(ItemStack stack, EntityPlayer playerIn, RenderPlayer renderPlayer)
     {
+        ModelRenderer modelHead = new ModelRenderer(renderPlayer.getMainModel(), 0, (int) ItemNBTHelper.getFloat(stack,"offsetY",0));
+        modelHead.addBox(-4.0F, -8.0F, -4.0F, 8, 8, 8, 0.25f);
+        GlStateManager.pushMatrix();
         //obj = new ModelRenderOBJ(renderPlayer.getMainModel(),new ResourceLocation(Augments.modId+":models/block/cube.obj"),new ResourceLocation(Augments.modId+":textures/block/modeltest.png"));
-        GL11.glPushMatrix();
+        //obj.render(1);
         Minecraft.getMinecraft().renderEngine.bindTexture(getTexture(stack,false));
 
-        alignModels(renderPlayer.getMainModel().bipedHead,model.bipedHead,playerIn.isSneaking());
+        //renderPlayer.getMainModel().bipedHead.addChild(model.bipedHead);
 
-        //obj.render(1f);
-        model.bipedHead.render(0.0625f);
-        GL11.glPopMatrix();
+        //alignModels(renderPlayer.getMainModel().bipedHead,model.bipedHead,playerIn.isSneaking());
+        //alignModels(renderPlayer.getMainModel().bipedHeadwear,model.bipedHeadwear,playerIn.isSneaking());
+
+        //ItemNBTHelper.setFloat(stack,"offsetY",1f);
+
+        //applyOffset(stack,renderPlayer.getMainModel().bipedHead,model.bipedHead);
+
+        alignModels(renderPlayer.getMainModel().bipedHead,modelHead,playerIn.isSneaking());
+        alignModels(renderPlayer.getMainModel().bipedHeadwear,modelHead,playerIn.isSneaking());
+        if(isAttached)
+            modelHead.render(0.0625f);
+        else
+            model.bipedHeadwear.render(0.0625f);
+
+        GlStateManager.popMatrix();
+
     }
+
+    private void applyOffset(ItemStack stack,ModelRenderer original, ModelRenderer model)
+    {
+        model.cubeList.clear();
+        model = original.setTextureOffset(2,2);
+        float offset = ItemNBTHelper.getFloat(stack,"offsetY",0);
+        model.setTextureOffset(0, (int) offset+3);
+        model.addBox(-4.0F, -8.0F, -4.0F, 8, 8, 8, 0.25f);
+        /*GL11.glMatrixMode(GL_TEXTURE);
+        GL11.glPushMatrix();
+        GL11.glTranslatef( 0.5f , 0.5f , 0 );*/
+
+        /*GL11.glMatrixMode(GL_MODELVIEW);
+        GL11.glTexCoordPointer( 2, GL_BYTE, 0, nokTexCoords);
+        GL11.glVertexPointer( 3, GL_BYTE, 0, backgroundVertices);
+        GL11.glBindTexture( GL_TEXTURE_2D, iLoadingTexObjects[2]);
+        GL11.glDrawElements( GL_TRIANGLES, 2 * 3, GL_UNSIGNED_BYTE, triangles );
+        GL11.glMatrixMode(GL_TEXTURE);
+        GL11.glPopMatrix();
+
+        //GlStateManager.translate(ItemNBTHelper.getFloat(stack,"offsetX",0),ItemNBTHelper.getFloat(stack,"offsetY",0),0);
+        //float offsetY = (float) ( original.rotateAngleX<0 ? Math.min(-0.1,Math.cos(original.rotateAngleX)) : Math.max(0.05,-Math.sin(original.rotateAngleX)));
+        //model.offsetY += ItemNBTHelper.getFloat(stack,"offsetY",0);
+        /*model.setTextureSize(100,100);
+        model.setTextureOffset(0, (int) Math.floor(ItemNBTHelper.getFloat(stack,"offsetY",0)));
+        ModelBase baseModel = ReflectionHelper.getPrivateValue(ModelRenderer.class,model,"baseModel");
+        baseModel.textureHeight = 10;*/
+
+        //model.offsetX += ItemNBTHelper.getFloat(stack,"offsetX",0);
+        //model.rotationPointY -= ItemNBTHelper.getFloat(stack,"offsetY",0);
+        //model.rotationPointZ += ItemNBTHelper.getFloat(stack,"offsetY",0);
+    }
+
+
 
     @Override
     public void drawWorldElements(ItemStack stack, RenderWorldLastEvent event)
@@ -122,9 +203,9 @@ public class ItemEyesBase extends ItemBodyPart implements IHUDProvider
     private void drawEnergyCells(ItemStack stack,IItemHandler parts, RenderGameOverlayEvent event)
     {
 
-        GL11.glPushMatrix();
+        glPushMatrix();
 
-        GL11.glPushMatrix();
+        glPushMatrix();
 
         GlStateManager.color(1,1,1,1);
         Minecraft.getMinecraft().renderEngine.bindTexture(new ResourceLocation(Augments.modId.toLowerCase(),"textures/items/hudBack.png"));
@@ -184,7 +265,7 @@ public class ItemEyesBase extends ItemBodyPart implements IHUDProvider
             }
 
 
-            GL11.glPushMatrix();
+            glPushMatrix();
             GL11.glScaled(0.6,0.6,0.6);
             RenderHelper.enableGUIStandardItemLighting();
             Minecraft.getMinecraft().getRenderItem().renderItemIntoGUI(activeAugment, 0, 0);
@@ -192,4 +273,17 @@ public class ItemEyesBase extends ItemBodyPart implements IHUDProvider
         }
     }
 
+    @Override
+    public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn, EnumHand hand)
+    {
+        if(ItemNBTHelper.getFloat(itemStackIn,"offsetY",0)<4)
+        {
+            ItemNBTHelper.setFloat(itemStackIn,"offsetY",ItemNBTHelper.getFloat(itemStackIn,"offsetY",0f)+1);
+        }
+        else
+        {
+            ItemNBTHelper.setFloat(itemStackIn,"offsetY",-4f);
+        }
+        return super.onItemRightClick(itemStackIn, worldIn, playerIn, hand);
+    }
 }

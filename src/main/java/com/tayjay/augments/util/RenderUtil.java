@@ -8,9 +8,12 @@ import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
+import org.lwjgl.opengl.GL11;
 
+import java.awt.*;
 import java.util.HashMap;
 
 /**
@@ -109,5 +112,134 @@ public class RenderUtil
         GlStateManager.disableBlend();
         GlStateManager.enableAlpha();
         GlStateManager.enableTexture2D();
+    }
+
+
+    //*************3D render from BoundingBoxOutlineReloaded
+
+    public static void renderCuboid(AxisAlignedBB aaBB, Color color, boolean fill) {
+        aaBB = offsetAxisAlignedBB(aaBB);
+        if (fill) {
+            renderFilledCuboid(aaBB, color);
+        }
+        renderUnfilledCuboid(aaBB, color);
+    }
+
+    private static void renderFilledCuboid(AxisAlignedBB aaBB, Color color) {
+        GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
+        GL11.glEnable(GL11.GL_BLEND);
+        renderCuboid(aaBB, 30, color);
+        GL11.glDisable(GL11.GL_BLEND);
+        GL11.glEnable(GL11.GL_POLYGON_OFFSET_LINE);
+        GL11.glPolygonOffset(-1.f, -1.f);
+    }
+
+    private static  void renderUnfilledCuboid(AxisAlignedBB aaBB, Color color) {
+        GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
+        renderCuboid(aaBB, 255, color);
+    }
+
+    private static void renderCuboid(AxisAlignedBB bb, int alphaChannel, Color color) {
+        Tessellator tessellator = Tessellator.getInstance();
+        VertexBuffer worldRenderer = tessellator.getBuffer();
+
+        int colorR = color.getRed();
+        int colorG = color.getGreen();
+        int colorB = color.getBlue();
+
+        worldRenderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
+        worldRenderer.pos(bb.minX, bb.minY, bb.minZ)
+                .color(colorR, colorG, colorB, alphaChannel)
+                .endVertex();
+        worldRenderer.pos(bb.maxX, bb.minY, bb.minZ)
+                .color(colorR, colorG, colorB, alphaChannel)
+                .endVertex();
+        worldRenderer.pos(bb.maxX, bb.minY, bb.maxZ)
+                .color(colorR, colorG, colorB, alphaChannel)
+                .endVertex();
+        worldRenderer.pos(bb.minX, bb.minY, bb.maxZ)
+                .color(colorR, colorG, colorB, alphaChannel)
+                .endVertex();
+
+        if (bb.minY != bb.maxY) {
+
+            worldRenderer.pos(bb.minX, bb.maxY, bb.minZ)
+                    .color(colorR, colorG, colorB, alphaChannel)
+                    .endVertex();
+            worldRenderer.pos(bb.maxX, bb.maxY, bb.minZ)
+                    .color(colorR, colorG, colorB, alphaChannel)
+                    .endVertex();
+            worldRenderer.pos(bb.maxX, bb.maxY, bb.maxZ)
+                    .color(colorR, colorG, colorB, alphaChannel)
+                    .endVertex();
+            worldRenderer.pos(bb.minX, bb.maxY, bb.maxZ)
+                    .color(colorR, colorG, colorB, alphaChannel)
+                    .endVertex();
+
+            worldRenderer.pos(bb.minX, bb.minY, bb.maxZ)
+                    .color(colorR, colorG, colorB, alphaChannel)
+                    .endVertex();
+            worldRenderer.pos(bb.minX, bb.maxY, bb.maxZ)
+                    .color(colorR, colorG, colorB, alphaChannel)
+                    .endVertex();
+            worldRenderer.pos(bb.maxX, bb.maxY, bb.maxZ)
+                    .color(colorR, colorG, colorB, alphaChannel)
+                    .endVertex();
+            worldRenderer.pos(bb.maxX, bb.minY, bb.maxZ)
+                    .color(colorR, colorG, colorB, alphaChannel)
+                    .endVertex();
+
+            worldRenderer.pos(bb.minX, bb.minY, bb.minZ)
+                    .color(colorR, colorG, colorB, alphaChannel)
+                    .endVertex();
+            worldRenderer.pos(bb.minX, bb.maxY, bb.minZ)
+                    .color(colorR, colorG, colorB, alphaChannel)
+                    .endVertex();
+            worldRenderer.pos(bb.maxX, bb.maxY, bb.minZ)
+                    .color(colorR, colorG, colorB, alphaChannel)
+                    .endVertex();
+            worldRenderer.pos(bb.maxX, bb.minY, bb.minZ)
+                    .color(colorR, colorG, colorB, alphaChannel)
+                    .endVertex();
+
+            worldRenderer.pos(bb.minX, bb.minY, bb.minZ)
+                    .color(colorR, colorG, colorB, alphaChannel)
+                    .endVertex();
+            worldRenderer.pos(bb.minX, bb.minY, bb.maxZ)
+                    .color(colorR, colorG, colorB, alphaChannel)
+                    .endVertex();
+            worldRenderer.pos(bb.minX, bb.maxY, bb.maxZ)
+                    .color(colorR, colorG, colorB, alphaChannel)
+                    .endVertex();
+            worldRenderer.pos(bb.minX, bb.maxY, bb.minZ)
+                    .color(colorR, colorG, colorB, alphaChannel)
+                    .endVertex();
+
+            worldRenderer.pos(bb.maxX, bb.minY, bb.minZ)
+                    .color(colorR, colorG, colorB, alphaChannel)
+                    .endVertex();
+            worldRenderer.pos(bb.maxX, bb.minY, bb.maxZ)
+                    .color(colorR, colorG, colorB, alphaChannel)
+                    .endVertex();
+            worldRenderer.pos(bb.maxX, bb.maxY, bb.maxZ)
+                    .color(colorR, colorG, colorB, alphaChannel)
+                    .endVertex();
+            worldRenderer.pos(bb.maxX, bb.maxY, bb.minZ)
+                    .color(colorR, colorG, colorB, alphaChannel)
+                    .endVertex();
+        }
+        tessellator.draw();
+    }
+    private static AxisAlignedBB offsetAxisAlignedBB(AxisAlignedBB axisAlignedBB) {
+        EntityPlayer p = Minecraft.getMinecraft().thePlayer;
+        double playerX = p.posX, playerY = p.posY,playerZ = p.posZ;
+        double expandXZ = 0.001F;
+        double expandY = 0;
+        if (axisAlignedBB.minY != axisAlignedBB.maxY) {
+            expandY = expandXZ;
+        }
+        return axisAlignedBB
+                .expand(expandXZ, expandY, expandXZ)
+                .offset(-playerX, -playerY, -playerZ);
     }
 }

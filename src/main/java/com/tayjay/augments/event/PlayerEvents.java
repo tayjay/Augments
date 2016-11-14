@@ -7,10 +7,12 @@ import com.tayjay.augments.api.item.IBodyPart;
 import com.tayjay.augments.api.item.PartType;
 import com.tayjay.augments.capability.PlayerDataImpl;
 import com.tayjay.augments.capability.PlayerBodyImpl;
+import com.tayjay.augments.client.renderer.CustomModel;
 import com.tayjay.augments.inventory.SlotBodyPart;
 import com.tayjay.augments.network.NetworkHandler;
 import com.tayjay.augments.network.packets.PacketREQSyncParts;
 import com.tayjay.augments.util.*;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.Gui;
@@ -21,9 +23,12 @@ import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.*;
+import net.minecraft.client.renderer.block.model.IBakedModel;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.entity.RenderLivingBase;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.RenderPlayer;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -32,10 +37,13 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.event.EntityViewRenderEvent;
-import net.minecraftforge.client.event.GuiScreenEvent;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.client.event.*;
+import net.minecraftforge.client.model.ModelLoaderRegistry;
+import net.minecraftforge.client.model.obj.OBJModel;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.EntityEvent;
@@ -49,8 +57,10 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
+import javax.annotation.Nullable;
 import java.awt.*;
-import java.util.ArrayList;
+import java.util.*;
+import java.util.List;
 
 /**
  * Created by tayjay on 2016-06-24.<br/>
@@ -81,6 +91,8 @@ public class PlayerEvents
     }
 
     ArrayList<String> hasCape = new ArrayList<String>();
+    int frame = 0;
+    int ticksSinceFrame = 0;
     @SideOnly(Side.CLIENT)
     @SubscribeEvent
     public void supporterCheck(TickEvent.PlayerTickEvent event)
@@ -88,8 +100,25 @@ public class PlayerEvents
         //Augments.supporterList.add("Player689");
         if(event.player.worldObj.isRemote && event.player !=null /*&& !hasCape.contains(event.player.getDisplayNameString())*/ /*&& Augments.supporterList.contains(event.player.getDisplayNameString())*/)
         {
-            hasCape.add(event.player.getDisplayNameString());
             ReflectHelper.setCapeLocation((AbstractClientPlayer) event.player,new ResourceLocation("augments","textures/models/capeAugmentsTest.png"));
+            /*//hasCape.add(event.player.getDisplayNameString());
+            //ticksSinceFrame++;
+            if(((AbstractClientPlayer) event.player).worldObj.getTotalWorldTime()%5==0&& event.phase == TickEvent.Phase.START)
+            {
+                if(frame==0)
+                {
+                    ReflectHelper.setCapeLocation((AbstractClientPlayer) event.player,new ResourceLocation("augments","textures/models/capeAugmentsTest.png"));
+                }
+                else if(frame >0)
+                {
+                    ReflectHelper.setCapeLocation((AbstractClientPlayer) event.player,new ResourceLocation("augments","textures/models/capeTest3.png"));
+                    frame = -1;
+                }
+                frame++;
+                //ticksSinceFrame = 0;
+
+
+            }*/
         }
     }
 
@@ -124,9 +153,9 @@ public class PlayerEvents
         if(!event.getEntity().worldObj.isRemote && event.getEntity() instanceof EntityPlayerMP)
         {
             EntityPlayerMP player = ((EntityPlayerMP) event.getEntity());
-            IPlayerBodyProvider parts = CapHelper.getPlayerBodyCap(player);
+            IPlayerBodyProvider body = CapHelper.getPlayerBodyCap(player);
             IPlayerDataProvider data = CapHelper.getPlayerDataCap(player);
-            parts.sync((EntityPlayerMP)event.getEntity());
+            body.sync((EntityPlayerMP)event.getEntity());
             data.sync((EntityPlayerMP)event.getEntity());
             LogHelper.info("Synced own Capabilities to client");
             //todo: Not including this yet. Hopefully "StartTracking" event will handle this.
@@ -155,16 +184,18 @@ public class PlayerEvents
     }
 
     int rotate = 0;
-    EntityItem entityItem;
     @SideOnly(Side.CLIENT)
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void drawInv(GuiScreenEvent.DrawScreenEvent.Post event)
+    public void draw3dModelInGui(GuiScreenEvent.DrawScreenEvent.Post event)
     {
+        if(!Augments.renderBodyPartInGUI)
+            return;
+
         GuiScreen guiScreen = event.getGui();
         if(guiScreen instanceof GuiContainer)
         {
             GuiContainer guiinv = ((GuiContainer) guiScreen);
-            if(guiinv.getSlotUnderMouse() !=null && guiinv.getSlotUnderMouse().getHasStack())
+            if(guiinv.getSlotUnderMouse() !=null && guiinv.getSlotUnderMouse().getHasStack() && GuiContainer.isShiftKeyDown())
             {
                 ItemStack stack = guiinv.getSlotUnderMouse().getStack();
                 if(stack.getItem() instanceof IBodyPart)
@@ -236,8 +267,9 @@ public class PlayerEvents
     {
         ModelRenderer model;
         ModelPlayer modelSteve = renderPlayer.getMainModel();
-        boolean smallArms = RenderUtil.hasSmallArms(modelSteve);
-        Minecraft.getMinecraft().renderEngine.bindTexture(new ResourceLocation("augments", "textures/models/blankBiped.png"));
+        boolean smallArms = RenderUtil.hasSmallArms(modelSteve); //Todo: Utilize this and the alternate arm width
+        //Minecraft.getMinecraft().renderEngine.bindTexture(new ResourceLocation("augments", "textures/models/capeAugmentsTest.png"));
+        Minecraft.getMinecraft().renderEngine.bindTexture(Minecraft.getMinecraft().thePlayer.getLocationSkin());
         GlStateManager.pushMatrix();
         GL11.glPushMatrix();
         switch (type)
@@ -251,6 +283,7 @@ public class PlayerEvents
                 GlStateManager.translate(0,0.5,0);
                 rotate = 180;
                 model = modelSteve.bipedHead;
+                //System.out.println(ItemNBTHelper.getFloat(stack,"offsetY",0));
                 break;
             case TORSO:
 
@@ -305,6 +338,12 @@ public class PlayerEvents
         //GlStateManager.disableAlpha();
         //GlStateManager.color(1,1,1,0.2f);
         Minecraft.getMinecraft().renderEngine.bindTexture(((IBodyPart)stack.getItem()).getTexture(stack,false));
+        if(type==PartType.EYES)
+        {
+            model = new ModelRenderer(modelSteve,0, (int) ItemNBTHelper.getFloat(stack,"offsetY",0));
+            model.addBox(-4.0F, -8.0F, -4.0F, 8, 8, 8, 0.25f);
+            alignModels(renderPlayer.getMainModel().bipedBody,model,false);
+        }
         model.render(0.0625f);
         //LayerAugments.renderEnchantedGlint(renderPlayer,playerIn, model);
         GL11.glPopMatrix();
@@ -346,6 +385,39 @@ public class PlayerEvents
     }
     */
 
+    @SideOnly(Side.CLIENT)
+    @SubscribeEvent
+    public void onModelBake(ModelBakeEvent event)
+    {
+        for(ModelResourceLocation loc : event.getModelRegistry().getKeys())
+        {
+            if(loc.getVariant().equals("custom"))
+            {
 
+                //TextureAtlasSprite base = Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite("minecraft:blocks/slime");
+                //TextureAtlasSprite overlay = Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite("minecraft:blocks/redstone_block");
+                //IBakedModel customModel = new CustomModel(base, overlay);
+/*
+                event.getModelRegistry().putObject(loc,event.getModelManager().getModel(new ModelResourceLocation("redstone_block#normal")));
+*/
+            }
+        }
+    }
+
+    /*@SubscribeEvent
+    public void renderWorldLast(RenderWorldLastEvent event)
+    {
+        if(event.getPhase() == EventPriority.LOWEST)
+        {
+            if(Minecraft.getMinecraft().thePlayer!=null)
+            {
+                GlStateManager.pushAttrib();
+                GlStateManager.pushMatrix();
+                RenderUtil.renderCuboid(new AxisAlignedBB(Minecraft.getMinecraft().thePlayer.getPosition()), Color.GREEN, false);
+                GlStateManager.popMatrix();
+                GlStateManager.popAttrib();
+            }
+        }
+    }*/
 
 }

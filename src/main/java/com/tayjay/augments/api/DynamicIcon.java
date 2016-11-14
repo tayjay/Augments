@@ -188,9 +188,19 @@ public class DynamicIcon
         try
         {
             String currentPath = DynamicIcon.class.getProtectionDomain().getCodeSource().getLocation().getPath();
-            int ind = currentPath.lastIndexOf("Augments");//todo: MAKE MORE GENERIC
-            if(ind >= 0)
-                currentPath = new StringBuilder(currentPath).substring(1, ind+"Augments".length());
+            if(currentPath.contains("!"))
+            {
+                int ind = currentPath.lastIndexOf("Augments");//todo: MAKE MORE GENERIC
+                if (ind >= 0)
+                    currentPath = new StringBuilder(currentPath).substring(currentPath.lastIndexOf('!') + 1, ind + "Augments".length());
+            }
+            else
+            {
+                int ind = currentPath.lastIndexOf("Augments");//todo: MAKE MORE GENERIC
+                if (ind >= 0)
+                    currentPath = new StringBuilder(currentPath).substring(1, ind + "Augments".length());
+            }
+            //file:/C:/Users/tayjm_000/AppData/Roaming/.technic/modpacks/194-with-forge/mods/augments-0.1.0.jar!/com/tayjay/augments/api/DynamicIcon.class/assets/augments/models/item/generic.json
             Path from = Paths.get(currentPath+"/assets/"+modid+"/models/item/generic.json");
             Path to = Paths.get(currentPath+"/assets/"+modid+"/models/item/"+itemName+".json");
             if(Files.exists(to,LinkOption.NOFOLLOW_LINKS))

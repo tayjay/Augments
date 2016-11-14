@@ -40,7 +40,7 @@ public class ReflectHelper
     public static void setCapeLocation(AbstractClientPlayer player, ResourceLocation location)
     {
         NetworkPlayerInfo networkPlayerInfo = Minecraft.getMinecraft().getConnection().getPlayerInfo(player.getUniqueID());
-        Map<MinecraftProfileTexture.Type, ResourceLocation> playerTextures = ReflectionHelper.getPrivateValue(NetworkPlayerInfo.class,networkPlayerInfo,"playerTextures");
+        Map<MinecraftProfileTexture.Type, ResourceLocation> playerTextures = ReflectionHelper.getPrivateValue(NetworkPlayerInfo.class,networkPlayerInfo,"playerTextures","field_187107_a","a");
         playerTextures.put(MinecraftProfileTexture.Type.CAPE,location);
     }
 

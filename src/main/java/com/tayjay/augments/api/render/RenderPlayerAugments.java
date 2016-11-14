@@ -33,7 +33,7 @@ public class RenderPlayerAugments extends RenderPlayer
     public RenderPlayerAugments(RenderPlayer overriding, RenderManager renderManager,boolean smallArms)
     {
         super(renderManager,smallArms);
-        this.layerRenderers = ReflectionHelper.getPrivateValue(RenderLivingBase.class,overriding,"layerRenderers");
+        this.layerRenderers = ReflectionHelper.getPrivateValue(RenderLivingBase.class,overriding,"layerRenderers","field_177097_h","i");
         this.mainModel = overriding.getMainModel();
 
     }

@@ -7,6 +7,7 @@ import com.tayjay.augments.api.item.IBodyPart;
 import com.tayjay.augments.api.item.PartType;
 import com.tayjay.augments.inventory.*;
 import com.tayjay.augments.util.CapHelper;
+import com.tayjay.augments.util.ItemNBTHelper;
 import com.tayjay.augments.util.RenderUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -174,7 +175,7 @@ public class GuiPlayerBody extends GuiContainer
         GlStateManager.setActiveTexture(OpenGlHelper.defaultTexUnit);
     }
 
-    int rotation = 0;
+    int rotation = 180;
     public void drawBodyPart(int posX, int posY, int scale, float mouseX, float mouseY, EntityLivingBase ent, SlotBodyPart slot,PartType type)
     {
         GlStateManager.enableColorMaterial();
@@ -356,7 +357,14 @@ public class GuiPlayerBody extends GuiContainer
         alignModels(renderPlayer.getMainModel().bipedBody,model,false);
         model.render(0.0625f);
         //GlStateManager.disableAlpha();
+
         Minecraft.getMinecraft().renderEngine.bindTexture(((IBodyPart)stack.getItem()).getTexture(stack,false));
+        if(type==PartType.EYES)//todo: Expand upon. Maybe other parts can be shifted.
+        {
+            model = new ModelRenderer(modelSteve,0, (int) ItemNBTHelper.getFloat(stack,"offsetY",0));
+            model.addBox(-4.0F, -8.0F, -4.0F, 8, 8, 8, 0.25f);
+            alignModels(renderPlayer.getMainModel().bipedBody,model,false);
+        }
         model.render(0.0625f);
         //LayerAugments.renderEnchantedGlint(renderPlayer,playerIn, model);
 

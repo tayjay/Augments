@@ -27,7 +27,7 @@ public class ItemBodySet extends ItemBodyPart
 
     public ItemBodySet(String name,int tier,int armourValue, int storageSize, String texture,String textureS, PartType type)
     {
-        super(name,tier,armourValue,storageSize,texture,textureS,type);
+        super(name,tier,armourValue,texture,textureS,type);
     }
 
     @Override
