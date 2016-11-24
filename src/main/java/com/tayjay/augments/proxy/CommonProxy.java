@@ -2,6 +2,7 @@ package com.tayjay.augments.proxy;
 
 import com.tayjay.augments.api.capabilities.IPlayerDataProvider;
 import com.tayjay.augments.api.capabilities.IPlayerBodyProvider;
+import com.tayjay.augments.event.ClientEvents;
 import net.minecraft.item.Item;
 
 /**
@@ -25,5 +26,7 @@ public class CommonProxy
     public void preInit(){}
 
     public void registerKeyBindings(){}
+
+    public ClientEvents getClientEventHandler(){return null;}
 
 }

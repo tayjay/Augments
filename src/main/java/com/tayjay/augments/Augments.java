@@ -1,12 +1,10 @@
 package com.tayjay.augments;
 
 import com.tayjay.augments.capability.AugmentDataImpl;
-import com.tayjay.augments.capability.AugmentHolderImpl;
 import com.tayjay.augments.capability.PlayerDataImpl;
 import com.tayjay.augments.capability.PlayerBodyImpl;
 import com.tayjay.augments.client.AugmentsTab;
 import com.tayjay.augments.event.AugmentEvents;
-import com.tayjay.augments.event.DrugEvents;
 import com.tayjay.augments.event.PlayerEvents;
 import com.tayjay.augments.handler.GuiHandler;
 import com.tayjay.augments.init.ModBlocks;
@@ -34,7 +32,7 @@ public class Augments
 {
     public static final String modId = "augments";
     public static final String name = "Augments";
-    public static final String version = "0.1.2.0";//MAJORMOD.MAJORAPI.MINOR.PATCH
+    public static final String version = "0.1.3.0";//MAJORMOD.MAJORAPI.MINOR.PATCH
     public static final String guiFactory = "com.tayjay.augments.client.GuiFactory";
 
     @Mod.Instance(modId)
@@ -46,7 +44,8 @@ public class Augments
     public static final AugmentsTab creativeTab = new AugmentsTab();
 
     public static int renderType;
-    public static boolean drugDependant;
+    //Removed drug dependency to lead up to a better system. Too difficult to enforce this.
+    //public static boolean drugDependant;
     public static int maxAllowedEnergy;
     public static int maxAllowedAugmentCapacity;
     public static boolean renderBodyPartInGUI;
@@ -80,7 +79,7 @@ public class Augments
                 "0:Not rendered\n" +
                 "1:Layer over player model\n"+
                 "2:Override RenderPlayer(Recommended but may conflict with other mods)" ,0,2).getInt();
-        drugDependant = config.get(Configuration.CATEGORY_GENERAL,"drugDependant",true,"Is the player required to take anti-rejection drugs in order to use the augments?").getBoolean();
+        //drugDependant = config.get(Configuration.CATEGORY_GENERAL,"drugDependant",true,"Is the player required to take anti-rejection drugs in order to use the augments?").getBoolean();
         maxAllowedEnergy = config.get(Configuration.CATEGORY_GENERAL,"maximumEnergy",5,"Maximum amount of energy charges a player is allowed to hold",0,6).getInt();
         maxAllowedAugmentCapacity = config.get(Configuration.CATEGORY_GENERAL,"augmentCapacity",5,"Most Augments that a player can hold",0,6).getInt();
         renderBodyPartInGUI = config.get(Configuration.CATEGORY_CLIENT,"renderBodyPartInGUI",true,"When hovering over a body part item in the GUI, should it render a 3d model of itself?").getBoolean();
@@ -92,8 +91,6 @@ public class Augments
     {
         MinecraftForge.EVENT_BUS.register(new PlayerEvents());
         MinecraftForge.EVENT_BUS.register(new AugmentEvents());
-        if(drugDependant)
-            MinecraftForge.EVENT_BUS.register(new DrugEvents());
 
         NetworkRegistry.INSTANCE.registerGuiHandler(instance,new GuiHandler());
 

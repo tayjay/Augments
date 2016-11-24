@@ -116,6 +116,7 @@ public class AugmentEvents
     }
 
     //TODO: Make this more accurate/ change calculation of damage reduction
+    //TODO: Instead change base armour of player?
     @SubscribeEvent
     public void armourCheck(LivingHurtEvent event)
     {

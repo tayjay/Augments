@@ -189,11 +189,11 @@ public class ItemEyesBase extends ItemBodyPart implements IHUDProvider
                 }
             }
             */
-            if(Augments.drugDependant)
+            /*if(Augments.drugDependant)
             {
                 int drugTimer = CapHelper.getPlayerDataCap(Minecraft.getMinecraft().thePlayer).getDrugTimer();
                 mc.fontRendererObj.drawString("Drug Timer: " + drugTimer, 10, 100, Color.GREEN.getRGB());
-            }
+            }*/
         }
     }
 

@@ -2,9 +2,9 @@
 {
   "modid": "augments",
   "name": "Augments",
-  "description": "I didn't ask for this.",
-  "version": "0.1.0",
-  "mcversion": "1.9.4-12.17.0.1976",
+  "description": "It costs an arm and a leg, but the new ones are better!",
+  "version": "0.2.0",
+  "mcversion": "1.10.2-12.18.2.2125",
   "url": "",
   "updateUrl": "",
   "authorList": ["tayjay"],

@@ -9,6 +9,7 @@ import com.tayjay.augments.api.render.RenderItemOverride;
 import com.tayjay.augments.api.render.RenderPlayerAugments;
 import com.tayjay.augments.client.handler.KeyInputHandler;
 import com.tayjay.augments.client.settings.Keybindings;
+import com.tayjay.augments.event.ClientEvents;
 import com.tayjay.augments.util.CapHelper;
 import com.tayjay.augments.util.ReflectHelper;
 import net.minecraft.client.Minecraft;
@@ -32,6 +33,7 @@ import java.util.Map;
  */
 public class ClientProxy extends CommonProxy
 {
+    private ClientEvents clientEvents;
     @Override
     public void registerItemRenderer(Item item, int meta, String id)
     {
@@ -53,12 +55,6 @@ public class ClientProxy extends CommonProxy
     @Override
     public void initRenderOverride()
     {
-        //Override RenderPlayer
-        /*
-        RenderManager manager = Minecraft.getMinecraft().getRenderManager();
-        manager.getSkinMap().put("default",new RenderPlayerWithEvents(manager));
-        manager.getSkinMap().put("slim",new RenderPlayerWithEvents(manager,true));
-        */
         Map<String, RenderPlayer> skinMap = Minecraft.getMinecraft().getRenderManager().getSkinMap();
         if(Augments.renderType == 0)
         {
@@ -86,11 +82,6 @@ public class ClientProxy extends CommonProxy
             ReflectHelper.changeRenderPlayer("default", new RenderPlayerAugments(skinMap.get("default"),Minecraft.getMinecraft().getRenderManager()));
             ReflectHelper.changeRenderPlayer("slim", new RenderPlayerAugments(skinMap.get("slim"),Minecraft.getMinecraft().getRenderManager(),true));
         }
-
-        //RenderItemOverride.override(Minecraft.getMinecraft().getRenderItem());
-        //ReflectionHelper.setPrivateValue(Minecraft.class,Minecraft.getMinecraft(),new ItemRenderer(Minecraft.getMinecraft()),"itemRenderer");
-        //ReflectionHelper.setPrivateValue(Minecraft.class,Minecraft.getMinecraft(),new ItemRendererOverride(Minecraft.getMinecraft()),"itemRenderer");
-
     }
 
     public static KeyBinding[] keyBindings;
@@ -104,6 +95,9 @@ public class ClientProxy extends CommonProxy
     {
         registerKeyBindings();
         OBJLoader.INSTANCE.addDomain(Augments.modId);
+
+        clientEvents = new ClientEvents();
+        MinecraftForge.EVENT_BUS.register(clientEvents);
     }
 
     public void registerKeyBindings()
@@ -113,5 +107,11 @@ public class ClientProxy extends CommonProxy
         {
             ClientRegistry.registerKeyBinding(key.getKeybind());
         }
+    }
+
+    @Override
+    public ClientEvents getClientEventHandler()
+    {
+        return clientEvents;
     }
 }

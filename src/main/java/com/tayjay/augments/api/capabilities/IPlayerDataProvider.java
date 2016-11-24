@@ -40,19 +40,6 @@ public interface IPlayerDataProvider extends INBTSerializable<NBTTagCompound>
 
     void reboot();
 
-    //Anti-Rejection Drug Data*********************
-    boolean needsDrug();
-
-    void doDrugTick();
-
-    int getDrugTimer();
-
-    void setDrugTimer(int amount);
-
-    void addDrugTimer(int amount);
-
-    void doDrugEffect();
-
     //**********************************************
     /**
      * Get the current augment that implements IActivate to be used when the "use" key is pressed

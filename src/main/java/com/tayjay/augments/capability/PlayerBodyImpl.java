@@ -66,7 +66,7 @@ public final class PlayerBodyImpl
         {
             this.player = player;
             partInventory = new ItemStackHandler(SLOTS_COUNT);
-            augmentInventory = new ItemStackHandler(Augments.maxAllowedAugmentCapacity);//todo: Dynamic size depending on player tier.
+            augmentInventory = new ItemStackHandler(Augments.maxAllowedAugmentCapacity);
         }
 
         @Override
@@ -76,7 +76,7 @@ public final class PlayerBodyImpl
         }
 
         @Override
-        public ItemStack getStackByPart(PartType type) //TODO: Make this the prefered manor of getting itemstacks
+        public ItemStack getStackByPart(PartType type)
         {
             if(type == PartType.ARM || type == PartType.LEG)
             {

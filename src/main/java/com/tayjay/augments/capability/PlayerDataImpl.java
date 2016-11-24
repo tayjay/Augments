@@ -82,16 +82,12 @@ public class PlayerDataImpl
         {
             this.player = player;
             this.playerTier = 0;
-            //this.currentActiveIndex = -1;
-            //this.cycleActiveAugment();
         }
 
 
         @Override
         public boolean validate()
         {
-            if(Augments.drugDependant)
-                return drugTimer>0;
             return true;
         }
 
@@ -104,17 +100,6 @@ public class PlayerDataImpl
         @Override
         public float getMaxEnergy()
         {
-            /*
-            if(CapHelper.getPlayerBodyCap(this.player).getBodyParts().getStackInSlot(7).getItem() == null)
-            {
-                if (CapHelper.getPlayerBodyCap(this.player).getBodyParts().getStackInSlot(7).getItem() instanceof IEnergySupply)
-                {
-                    IEnergySupply supply = (IEnergySupply) CapHelper.getPlayerBodyCap(this.player).getBodyParts().getStackInSlot(7).getItem();
-                    maxEnergy = supply.maxEnergy(CapHelper.getPlayerBodyCap(this.player).getBodyParts().getStackInSlot(7));
-                }
-                maxEnergy = 0;
-            }
-            */
             return maxEnergy;
         }
 
@@ -196,68 +181,6 @@ public class PlayerDataImpl
             setCurrentEnergy(0);
             ChatHelper.send(player,"Rebooting...");
             player.addPotionEffect(new PotionEffect(MobEffects.NAUSEA,5));
-        }
-
-        @Override
-        public boolean needsDrug()
-        {
-            return checkPlayerAugmented(player);
-        }
-
-        private boolean checkPlayerAugmented(EntityPlayer player)
-        {
-            IItemHandler parts = player.getCapability(AugmentsAPI.PLAYER_BODY_CAPABILITY,null).getBodyParts();
-            for(int i =0;i<parts.getSlots();i++)
-            {
-                if(parts.getStackInSlot(i)!=null)
-                    return true;
-            }
-            return false;
-        }
-
-        @Override
-        public void doDrugTick()
-        {
-            if(needsDrug())
-            {
-                if (drugTimer-1 < 0)
-                {
-                    this.doDrugEffect();
-                }
-                else
-                {
-                    drugTimer--;
-                }
-            }
-        }
-
-        @Override
-        public int getDrugTimer()
-        {
-            return this.drugTimer;
-        }
-
-        @Override
-        public void setDrugTimer(int amount)
-        {
-            this.drugTimer = amount;
-        }
-
-        @Override
-        public void addDrugTimer(int amount)
-        {
-            this.drugTimer+= amount;
-        }
-
-        @Override
-        public void doDrugEffect()
-        {
-            if(!player.isCreative())
-            {
-                player.addPotionEffect(new PotionEffect(MobEffects.HUNGER, 40));
-                player.addPotionEffect(new PotionEffect(MobEffects.NAUSEA, 40));
-                player.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 40));
-            }
         }
 
         @Override

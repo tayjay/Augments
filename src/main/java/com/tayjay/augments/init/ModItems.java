@@ -19,7 +19,6 @@ public class ModItems
     public static ItemBase carbonMesh;
     public static ItemTablet tablet;
     public static ItemAugmentKit praxisKit;
-    public static ItemDrug antiRejectDrug;
 
     public static ItemBodyPart cyborgEyes;
     public static ItemBodyPart eyeSingleL;
@@ -38,6 +37,7 @@ public class ModItems
     public static ItemAugment flight;
     public static ItemAugment mindControl;
     public static ItemAugment feeder;
+    public static ItemAugment oreFinder;
 
     public static ItemBodySet armTest;
     //public static ItemBodySet armRightTest;
@@ -72,7 +72,6 @@ public class ModItems
         carbonMesh = register(new ItemBase("carbonMesh"));
         tablet = register(new ItemTablet("tablet"));
         praxisKit = register(new ItemAugmentKit("praxisKit"));
-        antiRejectDrug = register(new ItemDrug("antiRejectDrug",1000));
 
         cyborgEyes = register(new ItemCyborgEyes("cyborgEyes",2));
         eyeSingleL = register(new ItemCyborgEyes("eyeSingleL",1));
@@ -88,6 +87,8 @@ public class ModItems
         flight = register(new ItemFlight("flight",0.05f));
         mindControl = register(new ItemMindControl("mindControl"));
         feeder = register(new ItemFeeder("feeder"));
+        oreFinder = register(new ItemOreFinder());
+
 
         overShield = register(new ItemOvershield("overshield"));
         typhoon = register(new ItemExplosiveSystem("typhoon"));

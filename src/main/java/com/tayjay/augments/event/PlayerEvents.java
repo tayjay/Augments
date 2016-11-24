@@ -137,12 +137,12 @@ public class PlayerEvents
     }
 
     @SubscribeEvent
-    public void attachCapabilities(AttachCapabilitiesEvent.Entity event)
+    public void attachCapabilities(AttachCapabilitiesEvent<Entity> event)
     {
-        if(event.getEntity() instanceof EntityPlayer)
+        if(event.getObject() instanceof EntityPlayer)
         {
-            event.addCapability(PlayerDataImpl.Provider.NAME,new PlayerDataImpl.Provider((EntityPlayer) event.getEntity()));
-            event.addCapability(PlayerBodyImpl.Provider.NAME,new PlayerBodyImpl.Provider((EntityPlayer)event.getEntity()));
+            event.addCapability(PlayerDataImpl.Provider.NAME,new PlayerDataImpl.Provider((EntityPlayer) event.getObject()));
+            event.addCapability(PlayerBodyImpl.Provider.NAME,new PlayerBodyImpl.Provider((EntityPlayer)event.getObject()));
             LogHelper.debug("Player Capabilities added to player");
         }
     }
@@ -407,16 +407,40 @@ public class PlayerEvents
     /*@SubscribeEvent
     public void renderWorldLast(RenderWorldLastEvent event)
     {
-        if(event.getPhase() == EventPriority.LOWEST)
+        if(Minecraft.getMinecraft().thePlayer!=null)
         {
-            if(Minecraft.getMinecraft().thePlayer!=null)
-            {
-                GlStateManager.pushAttrib();
-                GlStateManager.pushMatrix();
-                RenderUtil.renderCuboid(new AxisAlignedBB(Minecraft.getMinecraft().thePlayer.getPosition()), Color.GREEN, false);
-                GlStateManager.popMatrix();
-                GlStateManager.popAttrib();
-            }
+            GlStateManager.pushAttrib();
+            GlStateManager.pushMatrix();
+                //See through walls
+                GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
+
+
+            GL11.glEnable(GL11.GL_BLEND);
+            GL11.glLineWidth(3.0f);
+            GL11.glDisable(GL11.GL_TEXTURE_2D);
+            GL11.glDisable(GL11.GL_CULL_FACE);
+
+            BlockPos block = new BlockPos(117,73,266);
+            *//*
+            double x = player.lastTickPosX + (player.posX - player.lastTickPosX) * event.partialTicks;
+        double y = player.lastTickPosY + (player.posY - player.lastTickPosY) * event.partialTicks;
+        double z = player.lastTickPosZ + (player.posZ - player.lastTickPosZ) * event.partialTicks;
+             *//*
+            EntityPlayer player = Minecraft.getMinecraft().thePlayer;
+            double x = block.getX()-(player.lastTickPosX + (player.posX-player.lastTickPosX)*event.getPartialTicks());
+            double y = block.getY()-(player.lastTickPosY + (player.posY-player.lastTickPosY)*event.getPartialTicks());
+            double z = block.getZ()-(player.lastTickPosZ + (player.posZ-player.lastTickPosZ)*event.getPartialTicks());
+
+            RenderGlobal.drawBoundingBox(x,y,z,x+1,y+1,z+1,1,1,1,1);
+
+            RenderGlobal.renderFilledBox(x,y,z,x+1,y+1,z+1,0,0,1,0.5f);
+
+            GL11.glEnable(GL11.GL_CULL_FACE);
+            GL11.glEnable(GL11.GL_TEXTURE_2D);
+            GL11.glDisable(GL11.GL_BLEND);
+
+            GlStateManager.popMatrix();
+            GlStateManager.popAttrib();
         }
     }*/
 
