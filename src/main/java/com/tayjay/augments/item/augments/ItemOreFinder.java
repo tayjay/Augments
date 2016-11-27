@@ -51,7 +51,7 @@ public class ItemOreFinder extends ItemAugment
                     for (int y = playerY - rangeY; y < playerY + rangeY; y++)
                     {
                         blockChecking = new BlockPos(x,y,z);
-                        if (world != null && world.getBlockState(blockChecking).getBlock().getUnlocalizedName().contains("ore"))
+                        if (world != null && world.getBlockState(blockChecking).getBlock() == Blocks.DIAMOND_ORE)
                         {
                             /*int currentMeta = world.getBlockMetadata(x, y, z);
                             if(meta==-1 || currentMeta == meta)
