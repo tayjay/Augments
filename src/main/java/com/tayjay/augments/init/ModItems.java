@@ -93,11 +93,11 @@ public class ModItems
         overShield = register(new ItemOvershield("overshield"));
         typhoon = register(new ItemExplosiveSystem("typhoon"));
 
-        armTest = register(new ItemBodySet("armTest",2,3,2,"template", PartType.ARM));
+        armTest = register(new ItemBodySet("armTest",2,3,2,"playerBlue", PartType.ARM));//template
         //armRightTest = register(new ItemBodySet("armRightTest",2,3,2,"template", PartType.ARM_RIGHT));//TODO: Use metadata instead of diff item?
-        torsoTest = register(new ItemBodySet("torsoTest",2,5,3,"template", PartType.TORSO));
-        headTest = register(new ItemBodySet("headTest",2,4,2,"template", PartType.HEAD));
-        legTest = register(new ItemBodySet("legTest",2,3,2,"template", PartType.LEG));
+        torsoTest = register(new ItemBodySet("torsoTest",2,5,3,"playerBlue", PartType.TORSO));
+        headTest = register(new ItemBodySet("headTest",2,4,2,"playerBlue", PartType.HEAD));
+        legTest = register(new ItemBodySet("legTest",2,3,2,"playerBlue", PartType.LEG));
         //legRightTest = register(new ItemBodySet("legRightTest",2,3,2,"template", PartType.LEG_RIGHT));
 
 

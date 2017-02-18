@@ -49,7 +49,8 @@ public class ItemSonar extends ItemAugment
                 {
                     if(e instanceof EntityLivingBase)
                     {
-                        EntityUtil.setFlag(e,6,true);
+                        e.setGlowing(true);
+                        //EntityUtil.setFlag(e,6,true);
                     }
                 }
             }

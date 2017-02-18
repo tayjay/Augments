@@ -6,7 +6,6 @@ import com.tayjay.augments.api.capabilities.IAugHolderProvider;
 import com.tayjay.augments.api.capabilities.IPlayerDataProvider;
 import com.tayjay.augments.api.capabilities.IPlayerBodyProvider;
 import com.tayjay.augments.api.item.IAugment;
-import com.tayjay.augments.api.item.IAugmentHolder;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 

@@ -1,11 +1,16 @@
 package com.tayjay.augments.event;
 
+import com.tayjay.augments.api.events.IHUDProvider;
+import com.tayjay.augments.api.item.PartType;
+import com.tayjay.augments.util.CapHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
@@ -19,9 +24,12 @@ import java.util.ArrayList;
  */
 public class ClientEvents
 {
+    EntityPlayerSP player = Minecraft.getMinecraft().thePlayer;
+
+    //<editor-fold desc="Rendering for Ore Finder">
     ArrayList<BlockPos> blockPosToRender = new ArrayList<BlockPos>();
     long lastPing = 0;
-    EntityPlayerSP player = Minecraft.getMinecraft().thePlayer;
+
     //How many ticks to render for. todo: Make unique timing to each blockPos
     final long RENDER_TIME = 200L;
 
@@ -92,4 +100,30 @@ public class ClientEvents
     {
         blockPosToRender.clear();
     }
+    //</editor-fold>
+
+    //<editor-fold desc="Rendering for IHUDProvider">
+    @SubscribeEvent
+    public void renderWorld(RenderWorldLastEvent event)
+    {
+        GlStateManager.pushMatrix();
+        GlStateManager.pushAttrib();
+        ItemStack eyes = CapHelper.getPlayerBodyCap(Minecraft.getMinecraft().thePlayer).getStackByPart(PartType.EYES);
+        if(eyes !=null && eyes.getItem() instanceof IHUDProvider)
+            ((IHUDProvider)eyes.getItem()).drawWorldElements(eyes,event);
+
+        GlStateManager.popMatrix();
+        GlStateManager.popAttrib();
+    }
+
+    @SubscribeEvent
+    public void renderOverlay(RenderGameOverlayEvent event)
+    {
+        ItemStack eyes = CapHelper.getPlayerBodyCap(Minecraft.getMinecraft().thePlayer).getStackByPart(PartType.EYES);
+        if(eyes !=null && eyes.getItem() instanceof IHUDProvider)
+            ((IHUDProvider)eyes.getItem()).drawHudElements(eyes,event);
+    }
+    //</editor-fold>
+
+
 }

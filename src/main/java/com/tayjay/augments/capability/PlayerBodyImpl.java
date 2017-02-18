@@ -3,6 +3,7 @@ package com.tayjay.augments.capability;
 import com.tayjay.augments.Augments;
 import com.tayjay.augments.api.AugmentsAPI;
 import com.tayjay.augments.api.capabilities.IPlayerBodyProvider;
+import com.tayjay.augments.api.inventory.ItemStackHandlerAugments;
 import com.tayjay.augments.api.item.IAugment;
 import com.tayjay.augments.api.item.IBodyPart;
 import com.tayjay.augments.api.item.PartType;
@@ -66,7 +67,7 @@ public final class PlayerBodyImpl
         {
             this.player = player;
             partInventory = new ItemStackHandler(SLOTS_COUNT);
-            augmentInventory = new ItemStackHandler(Augments.maxAllowedAugmentCapacity);
+            augmentInventory = new ItemStackHandlerAugments(Augments.maxAllowedAugmentCapacity,player);
         }
 
         @Override
@@ -151,7 +152,7 @@ public final class PlayerBodyImpl
             }
             if(nbt.hasKey(TAG_NAME_AUGS))
             {
-                IItemHandler augments = new ItemStackHandler(Augments.maxAllowedAugmentCapacity);
+                IItemHandler augments = new ItemStackHandlerAugments(Augments.maxAllowedAugmentCapacity,this.player);
                 CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.getStorage().readNBT(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY,augments,null,nbt.getTag(TAG_NAME_AUGS));
                 augmentInventory = augments;
             }

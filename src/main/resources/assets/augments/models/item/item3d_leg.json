@@ -1,0 +1,17 @@
+{
+  "parent": "augments:item/item3d",
+  "elements": [
+    {   "__comment": "Leg",
+      "from": [ 4, 0, 4 ],
+      "to": [ 12, 18, 12 ],
+      "faces": {
+        "down":  { "uv": [ 7, 4, 9, 5 ], "texture": "#main", "rotation": 90 },
+        "up":    { "uv": [ 5, 4, 7, 5 ], "texture": "#main", "rotation": 90 },
+        "north": { "uv": [ 9, 5, 10, 8 ], "texture": "#main", "__comment": "Left" },
+        "south": { "uv": [ 4, 5, 5, 8 ], "texture": "#main", "__comment": "Right" },
+        "west":  { "uv": [ 7, 5, 9, 8 ], "texture": "#main", "__comment": "Back" },
+        "east":  { "uv": [ 5, 5, 7, 8 ], "texture": "#main", "__comment": "Front" }
+      }
+    }
+  ]
+}

@@ -29,17 +29,6 @@ import net.minecraftforge.items.IItemHandler;
  */
 public class AugmentEvents
 {
-    /* Removed with 0.1.2.0 update
-    @Deprecated
-    @SubscribeEvent
-    public void createAugmentHolderItem(AttachCapabilitiesEvent.Item event)
-    {
-        if(event.getItem() instanceof IAugmentHolder)
-        {
-            event.addCapability(AugmentHolderImpl.Provider.NAME,new AugmentHolderImpl.Provider(((IAugmentHolder) event.getItem()).getHolderSize(event.getItemStack())));
-        }
-    }
-    */
 
     @SubscribeEvent
     public void createAugmentDataItem(AttachCapabilitiesEvent.Item event)
@@ -88,26 +77,7 @@ public class AugmentEvents
         }
     }
 
-    @SubscribeEvent
-    public void renderWorld(RenderWorldLastEvent event)
-    {
-        GlStateManager.pushMatrix();
-        GlStateManager.pushAttrib();
-        ItemStack eyes = CapHelper.getPlayerBodyCap(Minecraft.getMinecraft().thePlayer).getStackByPart(PartType.EYES);
-        if(eyes !=null && eyes.getItem() instanceof IHUDProvider)
-            ((IHUDProvider)eyes.getItem()).drawWorldElements(eyes,event);
 
-        GlStateManager.popMatrix();
-        GlStateManager.popAttrib();
-    }
-
-    @SubscribeEvent
-    public void renderOverlay(RenderGameOverlayEvent event)
-    {
-        ItemStack eyes = CapHelper.getPlayerBodyCap(Minecraft.getMinecraft().thePlayer).getStackByPart(PartType.EYES);
-        if(eyes !=null && eyes.getItem() instanceof IHUDProvider)
-            ((IHUDProvider)eyes.getItem()).drawHudElements(eyes,event);
-    }
 
     @SubscribeEvent
     public void playerInteract(PlayerInteractEvent event)

@@ -15,6 +15,9 @@ public class NetworkHandler
 {
     public static final SimpleNetworkWrapper INSTANCE = NetworkRegistry.INSTANCE.newSimpleChannel(Augments.modId);
 
+    /**
+     * Register packets on load
+     */
     static
     {
         int desc = 0;//Discriminator

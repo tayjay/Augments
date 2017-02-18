@@ -79,7 +79,7 @@ public abstract class PacketRunnable<REQ extends IMessage> implements IMessage, 
 
     /**
      * This method will be passed to the client ScheduledTask list for client execution.
-     * Eaier than detecting client side and creating runnable manually in each packet.
+     * Easier than detecting client side and creating runnable manually in each packet.
      * Should be safe to run this because it isn't executed until it is in the main thread.
      * @param message   Message being handled
      * @param ctx       Client context
